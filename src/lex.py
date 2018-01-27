@@ -96,6 +96,7 @@ keywords={'alias': 'ALIAS',
         'enum' : 'ENUM',
         'extern' : 'EXTERN',
         'false' : 'FALSE',
+        'static': 'STATIC',
         'final' : 'FINAL',
         'float' : 'FLOAT',
         'for' : 'FOR',
@@ -288,7 +289,7 @@ def t_error(t):
     print "Illegal character '%s' at line number %d" % (t.value[0], t.lineno)
     t.lexer.skip(1)
     success = False
-token_dict = {}
+
 def test_lexer(lexer, string):
     lexer.input(string)
     # Tokenize
@@ -297,9 +298,13 @@ def test_lexer(lexer, string):
         if not tok: 
             break      # No more input
         token_dict[tok.type].append(tok.value)
+
+token_dict = {}
+
 def create_tokendictionary():
     for token in tokens:
         token_dict.setdefault(token, [])
+
 
 if __name__ == '__main__':
     file = open(sys.argv[1])

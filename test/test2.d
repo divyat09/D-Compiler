@@ -16,7 +16,6 @@ int main() {
    /*
 	char d= 'd'
 	printf("The val of character d: %s", d)
-
    */
 
    // Here we compare the different scenarios of values of c and d
