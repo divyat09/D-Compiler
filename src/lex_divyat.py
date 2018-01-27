@@ -1,13 +1,10 @@
+#!/home/divyat/anaconda2/bin/python
 import sys
 import re
 import ply.lex as lex
 from ply.lex import TOKEN
 
-##
-## All the tokens recognized by the lexer
-##
-
-special_characters=('COMMA',
+Operators=('COMMA',
         'RANGE',           
         'ELLIPSIS',
         'SCOPE' ,
@@ -24,11 +21,9 @@ special_characters=('COMMA',
         'DOT',    
         'SINGLE_QUOTE',
         'DOUBLE_QUOTE',
-        'BACK_SLASH'
-        )
-
-
-operators=('ASSIGN','ARROW',
+        'BACK_SLASH',
+        'ASSIGN',
+        'ARROW',
         'GREATER',
         'LESS',
         'IS_EQ',
@@ -53,13 +48,14 @@ operators=('ASSIGN','ARROW',
         'EQ_TIMES',
         'EQ_DIV',
         'EQ_MODULO',
-        'EQ_LEFT',
+        'EQ_LEFT',  
         'EQ_RIGHT',
         'EQ_AND_BIT',
         'EQ_OR_BIT',
         'EQ_XOR_BIT',
-#        'EQ_NEG_BIT'
-        'DOLLAR'
+#        'EQ_NEG_BIT',
+        'DOLLAR',
+#        'DOT'
         )
 
 complex_tokens=('IDENTIFIER',
@@ -72,12 +68,8 @@ complex_tokens=('IDENTIFIER',
         'LIT_CHAR',
         'COMMENT')
 
-##
-## Reserved keywords
-##
-
-keywords={'alias': 'ALIAS',
-  			'auto' : 'AUTO',
+Keywords={'alias': 'ALIAS',
+  		'auto' : 'AUTO',
         'body' : 'BODY',
         'bool': 'BOOL',
         'break': 'BREAK',
@@ -95,6 +87,7 @@ keywords={'alias': 'ALIAS',
         'enum' : 'ENUM',
         'extern' : 'EXTERN',
         'false' : 'FALSE',
+        'static': 'STATIC',
         'final' : 'FINAL',
         'float' : 'FLOAT',
         'for' : 'FOR',
@@ -120,7 +113,7 @@ keywords={'alias': 'ALIAS',
         'switch' :'SWITCH',
         'short' : 'SHORT',
         'true' :'TRUE',
-				'this' :'THIS',
+		'this' :'THIS',
         'type' : 'TYPEDEF',
         'union' : 'UNION',
         'uint' : 'UINT',
@@ -134,12 +127,9 @@ keywords={'alias': 'ALIAS',
         'delegate' : 'DELEGATE' 
          }
 
-tokens=special_characters+operators+complex_tokens+tuple(keywords.values())
+tokens=Operators+complex_tokens+tuple(Keywords.values())
 
-
-# Each token is specified by writing a regular expression rule. 
-# Each of these rules are are defined by making declarations with a 
-# special prefix t_ to indicate that it defines a token.
+# Regular Expression for each token
 
 t_ARROW = r'->'
 t_RANGE = r'\.\.'
@@ -185,35 +175,30 @@ t_EQ_DIV = r'/='
 t_EQ_MODULO = r'%='
 t_EQ_LEFT = '>>='
 t_EQ_RIGHT = '<<='
-t_EQ_AND_BIT= = '&='
+t_EQ_AND_BIT = '&='
 t_EQ_OR_BIT =	'\|='
 t_EQ_XOR_BIT =	'\^='
-
 t_SINGLE_QUOTE = r'\''
 t_DOUBLE_QUOTE= r'\"'
 t_BACK_SLASH = r'\\'
-
 t_DOLLAR = r'\$'
-#t_DOLLAR = r'\$'
+#t_DOT= r'\.'
 
 IDENTIFIER = r'[A-Za-z_][\w]*'
 @TOKEN(IDENTIFIER)
 def t_IDENTIFIER(t):
-    """Match an identifier and check if it is a keyword.
-    This approach greatly reduces the number of regular 
-    expression rules and is likely to make things a little faster.
-    """
+    #Match an identifier and check if it is a keyword ( Reduces time ) 
     r'[A-Za-z_][\w]*'
-    global keywords
-    if keywords.has_key(t.value):
-        t.type=keywords[t.value]
+    global Keywords
+    if Keywords.has_key(t.value):
+        t.type=Keywords[t.value]
     return t
 
 def t_ILLEGAL_ID(t):
     r'(?<=[\d])[A-Za-z_][\w]*'
     print "Ill_formed Identifier %s' at line number %d" % (t.value, t.lineno)
 
-    # Match a decimal number
+# Match a decimal number
 def t_DNUMBER(t):
     r'((\d*)\.((\d*([eE][+-]\d+))|\d+)(?=[+<>!=\-*/%(),;\s\]])|([eE][+-]\d+)(?=[+<>!=\-*/()%,;\s\]]))'
     return t
@@ -258,8 +243,6 @@ def t_LIT_STR(t):
         return
     return t
 
-# Match single line and multiline comments and 
-    # increase the line number
 def t_COMMENT(t):
     r'(/\*[\w\W]*?\*/)|(//[\w\W]*?\n)'
     t.lineno += t.value.count('\n')
@@ -295,9 +278,16 @@ def test_lexer(lexer, string):
         tok = lexer.token()
         if not tok: 
             break      # No more input
-    	print tok
+        token_dict[tok.type].append(tok.value)
+
+token_dict = {}
+
+def create_tokendictionary():
+    for token in tokens:
+        token_dict.setdefault(token, [])
 
 
+# Function added to output all the tokens, occurences and lexemes in the required format
 if __name__ == '__main__':
     file = open(sys.argv[1])
     lines = file.readlines()
@@ -307,4 +297,8 @@ if __name__ == '__main__':
         strings += i
     # run lexer on input
     lexer = lex.lex()
+    create_tokendictionary()
     test_lexer(lexer, strings)
+    for key in token_dict:
+        if(len(token_dict[key])):
+            print key,"\t\t",len(token_dict[key]),"\t\t",set(token_dict[key])

@@ -10,10 +10,10 @@ int main() {
    alphabet c='D';
    sequence s= "Compilers";
 
-   mixin(`writeln("Compilers Project");`); 
-   mixin(`writeln("%s",s);`); 
-   mixin(`writeln("%d",x);`); 
-   mixin(`writeln("%c",c);`); 
+   mixin(`writefln("Compilers Project");`); 
+   mixin(`writefln("%s",s);`); 
+   mixin(`writefln("%d",x);`); 
+   mixin(`writefln("%c",c);`); 
    
    return 0;
 
