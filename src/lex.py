@@ -314,4 +314,4 @@ if __name__ == '__main__':
     test_lexer(lexer, strings)
     for key in token_dict:
         if(len(token_dict[key])):
-            print key,set(token_dict[key]),len(token_dict[key])
+            print key,"\t",len(token_dict[key]),"\t",set(token_dict[key]),
