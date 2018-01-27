@@ -6,7 +6,7 @@ int main() {
    a= a+1;
    uint b=50;
    float c= 34.5;
-   float d= (a+b)*c/10.0;
+   static float d= (a+b)*c/10.0;
 
    printf("Value of a: %d\n", a);
    printf("Value of b: %d\n", b);

@@ -1,4 +1,3 @@
-#!/usr/bin/python2
 import sys
 import re
 import ply.lex as lex
@@ -54,7 +53,7 @@ operators=('ASSIGN','ARROW',
         'EQ_TIMES',
         'EQ_DIV',
         'EQ_MODULO',
-        'EQ_LEFT',          #Added by pooja
+        'EQ_LEFT',  
         'EQ_RIGHT',
         'EQ_AND_BIT',
         'EQ_OR_BIT',
