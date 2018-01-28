@@ -53,9 +53,13 @@ Operators=('COMMA',
         'EQ_AND_BIT',
         'EQ_OR_BIT',
         'EQ_XOR_BIT',
-#        'EQ_NEG_BIT',
         'DOLLAR',
-#        'DOT'
+        'IS_EQ_DIFF',
+        'NOT_EQ_DIFF',
+        'GREATER_DIFF',
+        'LESS_DIFF',
+        'GREATER_EQ_DIFF',
+        'LESS_EQ_DIFF',
         )
 
 complex_tokens=('IDENTIFIER',
@@ -148,9 +152,15 @@ t_RBRACE = r'}'
 t_GREATER = r'>'
 t_LESS = r'<'
 t_IS_EQ = r'=='
-t_NOT_EQ = r'<>'
+t_NOT_EQ = r'!='
 t_GREATER_EQ = r'>='
 t_LESS_EQ = r'<='
+t_IS_EQ_DIFF = r'!<>'
+t_NOT_EQ_DIFF = r'<>'
+t_GREATER_DIFF = r'!<='
+t_LESS_DIFF = r'!>='
+t_GREATER_EQ_DIFF = r'!<'
+t_LESS_EQ_DIFF = r'!>'
 t_PLUS_PLUS = r'\+\+'
 t_MINUS_MINUS = r'--'
 t_PLUS = r'\+'
@@ -182,7 +192,6 @@ t_SINGLE_QUOTE = r'\''
 t_DOUBLE_QUOTE= r'\"'
 t_BACK_SLASH = r'\\'
 t_DOLLAR = r'\$'
-#t_DOT= r'\.'
 
 IDENTIFIER = r'[A-Za-z_][\w]*'
 @TOKEN(IDENTIFIER)
