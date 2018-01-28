@@ -1,5 +1,11 @@
 # D-Compiler
 
+### Acknowledgement
+
+Refernce we used for writing the lexer generator:
+ 
+https://github.com/pankajmore/pyCPP/blob/semantics/pyCPP/lexer.py
+
 ### Contents
 /src directory contains the code lex.py: the lexer generator
 
