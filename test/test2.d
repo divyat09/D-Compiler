@@ -2,7 +2,7 @@ import std.stdio;
 
 int main() {
    
-   int a=10;
+   long int a=10;
    a= a+1;
    uint b=50;
    float c= 34.5;
@@ -24,6 +24,18 @@ int main() {
    	printf("Floating Value  %f is greater than value %f\n", c, d);
    }
    else if( c < d ){
+   	printf("Floating Value  %f is less than value %f\n", c, d);
+   }
+   else{
+  	printf("Floating Value  %f is equal to value %f\n", c, d);
+   }	
+
+   // Here we compare the different scenarios of values of c and d using different notation of relational operators
+
+   if( c !<= d ){
+   	printf("Floating Value  %f is greater than value %f\n", c, d);
+   }
+   else if( c !>= d ){
    	printf("Floating Value  %f is less than value %f\n", c, d);
    }
    else{

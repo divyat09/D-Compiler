@@ -19,3 +19,10 @@ First create executable of "lex.py" using makefile and then run that executable 
 
 Tokenise different test cases by passing them as input command line parameters
  	
+### Output
+
+The output is of the form:
+
+Token \t\t Occurrances \t\t Lexemes 
+
+In cases of errors( like illegal identifier names ), the error is reported at start and then outputs the other tokens in above format.
