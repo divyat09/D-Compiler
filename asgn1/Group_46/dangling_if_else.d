@@ -1,5 +1,5 @@
 int main(void){
-    int i = 0,a[]={1,2,3};
+    int i = 0,a[]=[1,2,3];
     if (i<=3)
         a[i]++;
     if (i>=2)
