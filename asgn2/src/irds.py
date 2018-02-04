@@ -33,9 +33,9 @@ class irds:
       self.dst = data[2]
       self.src1 = data[3]
     elif (data[1] == "print"):
-      ??
+      self.src1 = data[2]
     elif (data[1] == "input"):
-      ??
+      self.src1 = data[2]
     else:
       self.dst = data[2]
       self.src1 = data[3]
