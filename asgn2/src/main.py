@@ -8,7 +8,10 @@ class IRDS:
     self.dst = None
     self.src1 = None
     self.src2 = None
-        
+    self.const = None
+    self.const2 = None
+  def isValid(_input):
+    return [bool(self.src1),bool(self.src2),bool(self.dst)]
   def represent(self,data):
     # print data
     self.lineno = data[0]
@@ -19,34 +22,55 @@ class IRDS:
       bb.append(int(self.lineno)+1)
       bb.append(int(self.dst))
     elif (data[1] == "jmp"):
-      self.dst = data[2]
+      self.const = data[2]
       bb.append(int(self.lineno)+1)
-      bb.append(int(self.dst))
+      bb.append(int(self.const))
     elif (data[1] == "call"):
-      self.dst = data[2]
+      self.const = data[2]
       # what about basic block???
     elif (data[1] == "ret"):  
-      self.src1 = data[2]
+      if(isint(data[2])):
+        self.const=data[2]
+      else:
+        self.src1 = data[2]
     elif (data[1] == "="):
       self.dst = data[2]
-      self.src1 = data[3]
+      if(isint(data[3])):
+        self.const=data[3]
+      else:
+        self.src1 = data[3]
     elif (data[1] == "!"):
       self.dst = data[2]
-      self.src1 = data[3]
+      if(isint(data[3])):
+        self.const=data[3]
+      else:
+        self.src1 = data[3]
     elif (data[1] == "print_int"):
-      self.src1 = data[2]
+      if(isint(data[2])):
+        self.const=data[2]
+      else:
+        self.src1 = data[2]
     elif (data[1] == "print_string"):
       self.src1 = data[2]
     elif (data[1] == "input_int"):
-      self.src1 = data[2]
+      if(isint(data[2])):
+        self.const=data[2]
+      else:
+        self.src1 = data[2]
     elif (data[1] == "input_string"):
       self.src1 = data[2]
     elif (data[1] == "label"):
       self.src1 = data[2]
     else:
       self.dst = data[2]
-      self.src1 = data[3]
-      self.src2 = data[4]
+      if(isint(data[3])):
+        self.const=data[3]
+      else:
+        self.src1 = data[3]
+      if(isint(data[4])):
+        self.const=data[4]
+      else:
+        self.src1 = data[4]
 
 filename = sys.argv[1]
 f=open(filename, 'r')
@@ -66,5 +90,6 @@ for line in f.readlines():
   IRepresentation.represent( _input )
   print bb
 bb.append(len(statements))
+bb.sort()
 print bb
   
