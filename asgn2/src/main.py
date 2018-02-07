@@ -1,5 +1,5 @@
 #!/usr/bin/env python2
-import globalvars g
+import globalvars *
 class IRDS:
   def __init__(self):
     self.lineno = 0
@@ -56,3 +56,4 @@ for line in f.readlines():
 
 	IRepresentation= IRDS()
 	IRDS.represent( _input )
+  print bb
