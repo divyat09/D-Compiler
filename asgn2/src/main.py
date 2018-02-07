@@ -1,4 +1,5 @@
 #!/usr/bin/env python2
+import globalvars g
 class IRDS:
   def __init__(self):
     self.lineno = 0
@@ -30,9 +31,15 @@ class IRDS:
     elif (data[1] = "!"):
       self.dst = data[2]
       self.src1 = data[3]
-    elif (data[1] == "print"):
+    elif (data[1] == "print_int"):
       self.src1 = data[2]
-    elif (data[1] == "input"):
+    elif (data[1] == "print_string"):
+      self.src1 = data[2]
+    elif (data[1] == "input_int"):
+      self.src1 = data[2]
+    elif (data[1] == "input_string"):
+      self.src1 = data[2]
+    elif (data[1] == "label"):
       self.src1 = data[2]
     else:
       self.dst = data[2]
