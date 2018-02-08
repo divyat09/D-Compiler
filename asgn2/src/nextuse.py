@@ -20,11 +20,16 @@ def BuildNextUseTable( bb ):
 	  
 	  Global_Dict= {}
 
-	  # Start and End here are in the opposite sense from English
-	  # They represent the start and end of basic block as per the NextUse Algo sense i.e. starting from bottom
-	  Start= bb[_iter]
-	  End= bb[_iter +1 ]  # Not doing +1 here as the range func of python would take care of it
+	  StartLine= bb[_iter -1 ] 
+	  EndLine= bb[_iter] 
 
-	  for linenum in range( Start, End  ):
+	  for linenum in range( EndLine, StartLine+1, -1  ):
+	  		
+	  	# Dont include the Ending Leader unless its the case of Ending Basic Block
+	  	if( _iter!= len(bb) -1 and linenum==EndLine ):
+	  		continue
+
 	  	Global_Dict= NextUse( statements[linenum -1], Global_Dict )
 	    NextUseTable.append( Global_Dict )
+
+	NextUseTable.reverse()
