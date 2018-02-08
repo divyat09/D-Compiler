@@ -42,6 +42,11 @@ def AssignRegister(_var, lineno):
 		RegisterData[ VictimReg ]= None
 		del RegisterAssigned[ VictimVar ]
 		
+		# Assigning the newly freed register to _var
+		reg= VictimReg
+		RegisterData[reg]= _var
+		RegisterAssigned[ _var ]= reg		
+
 	else:
 		RegisterData[reg]= _var
 		RegisterAssigned[ _var ]= reg
