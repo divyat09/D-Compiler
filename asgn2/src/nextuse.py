@@ -16,11 +16,14 @@ def NextUse( IRobj, Global_Dict ):
 
 def BuildNextUseTable( bb ):
 
-	for _iter in range( 0, len(bb)-1 ):	# Need to iterate only till the 2nd last element
+	for _iter in range( len(bb)-1, 0, -1 ):	# Need to iterate only till the 2nd element: hence 0 and not 1
 	  
 	  Global_Dict= {}
+
+	  # Start and End here are in the opposite sense from English
+	  # They represent the start and end of basic block as per the NextUse Algo sense i.e. starting from bottom
 	  Start= bb[_iter]
-	  End= bb[_iter +1 ]  # Not doing -1 here as the range func of python would take care of it
+	  End= bb[_iter +1 ]  # Not doing +1 here as the range func of python would take care of it
 
 	  for linenum in range( Start, End  ):
 	  	Global_Dict= NextUse( statements[linenum -1], Global_Dict )
