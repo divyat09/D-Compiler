@@ -23,7 +23,7 @@ def BuildNextUseTable( bb ):
 	  StartLine= bb[_iter -1 ] 
 	  EndLine= bb[_iter] 
 
-	  for linenum in range( EndLine, StartLine+1, -1  ):
+	  for linenum in range( EndLine, StartLine-1, -1  ):
 	  		
 	  	# Dont include the Ending Leader unless its the case of Ending Basic Block
 	  	if( _iter!= len(bb) -1 and linenum==EndLine ):
