@@ -2,9 +2,7 @@
 
 import sys
 from globalvars import *
-import nextuse
-
-
+from nextuse import *
 
 def MapRegisterName( _input ):
 
@@ -110,6 +108,7 @@ class IRDS:
 filename = sys.argv[1]
 f=open(filename, 'r')
 bb.append(1)
+statements= []
 
 for line in f.readlines():
   Data= line.split(',')
@@ -129,5 +128,8 @@ bb.append(len(statements))
 bb.sort()
 print bb
 
+BuildNextUseTable( bb )
 
-  
+# Printing the next use table
+for _item in NextUseTable:
+  print _item
