@@ -12,7 +12,7 @@ def	GetAssignedVar():
 def GetFreeRegister():
 
   for register in RegisterStatus:
-    if RegisterStatus[register] !=-1:
+    if RegisterStatus[register] ==-1:
       
       RegisterStatus[register]=1
       return register
