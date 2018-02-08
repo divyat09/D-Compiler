@@ -3,21 +3,7 @@
 import sys
 from globalvars import *
 from nextuse import *
-
-def MapRegisterName( _input ):
-
-  if _input==1:
-    return 
-  elif _input ==2:
-    return
-  elif _input ==3:
-    return
-  elif _input ==4:
-    return
-  elif _input ==5:
-    return
-  elif _input ==6:
-    return
+from registers import *
 
 class IRDS:
 
