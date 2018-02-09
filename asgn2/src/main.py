@@ -5,6 +5,13 @@ from globalvars import *
 from nextuse import *
 from registers import *
 
+def isint(value):
+  if (value[0]=='-'):
+    value = value[1:]
+    return value.isdigit()
+  else:
+    return value.isdigit()
+
 class IRDS:
 
   def __init__(self):
@@ -16,7 +23,7 @@ class IRDS:
     self.const = None
     self.const2 = None
   
-  def isValid(_input):
+  def isValid(self):
     return [bool(self.src1),bool(self.src2),bool(self.dst)]
   
   def represent(self,data):
@@ -89,33 +96,33 @@ class IRDS:
       if(isint(data[4])):
         self.const=data[4]
       else:
-        self.src1 = data[4]
+        self.src2 = data[4]
 
 filename = sys.argv[1]
 f=open(filename, 'r')
 bb.append(1)
-statements= []
 
 for line in f.readlines():
   Data= line.split(',')
-  data = [x.strip(' ') for x in Data]
   _input= []
 
-  for param in data:
+  for param in Data:
+    param=param.strip(' ')
+    param=param.strip('\n')
     _input.append(param)
-  print _input
+  # print _input
   
   IRepresentation= IRDS()
   IRepresentation.represent( _input )
   statements.append(IRepresentation)
-  print bb
+  # print bb
 
 bb.append(len(statements))
 bb.sort()
 print bb
-
+# print statements
 BuildNextUseTable( bb )
 
 # Printing the next use table
-for _item in NextUseTable:
-  print _item
+# for _item in NextUseTable:
+#   print _item
