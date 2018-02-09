@@ -80,27 +80,27 @@ def NegAssignment( IRObj ):
 		print "Error: Destination is not a Variable "
 
 
-def Operator1( IRObj ):			# Add, Mul, Sub
-
+def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 	if IRObj.isValid()[2]:
-
 		if IRObj.isValid()[0]:
 			_src1= IRObj.src1['name']
 			reg1= AssignRegister( _src1, IRObj.lineno )
 		else
 			_src1= IRObj.const
 			reg1= _src1
-
+		
 		if IRObj.isValid()[1]:
 			_src2= IRObj.src2['name']
 			reg2= AssignRegister( _src2, IRObj.lineno )
 		else
 			_src2= IRObj.const2
 			reg2= _src2
-
-		_dst= IRObj.dst["name"]
-		reg3= AssignRegister( _dst, IRObj.lineno )
-
+		_dst = AssignRegister(IRObj.dst['name',IRObj.lineno])
+		if(IRObj.src2== IRObj.dst):
+			reg2 = reg1
+		if(IRObj.src2 != IRObj.dst and IRObj.src2 != IRObj.dst)
+			print "movl\t",reg1,reg3
+		print op2wrd[op],"\t",reg2,reg3
 	else:
 		print "Error: Destination is not a Variable "
 
