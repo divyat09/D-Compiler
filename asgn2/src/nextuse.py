@@ -4,13 +4,13 @@ def NextUse( IRobj, Global_Dict ):
 	Status= IRobj.isValid()
 
  	if Status[0]:
-  		Global_Dict[ IRobj.src1 ]= IRobj.lineno
+  		Global_Dict[ IRobj.src1['name'] ]= IRobj.lineno
   	
 	if Status[1]:
-		Global_Dict[ IRobj.src2 ]= IRobj.lineno
+		Global_Dict[ IRobj.src2['name'] ]= IRobj.lineno
 
 	if Status[2]:
-		Global_Dict[ IRobj.dst ]= -1
+		Global_Dict[ IRobj.dst['name'] ]= -1
 
   	return Global_Dict
 
