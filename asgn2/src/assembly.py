@@ -135,12 +135,20 @@ def Operator2( IRObj ):			# Div, Mod
 
 	if IRObj.isValid()[2]:
 
+		if IRObj.op == '/':
+			MainResultReg= '%eax'
+			SecResultReg= '%edx'	
+		
+		elif IRObj.op == '%':
+			MainReg= '%edx'
+			SecReg= '%eax'	
+
 		_dst= IRObj.dst["name"]
+		AssignDivisionRegister( MainReg, SecReg, _dst, IRObj.lineno )
 
 		if IRObj.isValid()[0]:
 			_src1= IRObj.src1['name']
 			reg1= AssignRegister( _src1, IRObj.lineno, 1 )
-
 		else:
 			_src1= IRObj.const
 			reg1= _src1
@@ -148,18 +156,20 @@ def Operator2( IRObj ):			# Div, Mod
 		if IRObj.isValid()[1]:
 			_src2= IRObj.src2['name']
 			reg2= AssignRegister( _src2, IRObj.lineno, 1 )
-
+			SpecialDivisor= 0
 		else:
 			_src2= IRObj.const2
-			reg2= _src2
+			reg2= SpecialDivisorRegister( _src2, IRObj.lineno )
+			SpecialDivisor= 1
+
+		f.write( "movl\t" + str(reg1) +',\t' + MainReg+"\n" )
+		f.write( "idiv\t" + str(reg2) + "\n" )
+		
+		EndDivisionRegister( SecReg, reg2, SpecialDivisor)
 		
 	else:
 		print "Error: Destination is not a Variable "
 
-
-# def Divide( IRObj ):
-
-# def Mod(IRObj):
 
 def AssemblyConverter():
 
@@ -186,8 +196,8 @@ def AssemblyConverter():
 
 		elif IRObj.op == "=":
 			Assignment( IRObj )
-		elif IRObj.op == "!":
-			NegAssignment( IRObj )
+		# elif IRObj.op == "!":
+			# NegAssignment( IRObj )
 
 		# elif IRObj.op == "ifgoto":
 		# 	Conditional( IRObj )
@@ -198,5 +208,5 @@ def AssemblyConverter():
 		elif IRObj.op == "/" or IRObj.op == "%":  
 			Operator2( IRObj )
 
-		elif IRObj.op == "~":
-			BitNeg( IRObj )
+		# elif IRObj.op == "~":
+		# 	BitNeg( IRObj )

@@ -1,3 +1,5 @@
+from globalvars import *
+
 class SymbolTable:
     def __init__(self):
         self.table = {}

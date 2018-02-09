@@ -1,5 +1,6 @@
 from globalvars import *
 
+# Erase the content of a Register
 def FreeRegister( reg ):
 
 	var= RegisterData[ reg ]
@@ -23,59 +24,82 @@ def GetFreeRegister():
 
   return -1
 
+# If no free registers available, do Register Spilling
+def RegisterSpilling( lineno )
+
+	NextUseInfo= NextUseTable[ lineno-1 ]	# Get Next Use Dictionary for the particular line
+	AssVarList= RegisterAssigned.keys()			# Get List of variables currently assigned to Registers
+
+	NextUseList=[]							# Make a list of the nextuse of currently assigend varibles
+	for variable in AssVarList:
+		NextUseList.append( NextUseInfo[variable] )
+
+	# Get Max Next Use Variable 
+	MaxIndex= NextUseList.index( max(NextUseList) )
+	print NextUseList
+	VictimVar= AssVarList[ MaxIndex ]
+	print RegisterAssigned,VictimVar
+	VictimReg= RegisterAssigned[VictimVar]
+
+	# Setting the Register holding Longest Use Varible Free
+	FreeRegister( VictimVar )
+
+	return VictimReg
+	
+
 # Given a Variable and LineNumber of program, assign a register
 def AssignRegister(_var, lineno, LoadCase ):
 
 	if _var in RegisterAssigned.keys():
 		return RegisterAssigned[ _var ]
 
-	reg= GetFreeRegister()
-	
+	reg= GetFreeRegister()	
 	if reg == -1:
-		# Register Spilling
-		NextUseInfo= NextUseTable[ lineno-1 ]	# Get Next Use Dictionary for the particular line
-		AssVarList= RegisterAssigned.keys()			# Get List of variables currently assigned to Registers
+		reg= RegisterSpilling( lineno )	
 
-		NextUseList=[]							# Make a list of the nextuse of currently assigend varibles
-		for variable in AssVarList:
-			NextUseList.append( NextUseInfo[variable] )
-
-		# Get Max Next Use Variable 
-		MaxIndex= NextUseList.index( max(NextUseList) )
-		print NextUseList
-		VictimVar= AssVarList[ MaxIndex ]
-		print RegisterAssigned,VictimVar
-		VictimReg= RegisterAssigned[VictimVar]
-
-		# Setting the Register holding Longest Use Varible Free
-		FreeRegister( VictimVar )
-
-		# Assigning the newly freed register to _var
-		reg= VictimReg
-		RegisterData[reg]= _var
-		RegisterAssigned[ _var ]= reg		
-		RegisterStatus[ reg ]= 1
+	# Assigning the newly freed register to _var
+	RegisterData[reg]= _var
+	RegisterAssigned[ _var ]= reg		
+	RegisterStatus[ reg ]= 1
 		
-		# Adding the assembly instruction to Load data into register
-		if LoadCase:
-			f= open( AssemFile, 'a' )
-			f.write( 'movl\t' + str(_var)+',\t'+ str(reg) +"\n")
-			f.close()
+	# Adding the assembly instruction to Load data into register
+	if LoadCase:
+		f= open( AssemFile, 'a' )
+		f.write( 'movl\t' + str(_var)+',\t'+ str(reg) +"\n")
+		f.close()
 
-		return reg
+	return reg
 
-	else:
-		RegisterData[reg]= _var
-		RegisterAssigned[ _var ]= reg
-		RegisterStatus[ reg ]= 1
+def SpecialDivisorRegister( const, lineno ):
 
-		# Adding the assembly instruction to Load data into register
-		if LoadCase:
-			f= open( AssemFile, 'a' )
-			f.write( 'movl\t' + str(_var)+',\t'+ str(reg) +"\n")
-			f.close()
+	reg= GetFreeRegister()
+	if reg == -1:
+		reg= RegisterSpilling( lineno )
 
-		return reg
+	# Assigning the newly freed register to _var
+	RegisterStatus[ reg ]= 1
+	return reg
+
+def AssignDivisionRegister( MainReg, SecReg, _var, lineno ):
+
+	if RegisterStatus[MainReg] != -1:
+		FreeRegister( MainReg )
+	if RegisterStatus[SecReg] != -1:
+		FreeRegister( SecReg )
+
+	RegisterStatus[MainReg]= 1
+	RegisterData[MainReg]= _var
+	RegisterAssigned[MainReg]= '%eax'
+
+	RegisterStatus[SecReg]= 1
+
+def EndDivisionRegister( SecReg, reg, SpecialDivisor ):
+
+	RegisterStatus[SecReg]= -1
+	
+	if SpecialDivisor:
+		RegisterStatus[reg]= -1		
+
 
 # Dont whether to use or not
 # def MapRegisterName( _input ):
