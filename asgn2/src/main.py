@@ -115,7 +115,6 @@ class IRDS:
 filename = sys.argv[1]
 f=open(filename, 'r')
 bb.append(1)
-Table = SymbolTable()
 
 for line in f.readlines():
   Data= line.split(',')

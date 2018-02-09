@@ -1,13 +1,3 @@
-# Get list of currenty assigned variables in registers
-def	GetAssignedVar():
-
-	# _output=[]
-	# for register in RegisterData:
-	# 	if RegisterData[register]:
-	# 		_output.append( RegisterData[register] )
-	# return _output
-	return RegisterAssigned.keys()
-
 # Return a free register from the set of all registers
 def GetFreeRegister():
 
@@ -30,7 +20,7 @@ def AssignRegister(_var, lineno):
 	if reg == -1:
 		# Register Spilling
 		NextUseInfo= NextUseTable[ lineno -1 ]	# Get Next Use Dictionary for the particular line
-		AssVarList= GetAssignedVar()			# Get List of variables currently assigned to Registers
+		AssVarList= RegisterAssigned.keys()			# Get List of variables currently assigned to Registers
 
 		NextUseList=[]							# Make a list of the nextuse of currently assigend varibles
 		for variable in AssVarList:
@@ -49,12 +39,14 @@ def AssignRegister(_var, lineno):
 		reg= VictimReg
 		RegisterData[reg]= _var
 		RegisterAssigned[ _var ]= reg		
-
+		RegisterStatus[ reg ]= 1
+		
 		return reg
 
 	else:
 		RegisterData[reg]= _var
 		RegisterAssigned[ _var ]= reg
+		RegisterStatus[ reg ]= 1
 
 		return reg
 

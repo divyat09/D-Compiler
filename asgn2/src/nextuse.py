@@ -1,4 +1,13 @@
 from globalvars import *
+
+def InitGlobalDict():
+	Global_Dict={}
+
+	for _var in Table.table.keys():
+		Global_Dict[_var["name"]]= INF
+
+	return Global_Dict
+
 def NextUse( IRobj, Global_Dict ):
   
 	Status= IRobj.isValid()
@@ -10,7 +19,7 @@ def NextUse( IRobj, Global_Dict ):
 		Global_Dict[ IRobj.src2['name'] ]= IRobj.lineno
 
 	if Status[2]:
-		Global_Dict[ IRobj.dst['name'] ]= -1
+		Global_Dict[ IRobj.dst['name'] ]= INF
 
   	return Global_Dict
 
@@ -30,7 +39,7 @@ def BuildNextUseTable( bb ):
 	
 	for _iter in range( len(bb)-1, 0, -1 ):	# Need to iterate only till the 2nd element: hence 0 and not 1
 	  
-	  Global_Dict= {}
+	  Global_Dict= InitGlobalDict()
 
 	  StartLine= bb[_iter -1 ] 
 	  EndLine= bb[_iter] 
