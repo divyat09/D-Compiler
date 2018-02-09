@@ -1,10 +1,14 @@
 from globalvars import *
+import sys
 
 def InitGlobalDict():
 	Global_Dict={}
 
 	for _var in Table.table.keys():
-		Global_Dict[_var["name"]]= INF
+		# print int(sys.maxint)
+		# print Table.table.keys()
+		# print _var
+		Global_Dict[Table.table[_var]['name']]= int(sys.maxint)
 
 	return Global_Dict
 
@@ -19,7 +23,7 @@ def NextUse( IRobj, Global_Dict ):
 		Global_Dict[ IRobj.src2['name'] ]= IRobj.lineno
 
 	if Status[2]:
-		Global_Dict[ IRobj.dst['name'] ]= INF
+		Global_Dict[ IRobj.dst['name'] ]= int(sys.maxint)
 
   	return Global_Dict
 
@@ -53,8 +57,8 @@ def BuildNextUseTable( bb ):
 	  	Global_Dict= NextUse( statements[linenum -1], Global_Dict )
 		# print Global_Dict
 		NextUseTable.append( Global_Dict.copy() )
-		print NextUseTable 
-		print "\n"
+		# print NextUseTable 
+		# print "\n"
 
 	NextUseTable.reverse()
 	print NextUseTable

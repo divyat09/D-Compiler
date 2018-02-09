@@ -1,3 +1,5 @@
+from globalvars import *
+
 # Return a free register from the set of all registers
 def GetFreeRegister():
 
@@ -19,7 +21,7 @@ def AssignRegister(_var, lineno):
 	
 	if reg == -1:
 		# Register Spilling
-		NextUseInfo= NextUseTable[ lineno -1 ]	# Get Next Use Dictionary for the particular line
+		NextUseInfo= NextUseTable[ lineno-1 ]	# Get Next Use Dictionary for the particular line
 		AssVarList= RegisterAssigned.keys()			# Get List of variables currently assigned to Registers
 
 		NextUseList=[]							# Make a list of the nextuse of currently assigend varibles
@@ -27,7 +29,10 @@ def AssignRegister(_var, lineno):
 			NextUseList.append( NextUseInfo[variable] )
 
 		# Get Max Next Use Variable 
-		VictimVar= NextUseList.index( max(NextUseList) )
+		MaxIndex= NextUseList.index( max(NextUseList) )
+		print NextUseList
+		VictimVar= AssVarList[ MaxIndex ]
+		print RegisterAssigned,VictimVar
 		VictimReg= RegisterAssigned[VictimVar]
 
 		# Setting the Register holding Longest Use Varible Free

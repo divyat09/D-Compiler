@@ -30,7 +30,7 @@ class IRDS:
   
   def represent(self,data):
     # print data
-    self.lineno = data[0]
+    self.lineno = int(data[0])
     self.op = data[1]
   
   # build label to lineno dictionary

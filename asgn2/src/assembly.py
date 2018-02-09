@@ -1,3 +1,5 @@
+from registers import *
+
 def datasection():
     print ".data\n"
     for variables in global_vars:
@@ -85,14 +87,14 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 		if IRObj.isValid()[0]:
 			_src1= IRObj.src1['name']
 			reg1= AssignRegister( _src1, IRObj.lineno )
-		else
+		else:
 			_src1= IRObj.const
 			reg1= _src1
 		
 		if IRObj.isValid()[1]:
 			_src2= IRObj.src2['name']
 			reg2= AssignRegister( _src2, IRObj.lineno )
-		else
+		else:
 			_src2= IRObj.const2
 			reg2= _src2
 		
@@ -101,10 +103,10 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 		
 		if(IRObj.src2== IRObj.dst):
 			reg2 = reg1
-		if(IRObj.src2 != IRObj.dst and IRObj.src2 != IRObj.dst)
+		if(IRObj.src2 != IRObj.dst and IRObj.src2 != IRObj.dst):
 			print "movl\t",reg1, reg3
 
-		print op2wrd[op],"\t",reg2,reg3
+		print op2wrd[IRObj.op],"\t",reg2,reg3
 	
 	else:
 		print "Error: Destination is not a Variable "
@@ -115,12 +117,12 @@ def Operator2( IRObj ):			# Div, Mod
 
 		if IRObj.isValid()[0]:
 			_src1= IRObj.src1['name']
-		else
+		else:
 			_src1= IRObj.const
 
 		if IRObj.isValid()[1]:
 			_src1= IRObj.src2['name']
-		else
+		else:
 			_src1= IRObj.const2
 
 		_dst= IRObj.dst["name"]
@@ -129,12 +131,11 @@ def Operator2( IRObj ):			# Div, Mod
 		print "Error: Destination is not a Variable "
 
 
-def Divide( IRObj ):
+# def Divide( IRObj ):
 
-def Mod(IRObj):
+# def Mod(IRObj):
 
 def AssemblyConverter():
-
 	for IRObj in statements:
 
 		if IRObj.op == "print_int":
@@ -146,27 +147,27 @@ def AssemblyConverter():
 		elif IRObj.op == "input_string":
 			Input_Str( IRObj )
 
-		elif IRObj.op == "jmp":
-			Jump( IRObj )
-		elif IRObj.op == "call":
-			Call( IRObj )
-		elif IRObj.op == "ret":
-			Ret( IRObj )
-		elif IRObj.op == "label":
-			Label( IRObj )
+		# elif IRObj.op == "jmp":
+		# 	Jump( IRObj )
+		# elif IRObj.op == "call":
+		# 	Call( IRObj )
+		# elif IRObj.op == "ret":
+		# 	Ret( IRObj )
+		# elif IRObj.op == "label":
+			# Label( IRObj )
 
 		elif IRObj.op == "=":
 			Assignment( IRObj )
 		elif IRObj.op == "!":
 			NegAssignment( IRObj )
 
-		elif IRObj.op == "ifgoto":
-			Conditional( IRObj )
+		# elif IRObj.op == "ifgoto":
+		# 	Conditional( IRObj )
 
 		elif IRObj.op in ["+", "-", "*", "&", "|", "<<", ">>", "^"]:
 			Operator1( IRObj )
 
-		elif IRObj.op == "/" || IRObj.op == "%":  
+		elif IRObj.op == "/" or IRObj.op == "%":  
 			Operator2( IRObj )
 
 		elif IRObj.op == "~":
