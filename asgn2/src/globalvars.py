@@ -11,3 +11,5 @@ RegisterData= {'%ebx':None, '%esx':None, '%esi':None, '%edi':None, '%eax':None, 
 RegisterAssigned= {  }
 
 op2wrd= { '+': 'addl', '-': 'subl', '*': 'mull', '/': 'divl', '%': 'modl', '<<': 'shll', '>>': 'shrl', '&': 'andl', '|': 'orl', '^':'xorl' }
+
+AssemFile='AssemblyCode.asm'

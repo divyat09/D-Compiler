@@ -1,0 +1,17 @@
+movl	3,	%eax
+subl	1,	%eax
+movl	a,	%edi
+movl	%edi,	%ebx
+mull	%eax,	%ebx
+movl	%edi,	%esi
+addl	%ebx,	%esi
+movl	d,	%edx
+movl	%eax,	%esx
+mull	%edx,	%esx
+movl	%edi,	a
+movl	%esi,	%edi
+addl	%esx,	%edi
+movl	%edx,	d
+movl	c,	%edx
+movl	%edx,	%edi
+addl	6,	%edi

@@ -107,7 +107,7 @@ class IRDS:
         # Table.addvar(data[3])
         self.src1 =Table.table[data[3]]
       if(isint(data[4])):
-        self.const=data[4]
+        self.const2=data[4]
       else:
         # Table.addvar(data[4])
         self.src2 = Table.table[data[4]]

@@ -1,9 +1,15 @@
 from registers import *
+from globalvars import *
 
 def datasection():
     print ".data\n"
-    for variables in global_vars:
-        print variables.name+":\n\t.long"+variables.value
+    
+    # for variables in global_vars:
+    #     print variables.name+":\n\t.long"+variables.value
+
+    for _var in Table.table.keys():
+		_varname= Table.table[_var]['name']
+		print(str(_varname) + ': .int 0\n')
 
 def Print_Int( IRObj ):
 
@@ -60,54 +66,68 @@ def Assignment( IRObj ):
 	if IRObj.isValid()[2]:
 
 		if IRObj.isValid()[0]:
-			_dst= IRObj.dst['name']
 			_src= IRObj.src1['name']
+			reg1= AssignRegister(_src, IRObj.lineno ,1)
+
 		else:
-			_dst= IRObj.dst['name']
 			_src= IRObj.const
+			reg1= _src
+
+		_dst= IRObj.dst['name']
+		reg2= AssignRegister(_dst, IRObj.lineno ,0)
+
+		f=open(AssemFile,'a')
+		f.write( "movl\t" + str(reg1) +',\t' + str(reg2)+"\n" )
+		f.close()
+
 	else:
 		print "Error: Destination is not a Variable "
 
-def NegAssignment( IRObj ):
+# def NegAssignment( IRObj ):
 
-	if IRObj.isValid()[2]:
+# 	if IRObj.isValid()[2]:
 
-		if IRObj.isValid()[0]:
-			_dst= IRObj.dst['name']
-			_src= IRObj.src1['name']
-		else:
-			_dst= IRObj.dst['name']
-			_src= IRObj.const
-	else:
-		print "Error: Destination is not a Variable "
+# 		if IRObj.isValid()[0]:
+# 			_dst= IRObj.dst['name']
+# 			_src= IRObj.src1['name']
+# 		else:
+# 			_dst= IRObj.dst['name']
+# 			_src= IRObj.const
+# 	else:
+# 		print "Error: Destination is not a Variable "
 
 
 def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 	if IRObj.isValid()[2]:
 		if IRObj.isValid()[0]:
 			_src1= IRObj.src1['name']
-			reg1= AssignRegister( _src1, IRObj.lineno )
+			reg1= AssignRegister( _src1, IRObj.lineno, 1 )
+
 		else:
 			_src1= IRObj.const
 			reg1= _src1
 		
 		if IRObj.isValid()[1]:
 			_src2= IRObj.src2['name']
-			reg2= AssignRegister( _src2, IRObj.lineno )
+			reg2= AssignRegister( _src2, IRObj.lineno, 1 )
+
 		else:
 			_src2= IRObj.const2
 			reg2= _src2
 		
 		_dst= IRObj.dst['name']
-		reg3 = AssignRegister( _dst, IRObj.lineno)
+		reg3 = AssignRegister( _dst, IRObj.lineno, 0)
 		
+		f=open(AssemFile,'a')
+
 		if(IRObj.src2== IRObj.dst):
 			reg2 = reg1
-		if(IRObj.src2 != IRObj.dst and IRObj.src2 != IRObj.dst):
-			print "movl\t",reg1, reg3
+		if(IRObj.src1 != IRObj.dst and IRObj.src2 != IRObj.dst):
+			f.write( "movl\t" + str(reg1) +',\t' + str(reg3)+"\n" )
 
-		print op2wrd[IRObj.op],"\t",reg2,reg3
-	
+		f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )
+		f.close()
+
 	else:
 		print "Error: Destination is not a Variable "
 
@@ -115,18 +135,24 @@ def Operator2( IRObj ):			# Div, Mod
 
 	if IRObj.isValid()[2]:
 
-		if IRObj.isValid()[0]:
-			_src1= IRObj.src1['name']
-		else:
-			_src1= IRObj.const
-
-		if IRObj.isValid()[1]:
-			_src1= IRObj.src2['name']
-		else:
-			_src1= IRObj.const2
-
 		_dst= IRObj.dst["name"]
 
+		if IRObj.isValid()[0]:
+			_src1= IRObj.src1['name']
+			reg1= AssignRegister( _src1, IRObj.lineno, 1 )
+
+		else:
+			_src1= IRObj.const
+			reg1= _src1
+		
+		if IRObj.isValid()[1]:
+			_src2= IRObj.src2['name']
+			reg2= AssignRegister( _src2, IRObj.lineno, 1 )
+
+		else:
+			_src2= IRObj.const2
+			reg2= _src2
+		
 	else:
 		print "Error: Destination is not a Variable "
 
@@ -136,6 +162,8 @@ def Operator2( IRObj ):			# Div, Mod
 # def Mod(IRObj):
 
 def AssemblyConverter():
+
+	datasection()
 	for IRObj in statements:
 
 		if IRObj.op == "print_int":

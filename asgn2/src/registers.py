@@ -1,5 +1,17 @@
 from globalvars import *
 
+def FreeRegister( reg ):
+
+	var= RegisterData[ reg ]
+	RegisterStatus[ reg ]= -1
+	RegisterData[ reg ]= None
+	del RegisterAssigned[ var ]	
+
+	# Adding the assembly instruction to save the data
+	f= open( AssemFile, 'a' )
+	f.write( 'movl\t' + str(reg)+',\t'+ str(var) +"\n")
+	f.close()
+
 # Return a free register from the set of all registers
 def GetFreeRegister():
 
@@ -12,7 +24,7 @@ def GetFreeRegister():
   return -1
 
 # Given a Variable and LineNumber of program, assign a register
-def AssignRegister(_var, lineno):
+def AssignRegister(_var, lineno, LoadCase ):
 
 	if _var in RegisterAssigned.keys():
 		return RegisterAssigned[ _var ]
@@ -36,22 +48,32 @@ def AssignRegister(_var, lineno):
 		VictimReg= RegisterAssigned[VictimVar]
 
 		# Setting the Register holding Longest Use Varible Free
-		RegisterStatus[ VictimReg ]= -1
-		RegisterData[ VictimReg ]= None
-		del RegisterAssigned[ VictimVar ]
-		
+		FreeRegister( VictimVar )
+
 		# Assigning the newly freed register to _var
 		reg= VictimReg
 		RegisterData[reg]= _var
 		RegisterAssigned[ _var ]= reg		
 		RegisterStatus[ reg ]= 1
 		
+		# Adding the assembly instruction to Load data into register
+		if LoadCase:
+			f= open( AssemFile, 'a' )
+			f.write( 'movl\t' + str(_var)+',\t'+ str(reg) +"\n")
+			f.close()
+
 		return reg
 
 	else:
 		RegisterData[reg]= _var
 		RegisterAssigned[ _var ]= reg
 		RegisterStatus[ reg ]= 1
+
+		# Adding the assembly instruction to Load data into register
+		if LoadCase:
+			f= open( AssemFile, 'a' )
+			f.write( 'movl\t' + str(_var)+',\t'+ str(reg) +"\n")
+			f.close()
 
 		return reg
 
