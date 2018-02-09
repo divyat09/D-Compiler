@@ -9,21 +9,28 @@ def datasection():
 
     for _var in Table.table.keys():
 		_varname= Table.table[_var]['name']
-		print(str(_varname) + ': .int 0\n')
+		print(str(_varname) + ': DW 0\n')
 
 def Print_Int( IRObj ):
 
 	if IRObj.isValid()[0]:		# Int Variable printing case
 		_var= IRObj.src1['name']
 	else:						# Int constant printing case
-		_const= IRObj.const
-
+		_var= IRObj.const
+		# _var = "$0x"+str(int(_var,16))
+	print "mov\t5,%edx\nmov\t" \
+	+_var+"%ecx\nmov\t1,%ebx\nmov\t$0x4,eax\nint\t$0x80"
 def Print_Str( IRObj ):
 
-	if IRObj.isValid()[0]:	
-		_str= IRObj.src1['name']
+	# if IRObj.isValid()[0]:	
+	# 	_str= IRObj.src1['name']
+	# else:
+	# 	print "Invalid Case"
+	if(IRObj.const):
+		print "mov\t"+len(IRObj.const)+",%edx\nmov\t"+\
+		IRObj.const+"%ecx\nmov\t1,%ebx\nmov\t$0x4,eax\nint\t$0x80"
 	else:
-		print "Invalid Case"
+		print "Invalid Print_str"
 
 def Input_Int( IRObj ):
 
@@ -31,6 +38,7 @@ def Input_Int( IRObj ):
 		_var= IRObj.src1['name']
 	else:						# Int constant Case
 		_const= IRObj.const
+	print "mov\t5,%edx\nmov\t"+_var+"%ecx\nmov\t0x2,%ebx\nmov\t$0x3,eax\nint\t$0x80"
 
 def Input_Str( IRObj ):
 
