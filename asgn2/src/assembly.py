@@ -86,15 +86,20 @@ def Operator1( IRObj ):			# Add, Mul, Sub
 
 		if IRObj.isValid()[0]:
 			_src1= IRObj.src1['name']
+			reg1= AssignRegister( _src1, IRObj.lineno )
 		else
 			_src1= IRObj.const
+			reg1= _src1
 
 		if IRObj.isValid()[1]:
-			_src1= IRObj.src2['name']
+			_src2= IRObj.src2['name']
+			reg2= AssignRegister( _src2, IRObj.lineno )
 		else
-			_src1= IRObj.const2
+			_src2= IRObj.const2
+			reg2= _src2
 
 		_dst= IRObj.dst["name"]
+		reg3= AssignRegister( _dst, IRObj.lineno )
 
 	else:
 		print "Error: Destination is not a Variable "
@@ -155,11 +160,13 @@ def AssemblyConverter():
 
 		elif IRObj.op == "+" || IRObj.op == "-" || IRObj.op == "*" :
 			Operator1( IRObj )
+
 		elif IRObj.op == "/" || IRObj.op == "%":  
 			Operator2( IRObj )
 		
 		elif IRObj.op == "&" || IRObj.op == "|":
 			BitOperator1( IRObj )
+
 		elif IRObj.op == "~":
 			BitNeg( IRObj )
 		elif IRObj.op == "<<":

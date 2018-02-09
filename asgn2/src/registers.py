@@ -22,6 +22,9 @@ def GetFreeRegister():
 # Given a Variable and LineNumber of program, assign a register
 def AssignRegister(_var, lineno):
 
+	if _var in RegisterAssigned.keys():
+		return RegisterAssigned[ _var ]
+
 	reg= GetFreeRegister()
 	
 	if reg == -1:
@@ -47,9 +50,13 @@ def AssignRegister(_var, lineno):
 		RegisterData[reg]= _var
 		RegisterAssigned[ _var ]= reg		
 
+		return reg
+
 	else:
 		RegisterData[reg]= _var
 		RegisterAssigned[ _var ]= reg
+
+		return reg
 
 # Dont whether to use or not
 # def MapRegisterName( _input ):
