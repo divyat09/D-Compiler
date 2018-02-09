@@ -1,0 +1,31 @@
+# Data Types
+int
+
+# Normie
+Input
+Print
+
+# Operators
+add
+sub
+mul
+div
+mod
+assignment
+and
+or
+xor
+not
+
+# Conditionals
+revert
+ifgoto
+
+# Functions
+Func
+Return
+
+# Don't Know!! 
+PrintLabelName
+Print Function
+JumpTarget Update
