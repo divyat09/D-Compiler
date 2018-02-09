@@ -126,3 +126,7 @@ BuildNextUseTable( bb )
 # Printing the next use table
 # for _item in NextUseTable:
 #   print _item
+
+# Conver to Assembly
+
+AssemblyConverter()
