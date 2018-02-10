@@ -13,4 +13,4 @@ RegisterAssigned= {  }
 op2wrd= { '+': 'addl', '-': 'subl', '*': 'imul', '/': 'divl', '%': 'modl', '<<': 'shll', '>>': 'shrl', '&': 'andl', '|': 'orl', '^':'xorl',
 		'ifgoto_gt':'jg', 'ifgoto_geq':'jge' , 'ifgoto_lt':'jl', 'ifgoto_leq':'jle', 'ifgoto_eq':'je', 'ifgoto_neq':'jne' }
 
-AssemFile='AssemblyCode.asm'
+AssemFile='AssemblyCode1.S'
