@@ -25,10 +25,13 @@ def Print_Int( IRObj ):
 	for i in ['%ecx','%edx','%ebx','%eax']:
 		if RegisterStatus[i]==1:
 			FreeRegister(i)
-	
+	length_reg = "mov"+"\t"+"5"+"%edx\n" #Move 5 length of int iinto edx
+	output = "mov\t"+_var+"%ecx\n"
+	stdout = "mov"+"\t"+"1,%ebx\n"
+	sys_write = "mov"+"\t"+"$0x4"+","+"eax\n"
+	syscall = "int"+"\t"+"$0x80\n"
 	f=open(AssemFile,'a')	
-	f.write( "mov\t5,%edx\nmov\t" \
-	+_var+"%ecx\nmov"+"\t"+"1,%ebx\nmov"+"\t"+"$0x4,eax\nint\t$0x80")
+	f.write( length_reg+ output + sys_write + stdout + syscall )
 	f.close()
 
 def Print_Str( IRObj ):
@@ -38,10 +41,13 @@ def Print_Str( IRObj ):
 	# else:
 	# 	print "Invalid Case"
 	f=open(AssemFile,'a')
-	
 	if(IRObj.const):
-		f.write( "mov\t"+len(IRObj.const)+",%edx\nmov\t"+\
-		IRObj.const+"%ecx\nmov\t1,%ebx\nmov\t$0x4,eax\nint\t$0x80")
+		length_reg = "mov"+"\t"+str(len(IRObj.const))+"%edx\n"
+		output = "mov\t"+IRObj.const+"%ecx\n"
+		stdout = "mov"+"\t"+"1,%ebx\n"
+		sys_write = "mov"+"\t"+"$0x4"+","+"eax\n"
+		syscall = "int"+"\t"+"$0x80\n"
+		f.write(length_reg+ output + sys_write + stdout + syscall )
 	else:
 		print "Invalid Print_str"
 	f.close()
@@ -51,11 +57,16 @@ def Input_Int( IRObj ):
 	if IRObj.isValid()[0]:		# Int Variable Case
 		_var= IRObj.src1['name']
 	else:						# Int constant Case
-		_const= IRObj.const
+		_var= IRObj.const
 
 	f=open(AssemFile,'a')
-	
-	f.write( "mov\t5,%edx\nmov\t"+_var+"%ecx\nmov\t0x2,%ebx\nmov\t$0x3,eax\nint\t$0x80")
+	length_reg = "mov"+"\t"+"5"+"%edx\n"
+	output = "mov\t"+_var+"%ecx\n"
+	stdin = "mov"+"\t"+"0"+","+"%ebx\n"
+	sys_read = "mov"+"\t"+"$0x3"+","+"eax\n"
+	syscall = "int"+"\t"+"$0x80\n"
+
+	f.write( length_reg + output+ sys_read+ stdin+syscall)
 	f.close()
 
 def Input_Str( IRObj ):
@@ -68,9 +79,13 @@ def Input_Str( IRObj ):
 def Jump( IRObj ):
 
 	if IRObj.isValid()[0]:	
-		print "Invalid Case"
+		print "Invalid Case : Jump assembly.py"
 	else:
 		_target= IRObj.const
+		jump = "JMP"+"\t"+_target+"\n"
+		f = open(AssemFile,'a')
+		f.write(jump)
+		f.close
 
 def call( IRObj ):
 
@@ -136,10 +151,10 @@ def Conditional ( IRObj):
 	else:
 		_src2= IRObj.const2
 		reg2= _src2
-
-	print "cmpl\t",reg1,",",reg2
-	print str(op2wrd[IRObj.op])+"\t", IRObj.dst
-
+	f = open(AssemFile,'a')
+	f.write( "cmpl\t"+reg1+","+reg2+"\n")
+	f.write( str(op2wrd[IRObj.op])+"\t"+ IRObj.dst+"\n")
+	f.close()
 
 def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 	if IRObj.isValid()[2]:
