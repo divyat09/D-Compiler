@@ -94,13 +94,14 @@ def Jump( IRObj ):
 		f = open(AssemFile,'a')
 		f.write(jump)
 		f.close
-
+def Label( IRObj ):
+	f.open(AssemFile,'a')
+	f.write(IRObj.const:+"\n")
+	f.close
 def call( IRObj ):
-
-	if IRObj.isValid()[0]:	
-		print "Invalid Case"
-	else:
-		_target= IRObj.const
+	f.open(AssemFile,'a')
+	f.write("call\t"+IRObj.const+"\n")
+	f.close
 
 def ret( IRObj ):
 
@@ -108,7 +109,9 @@ def ret( IRObj ):
 		_target= IRObj.src1['name']
 	else:
 		_target= IRObj.const
-
+	f.open(AssemFile,'a')
+	f.write("movl\t"+_target+",%eax"+"\nret\n")
+	f.close
 
 def Assignment( IRObj ):
 
@@ -192,11 +195,12 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 		if(IRObj.src1 != IRObj.dst and IRObj.src2 != IRObj.dst):
 			f.write( "movl\t" + str(reg1) +',\t' + str(reg3)+"\n" )
 
-		f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )
+		f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(relabelg3)+"\n" )
 		f.close()
 
 	else:
 		print "Error: Destination is not a Variable "
+
 
 def Operator2( IRObj ):			# Div, Mod
 
@@ -260,14 +264,17 @@ def AssemblyConverter():
 		elif IRObj.op == "input_string":
 			Input_Str( IRObj )
 
-		# elif IRObj.op == "jmp":
-		# 	Jump( IRObj )
-		# elif IRObj.op == "call":
-		# 	Call( IRObj )
-		# elif IRObj.op == "ret":
-		# 	Ret( IRObj )
-		# elif IRObj.op == "label":
-			# Label( IRObj )
+		elif IRObj.op == "jmp":
+			Jump( IRObj )
+		elif IRObj.op == "call":
+			FreeRegister("%eax")
+			FreeRegister("%ecx")
+			FreeRegister("%edx")
+			Call( IRObj )    # call the free registers functions
+		elif IRObj.op == "ret":
+			Ret( IRObj )
+		elif IRObj.op == "label":
+			Label( IRObj )
 
 		elif IRObj.op == "=":
 			Assignment( IRObj )
