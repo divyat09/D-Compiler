@@ -8,12 +8,7 @@ from nextuse import *
 from registers import *
 from assembly import *
 
-def isint(value):
-  if (value[0]=='-'):
-    value = value[1:]
-    return value.isdigit()
-  else:
-    return value.isdigit()
+
 
 filename = sys.argv[1]
 f=open(filename, 'r')

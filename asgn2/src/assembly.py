@@ -6,11 +6,14 @@ def datasection():
     
     # for variables in global_vars:
     #     print variables.name+":\n\t.long"+variables.value
-
+	# f=open(AssemFile,'a')		
+	# f.write(str(_varname) + ': DW 0\n')
+	# f.close()
     for _var in Table.table.keys():
 		_varname= Table.table[_var]['name']
-		print(str(_varname) + ': DW 0\n')
-
+		f=open(AssemFile,'a')		
+		f.write(str(_varname) + ': DW 0\n')
+		f.close()
 def Print_Int( IRObj ):
 
 	if IRObj.isValid()[0]:		# Int Variable printing case
@@ -18,27 +21,39 @@ def Print_Int( IRObj ):
 	else:						# Int constant printing case
 		_var= IRObj.const
 		# _var = "$0x"+str(int(_var,16))
-	print "mov\t5,%edx\nmov\t" \
-	+_var+"%ecx\nmov\t1,%ebx\nmov\t$0x4,eax\nint\t$0x80"
+	for i in ['%ecx','%edx','%ebx','%eax']:
+		if RegisterStatus[i]==1:
+			FreeRegister(i)
+	
+	f=open(AssemFile,'a')	
+	f.write( "mov\t5,%edx\nmov\t" \
+	+_var+"%ecx\nmov"+"\t"+"1,%ebx\nmov"+"\t"+"$0x4,eax\nint\t$0x80")
+	f.close()
 def Print_Str( IRObj ):
 
 	# if IRObj.isValid()[0]:	
 	# 	_str= IRObj.src1['name']
 	# else:
 	# 	print "Invalid Case"
+	f=open(AssemFile,'a')
+	
 	if(IRObj.const):
-		print "mov\t"+len(IRObj.const)+",%edx\nmov\t"+\
-		IRObj.const+"%ecx\nmov\t1,%ebx\nmov\t$0x4,eax\nint\t$0x80"
+		f.write( "mov\t"+len(IRObj.const)+",%edx\nmov\t"+\
+		IRObj.const+"%ecx\nmov\t1,%ebx\nmov\t$0x4,eax\nint\t$0x80")
 	else:
 		print "Invalid Print_str"
-
+	f.close()
 def Input_Int( IRObj ):
 
 	if IRObj.isValid()[0]:		# Int Variable Case
 		_var= IRObj.src1['name']
 	else:						# Int constant Case
 		_const= IRObj.const
-	print "mov\t5,%edx\nmov\t"+_var+"%ecx\nmov\t0x2,%ebx\nmov\t$0x3,eax\nint\t$0x80"
+
+	f=open(AssemFile,'a')
+	
+	f.write( "mov\t5,%edx\nmov\t"+_var+"%ecx\nmov\t0x2,%ebx\nmov\t$0x3,eax\nint\t$0x80")
+	f.close()
 
 def Input_Str( IRObj ):
 
@@ -144,8 +159,8 @@ def Operator2( IRObj ):			# Div, Mod
 	if IRObj.isValid()[2]:
 
 		if IRObj.op == '/':
-			MainResultReg= '%eax'
-			SecResultReg= '%edx'	
+			MainReg= '%eax'
+			SecReg= '%edx'	
 		
 		elif IRObj.op == '%':
 			MainReg= '%edx'
@@ -170,9 +185,12 @@ def Operator2( IRObj ):			# Div, Mod
 			reg2= SpecialDivisorRegister( _src2, IRObj.lineno )
 			SpecialDivisor= 1
 
+		f=open(AssemFile,'a')
+
 		f.write( "movl\t" + str(reg1) +',\t' + MainReg+"\n" )
 		f.write( "idiv\t" + str(reg2) + "\n" )
-		
+		f.close()
+			
 		EndDivisionRegister( SecReg, reg2, SpecialDivisor)
 		
 	else:
@@ -180,8 +198,13 @@ def Operator2( IRObj ):			# Div, Mod
 
 
 def AssemblyConverter():
-
+	f = open(AssemFile,'a')
+	f.write('.data\n')
+	f.close()
 	datasection()
+	f = open(AssemFile,'a')
+	f.write('\n.text\n.global _main\n_main:\n')
+	f.close()
 	for IRObj in statements:
 
 		if IRObj.op == "print_int":

@@ -2,7 +2,6 @@ from globalvars import *
 
 # Erase the content of a Register
 def FreeRegister( reg ):
-
 	var= RegisterData[ reg ]
 	RegisterStatus[ reg ]= -1
 	RegisterData[ reg ]= None
@@ -25,7 +24,7 @@ def GetFreeRegister():
   return -1
 
 # If no free registers available, do Register Spilling
-def RegisterSpilling( lineno )
+def RegisterSpilling( lineno ):
 
 	NextUseInfo= NextUseTable[ lineno-1 ]	# Get Next Use Dictionary for the particular line
 	AssVarList= RegisterAssigned.keys()			# Get List of variables currently assigned to Registers
@@ -89,7 +88,7 @@ def AssignDivisionRegister( MainReg, SecReg, _var, lineno ):
 
 	RegisterStatus[MainReg]= 1
 	RegisterData[MainReg]= _var
-	RegisterAssigned[MainReg]= '%eax'
+	RegisterAssigned[_var]= MainReg
 
 	RegisterStatus[SecReg]= 1
 
