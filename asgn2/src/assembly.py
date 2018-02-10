@@ -142,18 +142,22 @@ def Assignment( IRObj ):
 	else:
 		print "Error: Destination is not a Variable "
 
-# def NegAssignment( IRObj ):
+def NegAssignment( IRObj ):
 
-# 	if IRObj.isValid()[2]:
-
-# 		if IRObj.isValid()[0]:
-# 			_dst= IRObj.dst['name']
-# 			_src= IRObj.src1['name']
-# 		else:
-# 			_dst= IRObj.dst['name']
-# 			_src= IRObj.const
-# 	else:
-# 		print "Error: Destination is not a Variable "
+ 	if IRObj.isValid()[2]:
+		_dst= IRObj.dst['name']
+		reg3 = AssignRegister( _dst, IRObj.lineno, 0)
+		if IRObj.isValid()[0]:	
+			_src= IRObj.src1['name']
+			reg1= AssignRegister( _src, IRObj.lineno, 1 )
+		else:
+			_src= IRObj.const
+			reg1 = _src
+		f.open(AssemFile,'a')
+		f.write ("not\t"+reg3+","reg2)
+		f.close
+	else:
+		print "Error: Destination is not a Variable "
 
 def Conditional ( IRObj):
 
@@ -302,5 +306,5 @@ def AssemblyConverter():
 		elif IRObj.op in ["/", "%"]:  
 			Operator2( IRObj )
 
-		# elif IRObj.op == "~":
-		# 	BitNeg( IRObj )
+		elif IRObj.op == "~":
+			BitNeg( IRObj )
