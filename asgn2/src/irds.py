@@ -27,7 +27,7 @@ class IRDS:
     self.op = data[1]
   
   # build label to lineno dictionary
-    if (data[1] == "jl"):
+    if (data[1] == "ifgoto_lt"):
 
       if(isint(data[2])):
         self.const=data[2]
@@ -44,7 +44,7 @@ class IRDS:
       bb.append(int(self.lineno)+1)
       bb.append(int(self.const))
 
-    elif (data[1] == "jle"):
+    elif (data[1] == "ifgoto_leq"):
 
       if(isint(data[2])):
         self.const=data[2]
@@ -61,7 +61,7 @@ class IRDS:
       bb.append(int(self.lineno)+1)
       bb.append(int(self.const))
 
-    elif (data[1] == "jg"):
+    elif (data[1] == "ifgoto_gt"):
 
       if(isint(data[2])):
         self.const=data[2]
@@ -78,7 +78,7 @@ class IRDS:
       bb.append(int(self.lineno)+1)
       bb.append(int(self.const))
 
-    elif (data[1] == "jge"):
+    elif (data[1] == "ifgoto_geq"):
 
       if(isint(data[2])):
         self.const=data[2]
@@ -95,7 +95,7 @@ class IRDS:
       bb.append(int(self.lineno)+1)
       bb.append(int(self.const))
 
-    elif (data[1] == "je"):
+    elif (data[1] == "ifgoto_eq"):
 
       if(isint(data[2])):
         self.const=data[2]
@@ -112,7 +112,7 @@ class IRDS:
       bb.append(int(self.lineno)+1)
       bb.append(int(self.const))
 
-    elif (data[1] == "jne"):
+    elif (data[1] == "ifgoto_neq"):
 
       if(isint(data[2])):
         self.const=data[2]

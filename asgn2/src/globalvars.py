@@ -10,6 +10,7 @@ RegisterStatus={ '%ebx':-1, '%ecx':-1, '%esi':-1, '%edi':-1, '%eax':-1, '%edx':-
 RegisterData= {'%ebx':None, '%ecx':None, '%esi':None, '%edi':None, '%eax':None, '%edx':None }   
 RegisterAssigned= {  }
 
-op2wrd= { '+': 'addl', '-': 'subl', '*': 'mull', '/': 'divl', '%': 'modl', '<<': 'shll', '>>': 'shrl', '&': 'andl', '|': 'orl', '^':'xorl' }
+op2wrd= { '+': 'addl', '-': 'subl', '*': 'imul', '/': 'divl', '%': 'modl', '<<': 'shll', '>>': 'shrl', '&': 'andl', '|': 'orl', '^':'xorl',
+		'ifgoto_gt':'jg', 'ifgoto_geq':'jge' , 'ifgoto_lt':'jl', 'ifgoto_leq':'jle', 'ifgoto_eq':'je', 'ifgoto_neq':'jne' }
 
 AssemFile='AssemblyCode.asm'

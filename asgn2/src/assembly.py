@@ -239,7 +239,7 @@ def AssemblyConverter():
 		elif IRObj.op in ["+", "-", "*", "&", "|", "<<", ">>", "^"]:
 			Operator1( IRObj )
 
-		elif IRObj.op == "/" or IRObj.op == "%":  
+		elif IRObj.op in ["/", "%"]:  
 			Operator2( IRObj )
 
 		# elif IRObj.op == "~":
