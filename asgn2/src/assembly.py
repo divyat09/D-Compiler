@@ -121,6 +121,25 @@ def Assignment( IRObj ):
 # 			_src= IRObj.const
 # 	else:
 # 		print "Error: Destination is not a Variable "
+def Conditional ( IRObj):
+	if IRObj.isValid()[0]:
+			_src1= IRObj.src1['name']
+			reg1= AssignRegister( _src1, IRObj.lineno, 1 )
+
+	else:
+		_src1= IRObj.const
+		reg1= _src1
+	
+	if IRObj.isValid()[1]:
+		_src2= IRObj.src2['name']
+		reg2= AssignRegister( _src2, IRObj.lineno, 1 )
+
+	else:
+		_src2= IRObj.const2
+		reg2= _src2
+	print "cmpl\t",reg1,",",reg2
+	print IRObj.op,"\t",IRObj.dst
+
 
 
 def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
@@ -233,8 +252,8 @@ def AssemblyConverter():
 		# elif IRObj.op == "!":
 			# NegAssignment( IRObj )
 
-		# elif IRObj.op == "ifgoto":
-		# 	Conditional( IRObj )
+		elif IRObj.op[0] == "j":
+		 	Conditional( IRObj )
 
 		elif IRObj.op in ["+", "-", "*", "&", "|", "<<", ">>", "^"]:
 			Operator1( IRObj )
