@@ -14,6 +14,7 @@ def datasection():
 		f=open(AssemFile,'a')		
 		f.write(str(_varname) + ': DW 0\n')
 		f.close()
+
 def Print_Int( IRObj ):
 
 	if IRObj.isValid()[0]:		# Int Variable printing case
@@ -29,6 +30,7 @@ def Print_Int( IRObj ):
 	f.write( "mov\t5,%edx\nmov\t" \
 	+_var+"%ecx\nmov"+"\t"+"1,%ebx\nmov"+"\t"+"$0x4,eax\nint\t$0x80")
 	f.close()
+
 def Print_Str( IRObj ):
 
 	# if IRObj.isValid()[0]:	
@@ -43,6 +45,7 @@ def Print_Str( IRObj ):
 	else:
 		print "Invalid Print_str"
 	f.close()
+
 def Input_Int( IRObj ):
 
 	if IRObj.isValid()[0]:		# Int Variable Case

@@ -27,14 +27,108 @@ class IRDS:
     self.op = data[1]
   
   # build label to lineno dictionary
-    if (data[1] == "ifgoto"):
-      # Table.addvar(data[2])
-      # pointer to variable data[2] in symbol table
-      self.src1 =  Table.table[data[2]]
+    if (data[1] == "jl"):
+
+      if(isint(data[2])):
+        self.const=data[2]
+      else:
+        self.src1 =  Table.table[data[2]]
+      
+      if(isint(data[3])):
+        self.const2=data[3]
+      else:
+        self.src2 =  Table.table[data[3]]
+
       # jmp address can be a label hence not addded to table
-      self.const = data[3]
+      self.const = data[4]
       bb.append(int(self.lineno)+1)
       bb.append(int(self.const))
+
+    elif (data[1] == "jle"):
+
+      if(isint(data[2])):
+        self.const=data[2]
+      else:
+        self.src1 =  Table.table[data[2]]
+      
+      if(isint(data[3])):
+        self.const2=data[3]
+      else:
+        self.src2 =  Table.table[data[3]]
+
+      # jmp address can be a label hence not addded to table
+      self.const = data[4]
+      bb.append(int(self.lineno)+1)
+      bb.append(int(self.const))
+
+    elif (data[1] == "jg"):
+
+      if(isint(data[2])):
+        self.const=data[2]
+      else:
+        self.src1 =  Table.table[data[2]]
+      
+      if(isint(data[3])):
+        self.const2=data[3]
+      else:
+        self.src2 =  Table.table[data[3]]
+
+      # jmp address can be a label hence not addded to table
+      self.const = data[4]
+      bb.append(int(self.lineno)+1)
+      bb.append(int(self.const))
+
+    elif (data[1] == "jge"):
+
+      if(isint(data[2])):
+        self.const=data[2]
+      else:
+        self.src1 =  Table.table[data[2]]
+      
+      if(isint(data[3])):
+        self.const2=data[3]
+      else:
+        self.src2 =  Table.table[data[3]]
+
+      # jmp address can be a label hence not addded to table
+      self.const = data[4]
+      bb.append(int(self.lineno)+1)
+      bb.append(int(self.const))
+
+    elif (data[1] == "je"):
+
+      if(isint(data[2])):
+        self.const=data[2]
+      else:
+        self.src1 =  Table.table[data[2]]
+      
+      if(isint(data[3])):
+        self.const2=data[3]
+      else:
+        self.src2 =  Table.table[data[3]]
+
+      # jmp address can be a label hence not addded to table
+      self.const = data[4]
+      bb.append(int(self.lineno)+1)
+      bb.append(int(self.const))
+
+    elif (data[1] == "jne"):
+
+      if(isint(data[2])):
+        self.const=data[2]
+      else:
+        self.src1 =  Table.table[data[2]]
+      
+      if(isint(data[3])):
+        self.const2=data[3]
+      else:
+        self.src2 =  Table.table[data[3]]
+
+      # jmp address can be a label hence not addded to table
+      self.const = data[4]
+      bb.append(int(self.lineno)+1)
+      bb.append(int(self.const))
+
   
     elif (data[1] == "jmp"):
       self.const = data[2]
