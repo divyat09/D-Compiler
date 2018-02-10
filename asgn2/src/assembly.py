@@ -40,6 +40,9 @@ def Print_Str( IRObj ):
 	# 	_str= IRObj.src1['name']
 	# else:
 	# 	print "Invalid Case"
+	for i in ['%ecx','%edx','%ebx','%eax']:
+	if RegisterStatus[i]==1:
+		FreeRegister(i)
 	f=open(AssemFile,'a')
 	if(IRObj.const):
 		length_reg = "mov"+"\t"+str(len(IRObj.const))+"%edx\n"
@@ -58,7 +61,9 @@ def Input_Int( IRObj ):
 		_var= IRObj.src1['name']
 	else:						# Int constant Case
 		_var= IRObj.const
-
+	for i in ['%ecx','%edx','%ebx','%eax']:
+	if RegisterStatus[i]==1:
+		FreeRegister(i)
 	f=open(AssemFile,'a')
 	length_reg = "mov"+"\t"+"5"+"%edx\n"
 	output = "mov\t"+_var+"%ecx\n"
@@ -71,6 +76,9 @@ def Input_Int( IRObj ):
 
 def Input_Str( IRObj ):
 
+	for i in ['%ecx','%edx','%ebx','%eax']:
+	if RegisterStatus[i]==1:
+		FreeRegister(i)
 	if IRObj.isValid()[0]:	
 		_str= IRObj.src1['name']
 	else:
