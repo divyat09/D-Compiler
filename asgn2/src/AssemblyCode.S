@@ -7,13 +7,13 @@ t3: .long 0
 t1: .long 0
 
 .text
-.global _main
-_main:
+.global _start
+_start:
 movl	3,	%eax
 subl	1,	%eax
 movl	5,	%edi
 movl	%edi,	%ebx
-mull	%eax,	%ebx
+mull	%eax
 movl	%eax,	t1
 movl	%edi,	%eax
 idiv	%ebx
