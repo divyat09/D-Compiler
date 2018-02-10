@@ -12,7 +12,7 @@ def datasection():
     for _var in Table.table.keys():
 		_varname= Table.table[_var]['name']
 		f=open(AssemFile,'a')		
-		f.write(str(_varname) + ': DW 0\n')
+		f.write(str(_varname) + ': .long 0\n')
 		f.close()
 
 def Print_Int( IRObj ):
@@ -25,11 +25,11 @@ def Print_Int( IRObj ):
 	for i in ['%ecx','%edx','%ebx','%eax']:
 		if RegisterStatus[i]==1:
 			FreeRegister(i)
-	length_reg = "mov"+"\t"+"5"+"%edx\n" #Move 5 length of int iinto edx
-	output = "mov\t"+_var+"%ecx\n"
-	stdout = "mov"+"\t"+"1,%ebx\n"
-	sys_write = "mov"+"\t"+"$0x4"+","+"eax\n"
-	syscall = "int"+"\t"+"$0x80\n"
+	length_reg = "movl\t"+"5"+",\t%edx\n" #Move 5 length of int iinto edx
+	output = "movl\t"+"("_var")"+",\t%ecx\n"
+	stdout = "movl\t"+"1,\t%ebx\n"
+	sys_write = "movl\t"+"$0x4"+",\t"+"%eax\n"
+	syscall = "int\t"+"$0x80\n"
 	f=open(AssemFile,'a')	
 	f.write( length_reg+ output + sys_write + stdout + syscall )
 	f.close()
@@ -247,7 +247,7 @@ def AssemblyConverter():
 	f.close()
 	datasection()
 	f = open(AssemFile,'a')
-	f.write('\n.text\n.global _main\n_main:\n')
+	f.write('\n.text\n.global _start\n_start:\n')
 	f.close()
 	for IRObj in statements:
 

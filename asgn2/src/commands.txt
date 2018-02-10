@@ -1,2 +1,0 @@
-gcc -c -m32 -nostdlib AssemblyCode.S 
-gcc -m32 -nostdlib -o run AssemblyCode.o -Wl,-melf_i386
