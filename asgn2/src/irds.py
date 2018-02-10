@@ -27,7 +27,7 @@ class IRDS:
     self.op = data[1]
   
   # build label to lineno dictionary
-    if (data[1] == "ifgoto_lt"):
+    if (data[1] in ["ifgoto_lt","ifgoto_leq","ifgoto_gt","ifgoto_geq","ifgoto_eq","ifgoto_neq"]):
 
       if(isint(data[2])):
         self.const=data[2]
@@ -44,92 +44,6 @@ class IRDS:
       bb.append(int(self.lineno)+1)
       bb.append(int(self.const))
 
-    elif (data[1] == "ifgoto_leq"):
-
-      if(isint(data[2])):
-        self.const=data[2]
-      else:
-        self.src1 =  Table.table[data[2]]
-      
-      if(isint(data[3])):
-        self.const2=data[3]
-      else:
-        self.src2 =  Table.table[data[3]]
-
-      # jmp address can be a label hence not addded to table
-      self.const = data[4]
-      bb.append(int(self.lineno)+1)
-      bb.append(int(self.const))
-
-    elif (data[1] == "ifgoto_gt"):
-
-      if(isint(data[2])):
-        self.const=data[2]
-      else:
-        self.src1 =  Table.table[data[2]]
-      
-      if(isint(data[3])):
-        self.const2=data[3]
-      else:
-        self.src2 =  Table.table[data[3]]
-
-      # jmp address can be a label hence not addded to table
-      self.const = data[4]
-      bb.append(int(self.lineno)+1)
-      bb.append(int(self.const))
-
-    elif (data[1] == "ifgoto_geq"):
-
-      if(isint(data[2])):
-        self.const=data[2]
-      else:
-        self.src1 =  Table.table[data[2]]
-      
-      if(isint(data[3])):
-        self.const2=data[3]
-      else:
-        self.src2 =  Table.table[data[3]]
-
-      # jmp address can be a label hence not addded to table
-      self.const = data[4]
-      bb.append(int(self.lineno)+1)
-      bb.append(int(self.const))
-
-    elif (data[1] == "ifgoto_eq"):
-
-      if(isint(data[2])):
-        self.const=data[2]
-      else:
-        self.src1 =  Table.table[data[2]]
-      
-      if(isint(data[3])):
-        self.const2=data[3]
-      else:
-        self.src2 =  Table.table[data[3]]
-
-      # jmp address can be a label hence not addded to table
-      self.const = data[4]
-      bb.append(int(self.lineno)+1)
-      bb.append(int(self.const))
-
-    elif (data[1] == "ifgoto_neq"):
-
-      if(isint(data[2])):
-        self.const=data[2]
-      else:
-        self.src1 =  Table.table[data[2]]
-      
-      if(isint(data[3])):
-        self.const2=data[3]
-      else:
-        self.src2 =  Table.table[data[3]]
-
-      # jmp address can be a label hence not addded to table
-      self.const = data[4]
-      bb.append(int(self.lineno)+1)
-      bb.append(int(self.const))
-
-  
     elif (data[1] == "jmp"):
       self.const = data[2]
       bb.append(int(self.lineno)+1)
@@ -155,7 +69,7 @@ class IRDS:
         # Table.addvar(data[3])
         self.src1 = Table.table[data[3]]
   
-    elif (data[1] == "!"):
+    elif (data[1] == "~"):
       # Table.addvar(data[2])
       self.dst = Table.table[data[2]]
       if(isint(data[3])):

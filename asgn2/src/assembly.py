@@ -95,12 +95,20 @@ def Jump( IRObj ):
 		f.write(jump)
 		f.close
 
+def Label( IRObj ):
+	f.open(AssemFile,'a')
+	f.write(IRObj.const:+"\n")
+	f.close
+
 def call( IRObj ):
 
-	if IRObj.isValid()[0]:	
-		print "Invalid Case"
-	else:
-		_target= IRObj.const
+	for i in ['%eax','%ecx','%edx']:
+		if RegisterStatus[i]==1:
+			FreeRegister(i)
+			
+	f.open(AssemFile,'a')
+	f.write("call\t"+IRObj.const+"\n")
+	f.close
 
 def ret( IRObj ):
 
@@ -108,7 +116,9 @@ def ret( IRObj ):
 		_target= IRObj.src1['name']
 	else:
 		_target= IRObj.const
-
+	f.open(AssemFile,'a')
+	f.write("movl\t"+_target+",%eax"+"\nret\n")
+	f.close
 
 def Assignment( IRObj ):
 
@@ -132,18 +142,23 @@ def Assignment( IRObj ):
 	else:
 		print "Error: Destination is not a Variable "
 
-# def NegAssignment( IRObj ):
+def NegAssignment( IRObj ):
 
-# 	if IRObj.isValid()[2]:
+ 	if IRObj.isValid()[2]:
+		_dst= IRObj.dst['name']
+		reg3 = AssignRegister( _dst, IRObj.lineno, 0)
+		if IRObj.isValid()[0]:	
+			_src= IRObj.src1['name']
+			reg1= AssignRegister( _src, IRObj.lineno, 1 )
+		else:
+			_src= IRObj.const
+			reg1 = _src
+		f.open(AssemFile,'a')
+		f.write ("not\t"+reg3+","reg2)
+		f.close
+	else:
+		print "Error: Destination is not a Variable "
 
-# 		if IRObj.isValid()[0]:
-# 			_dst= IRObj.dst['name']
-# 			_src= IRObj.src1['name']
-# 		else:
-# 			_dst= IRObj.dst['name']
-# 			_src= IRObj.const
-# 	else:
-# 		print "Error: Destination is not a Variable "
 def Conditional ( IRObj):
 
 	if IRObj.isValid()[0]:
@@ -192,11 +207,12 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 		if(IRObj.src1 != IRObj.dst and IRObj.src2 != IRObj.dst):
 			f.write( "movl\t" + str(reg1) +',\t' + str(reg3)+"\n" )
 
-		f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )
+		f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(relabelg3)+"\n" )
 		f.close()
 
 	else:
 		print "Error: Destination is not a Variable "
+
 
 def Operator2( IRObj ):			# Div, Mod
 
@@ -242,6 +258,7 @@ def Operator2( IRObj ):			# Div, Mod
 
 
 def AssemblyConverter():
+
 	f = open(AssemFile,'a')
 	f.write('.data\n')
 	f.close()
@@ -250,6 +267,12 @@ def AssemblyConverter():
 	f.write('\n.text\n.global _start\n_start:\n')
 	f.close()
 	for IRObj in statements:
+
+		# Save Context Information
+		if IRObj.lineno in bb and IRObj.lineno != bb[-1] :
+			for register in RegisterStatus:
+				if RegisterStatus[register]==1:
+					FreeRegister(i)
 
 		if IRObj.op == "print_int":
 			Print_Int( IRObj ) 
@@ -260,14 +283,14 @@ def AssemblyConverter():
 		elif IRObj.op == "input_string":
 			Input_Str( IRObj )
 
-		# elif IRObj.op == "jmp":
-		# 	Jump( IRObj )
-		# elif IRObj.op == "call":
-		# 	Call( IRObj )
-		# elif IRObj.op == "ret":
-		# 	Ret( IRObj )
-		# elif IRObj.op == "label":
-			# Label( IRObj )
+		elif IRObj.op == "jmp":
+			Jump( IRObj )
+		elif IRObj.op == "call":
+			Call( IRObj )    
+		elif IRObj.op == "ret":
+			Ret( IRObj )
+		elif IRObj.op == "label":
+			Label( IRObj )
 
 		elif IRObj.op == "=":
 			Assignment( IRObj )
@@ -283,5 +306,5 @@ def AssemblyConverter():
 		elif IRObj.op in ["/", "%"]:  
 			Operator2( IRObj )
 
-		# elif IRObj.op == "~":
-		# 	BitNeg( IRObj )
+		elif IRObj.op == "~":
+			BitNeg( IRObj )
