@@ -94,11 +94,18 @@ def Jump( IRObj ):
 		f = open(AssemFile,'a')
 		f.write(jump)
 		f.close
+
 def Label( IRObj ):
 	f.open(AssemFile,'a')
 	f.write(IRObj.const:+"\n")
 	f.close
+
 def call( IRObj ):
+
+	for i in ['%eax','%ecx','%edx']:
+		if RegisterStatus[i]==1:
+			FreeRegister(i)
+			
 	f.open(AssemFile,'a')
 	f.write("call\t"+IRObj.const+"\n")
 	f.close
@@ -147,6 +154,7 @@ def Assignment( IRObj ):
 # 			_src= IRObj.const
 # 	else:
 # 		print "Error: Destination is not a Variable "
+
 def Conditional ( IRObj):
 
 	if IRObj.isValid()[0]:
@@ -246,6 +254,7 @@ def Operator2( IRObj ):			# Div, Mod
 
 
 def AssemblyConverter():
+
 	f = open(AssemFile,'a')
 	f.write('.data\n')
 	f.close()
@@ -254,6 +263,12 @@ def AssemblyConverter():
 	f.write('\n.text\n.global _main\n_main:\n')
 	f.close()
 	for IRObj in statements:
+
+		# Save Context Information
+		if IRObj.lineno in bb and IRObj.lineno != bb[-1] :
+			for register in RegisterStatus:
+				if RegisterStatus[register]==1:
+					FreeRegister(i)
 
 		if IRObj.op == "print_int":
 			Print_Int( IRObj ) 
@@ -267,10 +282,7 @@ def AssemblyConverter():
 		elif IRObj.op == "jmp":
 			Jump( IRObj )
 		elif IRObj.op == "call":
-			FreeRegister("%eax")
-			FreeRegister("%ecx")
-			FreeRegister("%edx")
-			Call( IRObj )    # call the free registers functions
+			Call( IRObj )    
 		elif IRObj.op == "ret":
 			Ret( IRObj )
 		elif IRObj.op == "label":
