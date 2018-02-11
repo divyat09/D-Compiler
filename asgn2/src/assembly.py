@@ -135,25 +135,43 @@ def Assignment( IRObj ):
 
 	if IRObj.isValid()[2]:
 
-		if IRObj.isValid()[0]:
-			_src= IRObj.src1['name']
-			reg1= AssignRegister(_src, IRObj.lineno ,1)
-
+		
+		if (IRObj.src1 = "*" or IRObj.src1 = "&"):
+			_src= IRObj.src1['name'][1:]
+			_dst= IRObj.dst['name']
+			reg2= AssignRegister(_dst, IRObj.lineno ,0)
+			if (IRObj.src1 = "*"):
+				reg1= AssignRegister(_src, IRObj.lineno ,1)
+				f=open(AssemFile,'a')
+				f.write( "movl\t[" + str(reg1) +',]\t' + str(reg2)+"\n" )
+				f.close()
+			else:
+				f=open(AssemFile,'a')
+				f.write( "lea\tbyte ptr " +_src +"," + str(reg2)+"\n" )
+				f.close()
 		else:
-			_src= IRObj.const
-			reg1= _src
-
-		_dst= IRObj.dst['name']
-		reg2= AssignRegister(_dst, IRObj.lineno ,0)
-
-		f=open(AssemFile,'a')
-		f.write( "movl\t$" + str(reg1) +',\t' + str(reg2)+"\n" )
-		f.close()
-
+			if IRObj.isValid()[0]:
+				_src= IRObj.src1['name']
+				reg1= AssignRegister(_src, IRObj.lineno ,1)
+			else:
+				_src= IRObj.const
+				reg1= _src
+			if (IRObj.dst[0]=='*'):
+				_dst = IRObj.dst['name'][1:]
+				reg2 = AssignRegister(_dst, IRObj.lineno, 0)
+				f=open(AssemFile,'a')
+				f.write( "movl\t" + str(reg1) +',\t[' + str(reg2)+"]\n" )
+				f.close()
+			else:
+				_dst = IRObj.dst['name']
+				reg2 = AssignRegister(_dst, IRObj.lineno, 0)
+				f=open(AssemFile,'a')
+				f.write( "movl\t" + str(reg1) +',\t' + str(reg2)+"\n" )
+				f.close()
 	else:
 		print "Error: Destination is not a Variable "
 
-def NegAssignment( IRObj ):
+def BitNeg( IRObj ):
 
  	if IRObj.isValid()[2]:
 		_dst= IRObj.dst['name']
@@ -212,15 +230,25 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 		reg3 = AssignRegister( _dst, IRObj.lineno, 0)
 		
 		f=open(AssemFile,'a')
-
+		
+		# Need to create a temporary register for the cases of type: a= b op a		
 		if(IRObj.src2== IRObj.dst):
-			f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg1) +',\t' + str(reg3)+"\n" )
-		elif(IRObj.src1== IRObj.dst ):
+			reg0= GetFreeRegister()	
+			if reg0 == -1:
+				reg0= RegisterSpilling( IRObj.lineno )	
+			f.write( "movl\t" + str(reg1) +',\t' + str(reg0)+"\n" )
+			f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg0)+"\n" )
+			f.write( "movl\t" + str(reg0) +',\t' + str(reg3)+"\n" )		
+
+		# a= a op b case
+		elif(IRObj.src1== IRObj.dst) 
 			f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )
+		
+		# a= b op c	 case
 		else:
 			f.write( "movl\t" + str(reg1) +',\t' + str(reg3)+"\n" )
 			f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )
-
+	
 		f.close()
 
 	else:
@@ -231,6 +259,9 @@ def Operator2( IRObj ):			# Div, Mod
 
 	if IRObj.isValid()[2]:
 
+		# Main Register stores the result we need. 
+		# In any case, eax stores quotient and edx stores remainder
+		# Hence, according to operator the MainReg changes from eax to edx
 		if IRObj.op == '/':
 			MainReg= '%eax'
 			SecReg= '%edx'	
@@ -239,6 +270,8 @@ def Operator2( IRObj ):			# Div, Mod
 			MainReg= '%edx'
 			SecReg= '%eax'	
 
+		# We explicitly need to store _dst in the Main Register
+		# Hence, a special Resiter Allocation Function for this case
 		_dst= IRObj.dst["name"]
 		AssignDivisionRegister( MainReg, SecReg, _dst, IRObj.lineno )
 
@@ -252,19 +285,19 @@ def Operator2( IRObj ):			# Div, Mod
 		if IRObj.isValid()[1]:
 			_src2= IRObj.src2['name']
 			reg2= AssignRegister( _src2, IRObj.lineno, 1 )
-			SpecialDivisor= 0
 		else:
+			# A special Syntax Case. You cant write "idiv 4". Need to assing 4 to some register first
 			_src2= IRObj.const2
-			reg2= SpecialDivisorRegister( _src2, IRObj.lineno )
-			SpecialDivisor= 1
+			reg2= SpecialConstRegister( _src2, IRObj.lineno )
 
 		f=open(AssemFile,'a')
 
 		f.write( "movl\t" + str(reg1) +',\t' + MainReg+"\n" )
 		f.write( "idiv\t" + str(reg2) + "\n" )
 		f.close()
-			
-		EndDivisionRegister( SecReg, reg2, SpecialDivisor)
+		
+		# To free the Second Register containg the value of Modulo/Quotient which we dont need 	
+		EndDivisionRegister( SecReg )
 		
 	else:
 		print "Error: Destination is not a Variable "
@@ -310,8 +343,6 @@ def AssemblyConverter():
 
 		elif IRObj.op == "=":
 			Assignment( IRObj )
-		# elif IRObj.op == "!":
-			# NegAssignment( IRObj )
 
 		elif IRObj.op[0] == "i":
 		 	Conditional( IRObj )

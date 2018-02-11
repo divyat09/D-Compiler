@@ -52,31 +52,71 @@ def AssignRegister(_var, lineno, LoadCase ):
 	if _var in RegisterAssigned.keys():
 		return RegisterAssigned[ _var ]
 
-	reg= GetFreeRegister()	
-	if reg == -1:
-		reg= RegisterSpilling( lineno )	
+	elif '[' in _var:	# The case of Array, you first need to assing registers to Base and Index here
 
-	# Assigning the newly freed register to _var
-	RegisterData[reg]= _var
-	RegisterAssigned[ _var ]= reg		
-	RegisterStatus[ reg ]= 1
+		BaseName= _var.split('[')[0]
+		Index= _var.split('[')[1].split(']')(0)
 		
-	# Adding the assembly instruction to Load data into register
-	if LoadCase:
-		f= open( AssemFile, 'a' )
-		f.write( 'movl\t' + str(_var)+',\t'+ str(reg) +"\n")
+		# Assigning the Register to Base Array: A
+		reg1= AssignRegister( BaseName, IRObj.lineno  , 1 )
+
+		# Assigning the Index to a Register: var in A[var]
+		if isint(Index):	# Case of A[4]
+			reg2= SpecialConstRegister( Index, IRObj.lineno , 1 )
+		else:				# Case of A[i]
+			reg2= AssignRegister( Index, IRObj.lineno , 1 )	
+
+		# Assigning the result of A[var] to a register
+		reg= GetFreeRegister()	
+		if reg == -1:
+			reg= RegisterSpilling( lineno )	
+
+		# Assigning the newly freed register to _var
+		RegisterData[reg]= _var
+		RegisterAssigned[ _var ]= reg		
+		RegisterStatus[ reg ]= 1
+
+		f=open( AssemFile, 'w' )
+		f.write( "movl\t" + '(' + str(reg1) + ', ' + str(reg2) + ', ' + str(4) +')' + '\t' + str(reg)+'\n' )
 		f.close()
 
-	return reg
+		return reg
 
-def SpecialDivisorRegister( const, lineno ):
+	else:
+
+		reg= GetFreeRegister()	
+		if reg == -1:
+			reg= RegisterSpilling( lineno )	
+
+		# Assigning the newly freed register to _var
+		RegisterData[reg]= _var
+		RegisterAssigned[ _var ]= reg		
+		RegisterStatus[ reg ]= 1
+			
+		# Adding the assembly instruction to Load data into register
+		# This Instruction is to be added only if the variable apperas on the RHS of a experession: this case LoadCase=1
+		# For variable on the LHS, LoadCase=0
+		if LoadCase:
+			f= open( AssemFile, 'a' )
+			f.write( 'movl\t' + str(_var)+',\t'+ str(reg) +"\n")
+			f.close()
+
+		return reg
+
+def SpecialConstRegister( const, lineno ):
 
 	reg= GetFreeRegister()
 	if reg == -1:
 		reg= RegisterSpilling( lineno )
 
 	# Assigning the newly freed register to _var
-	RegisterStatus[ reg ]= 1
+	# Important here we dont change the status, do any variable-register coupling as here 
+	# we just Out of Sytax need to assign a register to a constant value
+
+	f= open( AssemFile, 'a' )
+	f.write( 'movl\t' + str(const)+',\t'+ str(reg) +"\n")
+	f.close()
+
 	return reg
 
 def AssignDivisionRegister( MainReg, SecReg, _var, lineno ):
@@ -92,26 +132,6 @@ def AssignDivisionRegister( MainReg, SecReg, _var, lineno ):
 
 	RegisterStatus[SecReg]= 1
 
-def EndDivisionRegister( SecReg, reg, SpecialDivisor ):
+def EndDivisionRegister( SecReg ):
 
 	RegisterStatus[SecReg]= -1
-	
-	if SpecialDivisor:
-		RegisterStatus[reg]= -1		
-
-
-# Dont whether to use or not
-# def MapRegisterName( _input ):
-
-#   if _input==1:
-#     return "ebx"
-#   elif _input ==2:
-#     return "esx"
-#   elif _input ==3:
-#     return "esi"
-#   elif _input ==4:
-#     return "edi"
-#   elif _input ==5:
-#     return "eax"
-#   elif _input ==6:
-#     return "edx"

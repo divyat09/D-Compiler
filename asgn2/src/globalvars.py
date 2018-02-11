@@ -1,6 +1,13 @@
 #!/usr/bin/env python2
 from symbol_table import *
 
+def isint(value):
+  if (value[0]=='-'):
+    value = value[1:]
+    return value.isdigit()
+  else:
+    return value.isdigit()
+
 bb = [] #list for basic block
 statements = [] #list of IR objects for each statement
 NextUseTable= []
