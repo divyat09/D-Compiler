@@ -124,21 +124,40 @@ def Assignment( IRObj ):
 
 	if IRObj.isValid()[2]:
 
-		if IRObj.isValid()[0]:
-			_src= IRObj.src1['name']
-			reg1= AssignRegister(_src, IRObj.lineno ,1)
-
+		
+		if (IRObj.src1 = "*" or IRObj.src1 = "&"):
+			_src= IRObj.src1['name'][1:]
+			_dst= IRObj.dst['name']
+			reg2= AssignRegister(_dst, IRObj.lineno ,0)
+			if (IRObj.src1 = "*"):
+				reg1= AssignRegister(_src, IRObj.lineno ,1)
+				f=open(AssemFile,'a')
+				f.write( "movl\t[" + str(reg1) +',]\t' + str(reg2)+"\n" )
+				f.close()
+			else:
+				f=open(AssemFile,'a')
+				f.write( "lea\tbyte ptr " +_src +"," + str(reg2)+"\n" )
+				f.close()
 		else:
-			_src= IRObj.const
-			reg1= _src
 
-		_dst= IRObj.dst['name']
-		reg2= AssignRegister(_dst, IRObj.lineno ,0)
-
-		f=open(AssemFile,'a')
-		f.write( "movl\t" + str(reg1) +',\t' + str(reg2)+"\n" )
-		f.close()
-
+			if IRObj.isValid()[0]:
+				_src= IRObj.src1['name']
+				reg1= AssignRegister(_src, IRObj.lineno ,1)
+			else:
+				_src= IRObj.const
+				reg1= _src
+			if (IRObj.dst[0]=='*'):
+				_dst = IRObj.dst['name'][1:]
+				reg2 = AssignRegister(_dst, IRObj.lineno, 0)
+				f=open(AssemFile,'a')
+				f.write( "movl\t" + str(reg1) +',\t[' + str(reg2)+"]\n" )
+				f.close()
+			else:
+				_dst = IRObj.dst['name']
+				reg2 = AssignRegister(_dst, IRObj.lineno, 0)
+				f=open(AssemFile,'a')
+				f.write( "movl\t" + str(reg1) +',\t' + str(reg2)+"\n" )
+				f.close()
 	else:
 		print "Error: Destination is not a Variable "
 
