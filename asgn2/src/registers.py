@@ -52,7 +52,7 @@ def AssignRegister(_var, lineno, LoadCase ):
 	if _var in RegisterAssigned.keys():
 		return RegisterAssigned[ _var ]
 
-	elif '[' in _var:
+	elif '[' in _var:	# The case of Array, you first need to assing registers to Base and Index here
 
 		BaseName= _var.split('[')[0]
 		Index= _var.split('[')[1].split(']')(0)
@@ -94,6 +94,8 @@ def AssignRegister(_var, lineno, LoadCase ):
 		RegisterStatus[ reg ]= 1
 			
 		# Adding the assembly instruction to Load data into register
+		# This Instruction is to be added only if the variable apperas on the RHS of a experession: this case LoadCase=1
+		# For variable on the LHS, LoadCase=0
 		if LoadCase:
 			f= open( AssemFile, 'a' )
 			f.write( 'movl\t' + str(_var)+',\t'+ str(reg) +"\n")
