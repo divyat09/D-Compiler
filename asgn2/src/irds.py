@@ -17,6 +17,7 @@ class IRDS:
     self.src2 = None
     self.const = None
     self.const2 = None
+    self.const3 = None
   
   def isValid(self):
     return [bool(self.src1),bool(self.src2),bool(self.dst)]
@@ -40,9 +41,10 @@ class IRDS:
         self.src2 =  Table.table[data[3]]
 
       # jmp address can be a label hence not addded to table
-      self.const = data[4]
+      self.const3 = data[4]
       bb.append(int(self.lineno)+1)
-      bb.append(int(self.const))
+      bb.append(int(self.const3))
+      labels[self.const3]="label"+self.const3
 
     elif (data[1] == "jmp"):
       self.const = data[2]

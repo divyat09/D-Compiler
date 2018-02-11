@@ -25,12 +25,15 @@ for line in f.readlines():
   print _input
   for variables in _input[2:]:
     # print type(variables)
-    if(_input[1] in ['ifgoto','print_string','ret'] ):
+    if(_input[1] in ['ifgoto','print_string','ret','label'] ):
       continue
     if(isint(variables)):
       continue
     else:
-      Table.addvar(variables)
+      if _input[1]=='call':
+        functions.append(_input[2])
+      else:
+        Table.addvar(variables)
   IRepresentation= IRDS()
   IRepresentation.represent( _input )
   statements.append(IRepresentation)
@@ -39,6 +42,7 @@ for line in f.readlines():
 bb.append(len(statements))
 bb.sort()
 print bb
+print functions
 # print statements
 BuildNextUseTable( bb )
 
