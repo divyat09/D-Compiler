@@ -26,7 +26,7 @@ def Print_Int( IRObj ):
 		if RegisterStatus[i]==1:
 			FreeRegister(i)
 	length_reg = "movl\t"+"5"+",\t%edx\n" #Move 5 length of int iinto edx
-	output = "movl\t"+"("_var")"+",\t%ecx\n"
+	output = "movl\t"+"("+_var+")"+",\t%ecx\n"
 	stdout = "movl\t"+"1,\t%ebx\n"
 	sys_write = "movl\t"+"$0x4"+",\t"+"%eax\n"
 	syscall = "int\t"+"$0x80\n"
@@ -97,7 +97,7 @@ def Jump( IRObj ):
 
 def Label( IRObj ):
 	f.open(AssemFile,'a')
-	f.write(IRObj.const:+"\n")
+	f.write(IRObj.const+":\n")
 	f.close
 
 def call( IRObj ):
@@ -154,7 +154,7 @@ def NegAssignment( IRObj ):
 			_src= IRObj.const
 			reg1 = _src
 		f.open(AssemFile,'a')
-		f.write ("not\t"+reg3+","reg2)
+		f.write ("not\t"+reg3+","+reg2)
 		f.close
 	else:
 		print "Error: Destination is not a Variable "
@@ -207,7 +207,7 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 		if(IRObj.src1 != IRObj.dst and IRObj.src2 != IRObj.dst):
 			f.write( "movl\t" + str(reg1) +',\t' + str(reg3)+"\n" )
 
-		f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(relabelg3)+"\n" )
+		f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )
 		f.close()
 
 	else:
