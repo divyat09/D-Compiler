@@ -201,7 +201,8 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 		reg3 = AssignRegister( _dst, IRObj.lineno, 0)
 		
 		f=open(AssemFile,'a')
-
+		
+		# Need to create a temporary register for the cases of type: a= b op a		
 		if(IRObj.src2== IRObj.dst):
 			reg0= GetFreeRegister()	
 			if reg0 == -1:
@@ -210,9 +211,11 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 			f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg0)+"\n" )
 			f.write( "movl\t" + str(reg0) +',\t' + str(reg3)+"\n" )		
 
+		# a= a op b case
 		elif(IRObj.src1== IRObj.dst) 
 			f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )
-	
+		
+		# a= b op c	 case
 		else:
 			f.write( "movl\t" + str(reg1) +',\t' + str(reg3)+"\n" )
 			f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )

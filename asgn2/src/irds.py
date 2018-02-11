@@ -33,7 +33,7 @@ class IRDS:
         self.src2 =  Table.table[data[3]]
 
       # jmp address can be a label hence not addded to table
-      self.const = data[4]
+      self.const3 = data[4]
       bb.append(int(self.lineno)+1)
       bb.append(int(self.const))
 
