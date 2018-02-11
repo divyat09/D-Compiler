@@ -77,7 +77,7 @@ def AssignRegister(_var, lineno, LoadCase ):
 		RegisterStatus[ reg ]= 1
 
 		f=open( AssemFile, 'w' )
-		f.write( "movl\t" + '(' + str(reg1) + ', ' str(reg2) + ', ' +str(4) +')' + '\t' + str(reg)+'\n' )
+		f.write( "movl\t" + '(' + str(reg1) + ', ' + str(reg2) + ', ' + str(4) +')' + '\t' + str(reg)+'\n' )
 		f.close()
 
 		return reg

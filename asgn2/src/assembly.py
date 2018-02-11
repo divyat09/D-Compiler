@@ -203,11 +203,20 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 		f=open(AssemFile,'a')
 
 		if(IRObj.src2== IRObj.dst):
-			reg2 = reg1
-		if(IRObj.src1 != IRObj.dst and IRObj.src2 != IRObj.dst):
-			f.write( "movl\t" + str(reg1) +',\t' + str(reg3)+"\n" )
+			reg0= GetFreeRegister()	
+			if reg0 == -1:
+				reg0= RegisterSpilling( IRObj.lineno )	
+			f.write( "movl\t" + str(reg1) +',\t' + str(reg0)+"\n" )
+			f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg0)+"\n" )
+			f.write( "movl\t" + str(reg0) +',\t' + str(reg3)+"\n" )		
 
-		f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )
+		elif(IRObj.src1== IRObj.dst) 
+			f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )
+	
+		else:
+			f.write( "movl\t" + str(reg1) +',\t' + str(reg3)+"\n" )
+			f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )
+	
 		f.close()
 
 	else:
