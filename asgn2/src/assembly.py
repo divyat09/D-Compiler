@@ -142,7 +142,7 @@ def Assignment( IRObj ):
 	else:
 		print "Error: Destination is not a Variable "
 
-def NegAssignment( IRObj ):
+def BitNeg( IRObj ):
 
  	if IRObj.isValid()[2]:
 		_dst= IRObj.dst['name']
@@ -218,6 +218,9 @@ def Operator2( IRObj ):			# Div, Mod
 
 	if IRObj.isValid()[2]:
 
+		# Main Register stores the result we need. 
+		# In any case, eax stores quotient and edx stores remainder
+		# Hence, according to operator the MainReg changes from eax to edx
 		if IRObj.op == '/':
 			MainReg= '%eax'
 			SecReg= '%edx'	
@@ -226,6 +229,8 @@ def Operator2( IRObj ):			# Div, Mod
 			MainReg= '%edx'
 			SecReg= '%eax'	
 
+		# We explicitly need to store _dst in the Main Register
+		# Hence, a special Resiter Allocation Function for this case
 		_dst= IRObj.dst["name"]
 		AssignDivisionRegister( MainReg, SecReg, _dst, IRObj.lineno )
 
@@ -239,19 +244,19 @@ def Operator2( IRObj ):			# Div, Mod
 		if IRObj.isValid()[1]:
 			_src2= IRObj.src2['name']
 			reg2= AssignRegister( _src2, IRObj.lineno, 1 )
-			SpecialDivisor= 0
 		else:
+			# A special Syntax Case. You cant write "idiv 4". Need to assing 4 to some register first
 			_src2= IRObj.const2
-			reg2= SpecialDivisorRegister( _src2, IRObj.lineno )
-			SpecialDivisor= 1
+			reg2= SpecialConstRegister( _src2, IRObj.lineno )
 
 		f=open(AssemFile,'a')
 
 		f.write( "movl\t" + str(reg1) +',\t' + MainReg+"\n" )
 		f.write( "idiv\t" + str(reg2) + "\n" )
 		f.close()
-			
-		EndDivisionRegister( SecReg, reg2, SpecialDivisor)
+		
+		# To free the Second Register containg the value of Modulo/Quotient which we dont need 	
+		EndDivisionRegister( SecReg )
 		
 	else:
 		print "Error: Destination is not a Variable "
@@ -272,7 +277,7 @@ def AssemblyConverter():
 		if IRObj.lineno in bb and IRObj.lineno != bb[-1] :
 			for register in RegisterStatus:
 				if RegisterStatus[register]==1:
-					FreeRegister(i)
+					FreeRegister(register)
 
 		if IRObj.op == "print_int":
 			Print_Int( IRObj ) 
@@ -294,8 +299,6 @@ def AssemblyConverter():
 
 		elif IRObj.op == "=":
 			Assignment( IRObj )
-		# elif IRObj.op == "!":
-			# NegAssignment( IRObj )
 
 		elif IRObj.op[0] == "j":
 		 	Conditional( IRObj )
