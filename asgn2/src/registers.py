@@ -2,6 +2,7 @@ from globalvars import *
 
 # Erase the content of a Register
 def FreeRegister( reg ):
+	print reg, RegisterData,RegisterStatus[reg]
 	var= RegisterData[ reg ]
 	RegisterStatus[ reg ]= -1
 	RegisterData[ reg ]= None
@@ -18,7 +19,6 @@ def GetFreeRegister():
   for register in RegisterStatus:
     if RegisterStatus[register] ==-1:
       
-      RegisterStatus[register]=1
       return register
 
   return -1
@@ -114,7 +114,7 @@ def SpecialConstRegister( const, lineno ):
 	# we just Out of Sytax need to assign a register to a constant value
 
 	f= open( AssemFile, 'a' )
-	f.write( 'movl\t' + str(const)+',\t'+ str(reg) +"\n")
+	f.write( 'movl\t$' + str(const)+',\t'+ str(reg) +"\n")
 	f.close()
 
 	return reg
