@@ -22,7 +22,7 @@ for line in f.readlines():
     param=param.strip()
     param=param.strip('\n')
     _input.append(param)
-  # print _input
+  print _input
   for variables in _input[2:]:
     # print type(variables)
     if(_input[1] in ['ifgoto','print_string','ret','label'] ):

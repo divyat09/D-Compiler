@@ -40,11 +40,10 @@ def Print_Int( IRObj ):
 	if IRObj.isValid()[0]:		# Int Variable printing case
 		_var= IRObj.src1['name']
 		# if Table.table[_var]['type']=='Array':
-
 		if _var in RegisterAssigned.keys():
 			print _var, RegisterAssigned[_var]
-			FreeRegister(RegisterAssigned[_var])
 			f.write("movl\t"+RegisterAssigned[_var]+",\t"+_var+"\n")
+			FreeRegister(RegisterAssigned[_var])
 		f.write("pushl\t"+_var+"\n")			
 	else:						# Int constant printing case
 		_var= IRObj.const
@@ -225,9 +224,10 @@ def BitNeg( IRObj ):
 			reg1= AssignRegister( _src, IRObj.lineno, 1 )
 		else:
 			_src= IRObj.const
-			reg1 = '$'+ _src
-		f.open(AssemFile,'a')
-		f.write ("not\t"+reg3+","+reg2)
+			reg1 = SpecialConstRegister( _src, IRObj.lineno )
+		f=open(AssemFile,'a')
+		f.write ("movl\t"+reg1+","+reg3+"\n")
+		f.write ("not\t,"reg3)
 		f.close
 	else:
 		print "Error: Destination is not a Variable "
