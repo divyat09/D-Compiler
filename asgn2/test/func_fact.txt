@@ -1,0 +1,12 @@
+1, input_int, a
+2, call, foo
+3, print_int, fact
+4, exit, 0
+5, label, foo
+6, =, i, 1
+7, =, fact, 1
+8, label, L8
+9, *, fact, fact, i
+10, +, i, i, 1
+11, ifgoto_leq, i, a, L8
+12, ret, 0
