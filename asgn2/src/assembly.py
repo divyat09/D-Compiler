@@ -14,9 +14,16 @@ def datasection():
     f.close()
     for _var in Table.table.keys():
 		_varname= Table.table[_var]['name']
-		f=open(AssemFile,'a')
-		f.write(str(_varname) + ': .long 0\n')
-		f.close()
+
+		if Table.table[_var]['type'] == 'Array':
+			f=open(AssemFile,'a')
+			f.write(str(_varname) + ': .long '+ str(4*ArraySize)+'\n')	# 1 long= 4 Bytes
+			f.close()
+
+		else:		
+			f=open(AssemFile,'a')
+			f.write(str(_varname) + ': .long 0\n')
+			f.close()
 
 def Print_Int( IRObj ):
 	f=open(AssemFile,'a')	
