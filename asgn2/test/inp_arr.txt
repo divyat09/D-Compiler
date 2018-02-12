@@ -10,4 +10,4 @@
 10, ifgoto_lt, i, 10, L7
 11, print_int, A[5]
 12, print_int, A[7]
-13, ret, 0
+13, exit, 0
