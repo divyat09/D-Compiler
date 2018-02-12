@@ -11,6 +11,7 @@ class IRDS:
     self.const = None
     self.const2 = None
     self.const3 = None
+    # self.ArrIndex= None
   
   def isValid(self):
     return [bool(self.src1),bool(self.src2),bool(self.dst)]

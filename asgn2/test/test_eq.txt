@@ -1,0 +1,8 @@
+1, =, a, 7
+2, =, b, 7
+4, ifgoto_eq, a, b, 2
+5, call, foo
+6, ret, 0
+7, label, foo
+8, print_int, a
+9, ret, 0 

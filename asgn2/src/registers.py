@@ -55,7 +55,9 @@ def AssignRegister(_var, lineno, LoadCase ):
 	elif '[' in _var:	# The case of Array, you first need to assing registers to Base and Index here
 
 		BaseName= _var.split('[')[0]
-		Index= _var.split('[')[1].split(']')(0)
+		
+		temp= _var.split('[')[1]
+		Index=.split(']')(0)
 		
 		# Assigning the Register to Base Array: A
 		reg1= AssignRegister( BaseName, IRObj.lineno  , 1 )

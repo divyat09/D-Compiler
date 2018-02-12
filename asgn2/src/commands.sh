@@ -1,6 +1,6 @@
 #!/bin/bash
 >AssemblyCode4.S
-python2 main.py ../test/test_scanf.txt
+python main.py ../test/test5.txt
 # gcc -c -m32 -nostdlib AssemblyCode4.S 
 # gcc -m32 -nostdlib -o run AssemblyCode4.o -Wl,-melf_i386
 # ./run
