@@ -8,4 +8,6 @@
 8, +, i, i, 1
 9, print_int, A[i]
 10, ifgoto_leq, i, 10, L2
-11, ret, 0
+11, print_int, A[5]
+12, print_int, A[8]
+13, ret, 0
