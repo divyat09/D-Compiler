@@ -1,7 +1,7 @@
 1, =, a, 2
 2, =, b, 7
 3, label,L1
-4, sub, a, a, b
+4, +, a, a, b
 5, ifgoto_leq, a, b, L1
 6, call, foo
 7, ret, 0

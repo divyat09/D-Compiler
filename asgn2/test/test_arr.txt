@@ -2,5 +2,6 @@
 2, label, L1
 3, *, A[i], i, i
 4, print_int, A[i]
-5, if_leq, i, 10, L1
-5, ret, 0
+5, +, i, i, 1
+6, ifgoto_leq, i, 10, L1
+7, ret, 0
