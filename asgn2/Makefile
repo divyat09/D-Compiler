@@ -1,19 +1,21 @@
-all: 
-  sudo mkdir bin/
-  sudo cp src/globalvars.py bin/globalvars
-  sudo cp src/irds.py bin/irds
-  sudo cp src/main.py bin/main
-  sudo cp src/nextuse bin/nextuse
-  sudo cp sc/registers bin/registers
-  sudo cp src/assembly bin/assembly
-  sudo chmod 777 bin
+all:    binary
 
+binary: 
+        sudo mkdir -p bin/
+        sudo cp src/globalvars.py bin/globalvars.py
+        sudo cp src/irds.py bin/irds.py
+        sudo cp src/main.py bin/codegen
+        sudo cp src/nextuse.py bin/nextuse.py
+        sudo cp src/registers.py bin/registers.py
+        sudo cp src/assembly.py bin/assembly.py
+        sudo cp src/symbol_table.py bin/symbol_table.py
+        sudo chmod +x bin/codegen
 clean:
-  find . -type f -name '*.swp' -delete; \
-  find . -type f -name '*.pyc' -delete; \
-  rm *.o *.s *.out
-  sudo rm -r bin
-  
+        find . -type f -name '*.swp' -delete; \
+        find . -type f -name '*.pyc' -delete; \
+        rm -rf *.o *.s *.S *.out
+        sudo rm -r bin
+
 assembly:
-  as --32 -g  --gstabs AssemblyCode4.S -o AssemblyCode4.o
-  ld -g -m elf_i386 AssemblyCode4.o -lc -dynamic-linker /lib/ld-linux.so.2 -o AssemblyCode4
+        as --32 -g  --gstabs AssemblyCode.S -o AssemblyCode.o
+        ld -g -m elf_i386 AssemblyCode.o -lc -dynamic-linker /lib/ld-linux.so.2 -o AssemblyCode4
