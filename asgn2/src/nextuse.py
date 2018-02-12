@@ -61,4 +61,4 @@ def BuildNextUseTable( bb ):
 		# print "\n"
 
 	NextUseTable.reverse()
-	print NextUseTable
+	# print NextUseTable

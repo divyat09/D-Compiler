@@ -2,7 +2,7 @@ from registers import *
 from globalvars import *
 
 def datasection():
-    print ".data\n"
+    # print ".data\n"
     # for variables in global_vars:
     #     print variables.name+":\n\t.long"+variables.value
 	# f=open(AssemFile,'a')		
@@ -42,24 +42,24 @@ def Print_Int( IRObj ):
 	# f.write( length_reg+ output + sys_write + stdout + syscall )
 	f.close()
 
-def Print_Str( IRObj ):
+# def Print_Str( IRObj ):
 
-	# if IRObj.isValid()[0]:	
-	# 	_str= IRObj.src1['name']
-	# else:
-	# 	print "Invalid Case"
-	f=open(AssemFile,'a')
-	if(IRObj.const):
-		print "hi"
-		# length_reg = "mov"+"\t"+str(len(IRObj.const))+"%edx\n"
-		# output = "mov\t"+IRObj.const+"%ecx\n"
-		# stdout = "mov"+"\t"+"1,%ebx\n"
-		# sys_write = "mov"+"\t"+"$0x4"+","+"eax\n"
-		# syscall = "int"+"\t"+"$0x80\n"
-		# f.write(length_reg+ output + sys_write + stdout + syscall )
-	else:
-		print "Invalid Print_str"
-	f.close()
+# 	# if IRObj.isValid()[0]:	
+# 	# 	_str= IRObj.src1['name']
+# 	# else:
+# 	# 	print "Invalid Case"
+# 	f=open(AssemFile,'a')
+# 	if(IRObj.const):
+# 		print "hi"
+# 		# length_reg = "mov"+"\t"+str(len(IRObj.const))+"%edx\n"
+# 		# output = "mov\t"+IRObj.const+"%ecx\n"
+# 		# stdout = "mov"+"\t"+"1,%ebx\n"
+# 		# sys_write = "mov"+"\t"+"$0x4"+","+"eax\n"
+# 		# syscall = "int"+"\t"+"$0x80\n"
+# 		# f.write(length_reg+ output + sys_write + stdout + syscall )
+# 	else:
+# 		print "Invalid Print_str"
+# 	f.close()
 
 def Input_Int( IRObj ):
 
@@ -301,6 +301,7 @@ def Operator2( IRObj ):			# Div, Mod
 		f=open(AssemFile,'a')
 
 		f.write( "movl\t" + str(reg1) +',\t' + MainReg+"\n" )
+		f.write("cdq\n")
 		f.write( "idiv\t" + str(reg2) + "\n" )
 		f.close()
 		
