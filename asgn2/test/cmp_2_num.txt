@@ -2,7 +2,7 @@
 2, input_int, b
 3, ifgoto_leq, a, b, L6
 4, print_int, b
-5, ret, 0
+5, exit, 0
 6, label, L6
 7, print_int, a
-8, ret, 0
+8, exit, 0
