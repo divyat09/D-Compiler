@@ -1,6 +1,6 @@
 #!/bin/bash
 >AssemblyCode4.S
-python2 main.py ../test/test_eq.txt
+python2 main.py $1
 # gcc -c -m32 -nostdlib AssemblyCode4.S 
 # gcc -m32 -nostdlib -o run AssemblyCode4.o -Wl,-melf_i386
 # ./run

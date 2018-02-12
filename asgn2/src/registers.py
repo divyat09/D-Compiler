@@ -41,7 +41,7 @@ def RegisterSpilling( lineno ):
 	VictimReg= RegisterAssigned[VictimVar]
 
 	# Setting the Register holding Longest Use Varible Free
-	FreeRegister( VictimVar )
+	FreeRegister( VictimReg )
 
 	return VictimReg
 	
@@ -58,11 +58,14 @@ def AssignRegister(_var, lineno, LoadCase ):
 		Index= _var.split('[')[1].split(']')[0]
 		
 		# Assigning the Register to Base Array: A
-		reg1= AssignRegister( BaseName, lineno  , 1 )
+		reg1= AssignRegister( BaseName, lineno  , 0 )
+		f= open( AssemFile, 'a' )
+		f.write( 'movl\t$' + str(BaseName)+',\t'+ str(reg1) +"\n")
+		f.close()
 
 		# Assigning the Index to a Register: var in A[var]
 		if isint(Index):	# Case of A[4]
-			reg2= SpecialConstRegister( Index, lineno , 1 )
+			reg2= SpecialConstRegister( Index, lineno )
 		else:				# Case of A[i]
 			reg2= AssignRegister( Index, lineno , 1 )	
 

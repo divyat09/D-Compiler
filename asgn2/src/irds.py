@@ -36,8 +36,8 @@ class IRDS:
       # jmp address can be a label hence not addded to table
       self.const3 = data[4]
       bb.append(int(self.lineno)+1)
-      bb.append(int(self.const3))
-      labels[self.const3]="label"+self.const3
+      bb.append(int(self.const3[1:]))
+      # labels[self.const3]="label"+self.const3
 
     elif (data[1] == "jmp"):
       self.const = data[2]
@@ -93,6 +93,7 @@ class IRDS:
   
     elif (data[1] == "label"):
       self.const = data[2]
+
   
     else:
       # Table.addvar(data[2])

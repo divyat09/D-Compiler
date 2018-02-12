@@ -25,7 +25,7 @@ for line in f.readlines():
   print _input
   for variables in _input[2:]:
     # print type(variables)
-    if(_input[1] in ['ifgoto','print_string','ret','label'] ):
+    if(_input[1] in ["ifgoto_lt","ifgoto_leq","ifgoto_gt","ifgoto_geq","ifgoto_eq","ifgoto_neq",'print_string','ret','label'] ):
       continue
     if(isint(variables)):
       continue

@@ -23,7 +23,7 @@ def datasection():
 
 		if Table.table[_var]['type'] == 'Array':
 			f=open(AssemFile,'a')
-			f.write(str(_varname) + ': .zeros '+ str(4*ArraySize)+'\n')	# 1 long= 4 Bytes
+			f.write(str(_varname) + ': .zero '+ str(4*ArraySize)+'\n')	# 1 long= 4 Bytes
 			f.close()
 		else:
 			f=open(AssemFile,'a')
@@ -38,17 +38,25 @@ def datasection():
 
 
 def Print_Int( IRObj ):
+	
+	if RegisterStatus['%eax']!=-1:
+		FreeRegister("%eax")
+	RegisterStatus['%eax']= 1
+
 	f=open(AssemFile,'a')	
 	if IRObj.isValid()[0]:		# Int Variable printing case
 		_var= IRObj.src1
 		# if Table.table[_var]['type']=='Array':
-		if _var in RegisterAssigned.keys():
-			print _var, RegisterAssigned[_var]
-			f.write("movl\t"+RegisterAssigned[_var]+",\t"+_var+"\n")
-			FreeRegister(RegisterAssigned[_var])
-			if RegisterStatus['%eax']!=-1:
-				FreeRegister("%eax")			
-		f.write("pushl\t"+_var+"\n")			
+		# if _var in RegisterAssigned.keys():
+		# print _var, RegisterAssigned[_var]
+		# f.write("movl\t"+RegisterAssigned[_var]+",\t"+_var+"\n")
+		# FreeRegister(RegisterAssigned[_var])
+		# f.write("pushl\t"+RegisterASssigned[_var]+"\n")			
+		# else:
+		AssignRegister(_var,IRObj.lineno,1)
+		# f.write("pushl\t"+_var+"\n")		
+		f.write("pushl\t"+RegisterAssigned[_var]+"\n")							
+
 	else:						# Int constant printing case
 		_var= IRObj.const
 		if(isint(str(_var))):
@@ -56,7 +64,9 @@ def Print_Int( IRObj ):
 	f.write("pushl\t"+"$format_out\n")
 	f.write("call\tprintf\n")
 	f.write("addl\t$8,%esp\n")
-
+	RegisterStatus['%eax']= -1
+	# print "end ======== ",RegisterStatus["%edx"]
+	
 	# _var = "$0x"+str(int(_var,16))
 	# length_reg = "movl\t"+"5"+",\t%edx\n" #Move 5 length of int iinto edx
 	# output = "movl\t"+"("+_var+")"+",\t%ecx\n"
@@ -101,19 +111,43 @@ def Input_Int( IRObj ):
 	# f.close()
 	if IRObj.isValid()[2]:		# Int Variable printing case
 		_var= IRObj.dst
+		BaseName= _var.split('[')[0]
+		index= _var.split('[')[1].split(']')[0]
 		# if Table.table[_var]['type']=='Array':
 		# if _var in RegisterAssigned.keys():
 		# 	f.write("movl\t"+RegisterAssigned[_var]+",\t"+_var+"\n")
-		FreeRegister("%eax")
+		if RegisterStatus["%eax"]==1:
+			FreeRegister("%eax")
+		RegisterStatus["%eax"]=1
+		if _var in RegisterAssigned.keys():
+			FreeRegister[RegisterAssigned[_var]]
 		f.write("xorl\t%eax,%eax\n")
-		f.write("pushl\t$"+_var+"\n")	
-		f.write("pushl\t"+"$format_in\n")
-		f.write("call\tscanf\n")
-		f.write("addl\t$8,%esp\n")
+		if index == None:
+			f.write("pushl\t$"+_var+"\n")
+			f.write("pushl\t"+"$format_in\n")
+			f.write("call\tscanf\n")
+			f.write("addl\t$8,%esp\n")
+		else:
+			reg1= AssignRegister(BaseName,IRObj.lineno,0)
+			f.write( 'movl\t$' + str(BaseName)+',\t'+ str(reg1) +"\n")
+			
+			# if isint( index ):
+			
+			# else:
+			# 	reg2= AssignRegister( index, IRObj.lineno ,1 )
+			reg3 = AssignRegister( index, IRObj.lineno ,1 )
+			reg2= SpecialConstRegister( 4, IRObj.lineno )
+			f.write( "imul\t" + str(reg3) +',\t' + str(reg2)+"\n" )
+			f.write( "addl\t" + str(reg2) +',\t' + str(reg1)+"\n" )
+			f.write("pushl\t"+reg1+"\n")
+			f.write("pushl\t"+"$format_in\n")
+			f.write("call\tscanf\n")
+			f.write("addl\t$8,%esp\n")			
 
 	else:						# Int constant printing case
 		print "Input_Int error: value must be a memory location pc"
-
+	RegisterStatus["%eax"]=-1
+	
 
 def Input_Str( IRObj ):
 
@@ -253,7 +287,7 @@ def Conditional ( IRObj):
 		reg2= "$" + _src2
 	f = open(AssemFile,'a')
 	f.write( "cmpl\t"+reg2+","+reg1+"\n")
-	f.write( str(op2wrd[IRObj.op])+"\t"+ labels[IRObj.const3]+"\n")
+	f.write( str(op2wrd[IRObj.op])+"\t"+ IRObj.const3+"\n")
 	f.close()
 
 def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
@@ -351,6 +385,14 @@ def Operator2( IRObj ):			# Div, Mod
 	else:
 		print "Error: Destination is not a Variable "
 
+def SaveContext(IRObj):
+	# Save Context Information
+	if IRObj.lineno+1 in bb and IRObj.lineno+1 != bb[-1] :
+		print IRObj.lineno
+		for register in RegisterStatus:
+			if RegisterStatus[register]==1 and '[' not in RegisterData[register]:
+				FreeRegister(register)
+
 def AssemblyConverter():
 
 	flag_exit=0
@@ -366,8 +408,8 @@ def AssemblyConverter():
 		
 		if IRObj.op == "print_int":
 			Print_Int( IRObj ) 
-		elif IRObj.op == "print_string":
-			Print_Str( IRObj )
+		# elif IRObj.op == "print_string":
+		# 	Print_Str( IRObj )
 		elif IRObj.op == "input_int":
 			Input_Int( IRObj )
 		elif IRObj.op == "input_string":
@@ -382,12 +424,15 @@ def AssemblyConverter():
 			flag_exit=1
 
 		elif IRObj.op == "label":
+			if int(IRObj.const[1:]) in bb:
+				SaveContext(IRObj)
 			Label( IRObj )
 
 		elif IRObj.op == "=":
 			Assignment( IRObj )
 
 		elif IRObj.op[0] == "i":
+			SaveContext(IRObj)
 		 	Conditional( IRObj )
 
 		elif IRObj.op in ["+", "-", "*", "&", "|", "<<", ">>", "^"]:
@@ -403,13 +448,6 @@ def AssemblyConverter():
 		# 	f=open(AssemFile,'a')
 		# 	f.write(labels[str(IRObj.lineno)]+":\n")
 		# 	f.close()			
-		
-		# Save Context Information
-		if IRObj.lineno+1 in bb and IRObj.lineno+1 != bb[-1] :
-			print IRObj.lineno
-			for register in RegisterStatus:
-				if RegisterStatus[register]==1 and '[' not in RegisterData[register]:
-					FreeRegister(register)
 
 		# Program End Context Save Case
 		if IRObj.lineno == bb[-1]:
@@ -417,4 +455,3 @@ def AssemblyConverter():
 			for register in RegisterStatus:
 				if RegisterStatus[register]==1 and '[' not in RegisterData[register]:
 					FreeRegister(register)
-
