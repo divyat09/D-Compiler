@@ -1,6 +1,6 @@
 1, input_int, a
 2, input_int, b
-3, ifgoto_leq, a, b, L
+3, ifgoto_leq, a, b, L6
 4, print_int, b
 5, ret, 0
 6, label, L6
