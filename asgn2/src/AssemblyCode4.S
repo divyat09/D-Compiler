@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .data
 format_out: .asciz "%d\n"
 format_in: .asciz "%d"
@@ -14,3 +15,5 @@ movl	%eax,	a
 movl	%edi,	i
 movl	a,	%eax
 movl	A,	%edi
+=======
+>>>>>>> 069458aada1e7e2f41ef80a6e751d42830669c62
