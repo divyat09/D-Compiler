@@ -3,9 +3,9 @@ all:
   sudo cp src/globalvars.py bin/globalvars
   sudo cp src/irds.py bin/irds
   sudo cp src/main.py bin/main
-  sudo cp src/nextuse nextuse
-  sudo cp sc/registers registers
-  sudo cp src/assembly assembly
+  sudo cp src/nextuse bin/nextuse
+  sudo cp sc/registers bin/registers
+  sudo cp src/assembly bin/assembly
   sudo chmod 777 bin
 
 clean:
