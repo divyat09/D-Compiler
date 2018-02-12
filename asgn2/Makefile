@@ -6,7 +6,7 @@ all:
   sudo cp src/nextuse nextuse
   sudo cp sc/registers registers
   sudo cp src/assembly assembly
-	sudo chmod 777 bin
+  sudo chmod 777 bin
 
 clean:
   find . -type f -name '*.swp' -delete; \
