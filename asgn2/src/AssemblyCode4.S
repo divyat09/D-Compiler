@@ -8,8 +8,8 @@ A: .zero 40
 .globl _start
 _start:
 movl	$0,	%eax
-L2:
 movl	%eax,	i
+L2:
 movl	i,	%ebx
 movl	$4,	%esi
 xorl	%eax,%eax
@@ -21,14 +21,13 @@ pushl	$format_in
 call	scanf
 addl	$8,%esp
 addl	$1,	%ebx
-movl	%edi,	A
 movl	%ebx,	i
 movl	i,	%eax
 cmpl	$10,%eax
 jl	L2
 movl	$0,	%eax
-L7:
 movl	%eax,	i
+L7:
 movl	$A,	%edi
 movl	i,	%ebx
 movl	(%edi, %ebx, 4),	%esi
@@ -37,7 +36,6 @@ pushl	$format_out
 call	printf
 addl	$8,%esp
 addl	$1,	%ebx
-movl	%edi,	A
 movl	%ebx,	i
 movl	i,	%eax
 cmpl	$10,%eax
@@ -60,4 +58,3 @@ addl	$8,%esp
 movl	$0,%ebx
 movl	$1,%eax
 int	$0x80
-movl	%edi,	A

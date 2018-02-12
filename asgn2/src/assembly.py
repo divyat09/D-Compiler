@@ -385,13 +385,14 @@ def Operator2( IRObj ):			# Div, Mod
 	else:
 		print "Error: Destination is not a Variable "
 
-def SaveContext(IRObj):
+def SaveContext( lineno ):
 	# Save Context Information
-	if IRObj.lineno+1 in bb and IRObj.lineno+1 != bb[-1] :
-		print IRObj.lineno
-		for register in RegisterStatus:
+	if lineno in bb:
+		for register in RegisterStatus : 		
 			if RegisterStatus[register]==1 and '[' not in RegisterData[register]:
-				FreeRegister(register)
+				varname= RegisterData[register]
+				if Table.table[varname]['type'] == 'Variable':
+					FreeRegister(register)
 
 def AssemblyConverter():
 
@@ -425,14 +426,14 @@ def AssemblyConverter():
 
 		elif IRObj.op == "label":
 			if int(IRObj.const[1:]) in bb:
-				SaveContext(IRObj)
+				SaveContext( IRObj.lineno )
 			Label( IRObj )
 
 		elif IRObj.op == "=":
 			Assignment( IRObj )
 
 		elif IRObj.op[0] == "i":
-			SaveContext(IRObj)
+			SaveContext( IRObj.lineno +  1 )
 		 	Conditional( IRObj )
 
 		elif IRObj.op in ["+", "-", "*", "&", "|", "<<", ">>", "^"]:
@@ -449,9 +450,6 @@ def AssemblyConverter():
 		# 	f.write(labels[str(IRObj.lineno)]+":\n")
 		# 	f.close()			
 
-		# Program End Context Save Case
-		if IRObj.lineno == bb[-1]:
-			print IRObj.lineno
-			for register in RegisterStatus:
-				if RegisterStatus[register]==1 and '[' not in RegisterData[register]:
-					FreeRegister(register)
+		
+	# Program End Context Save Case
+	SaveContext( IRObj.lineno )
