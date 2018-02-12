@@ -8,6 +8,4 @@
 8, print_int, A[i]
 9, +, i, i, 1
 10, ifgoto_lt, i, 10, L7
-11, print_int, A[5]
-12, print_int, A[7]
-13, exit, 0
+11, exit, 0

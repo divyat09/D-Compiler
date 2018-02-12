@@ -1,64 +1,80 @@
 .data
-a:  .long 0
-c:  .long 0
-t5: .long 0
-t2: .long 0
-t3: .long 0
-t1: .long 0
-
-.text
-.global _start
-_start:
-movl	3,	%eax
-subl	1,	%eax
-movl	5,	%edi
-movl	%edi,	%ebx
-mull	%eax
-movl	%eax,	t1
-movl	%edi,	%eax
-idiv	%ebx
-movl	%ebx,	t2
-movl	%eax,	t3
-mov	    5,  %edx
-mov	    t3,  %ecx
-mov	    1,  %ebx
-mov	    $0x4,  %eax
-int	    $0x80
-movl	t3,	    %eax
-movl	%eax,	%ebx
-addl	2,	%ebx
-movl	c,	%esi
-movl	%esi,	%ebx
-addl	6,	%ebx
-.data
+format_out: .asciz "%d\n"
+format_in: .asciz "%d"
 a: .long 0
 c: .long 0
-t5: .long 0
-t2: .long 0
-t3: .long 0
-t1: .long 0
+b: .long 0
+e: .long 0
+d: .long 0
+g: .long 0
+f: .long 0
+h: .long 0
 
 .text
-.global _start
+.globl _start
 _start:
-movl	3,	%eax
-subl	1,	%eax
-movl	5,	%edi
-movl	%edi,	%ebx
-imul	%eax,	%ebx
-movl	%eax,	t1
-movl	%edi,	%eax
-idiv	%ebx
-movl	%ebx,	t2
-movl	%eax,	t3
-movl	5,	%edx
-movl	(t3),	%ecx
-movl	$0x4,	%eax
-movl	1,	%ebx
-int	$0x80
-movl	t3,	%eax
+movl	$10,	%eax
+movl	$5,	%edi
 movl	%eax,	%ebx
-addl	2,	%ebx
-movl	c,	%esi
-movl	%esi,	%ebx
-addl	6,	%ebx
+orl	%edi,	%ebx
+movl	%eax,	a
+pushl	%ebx
+pushl	$format_out
+call	printf
+addl	$8,%esp
+movl	a,	%eax
+movl	%eax,	%esi
+andl	%edi,	%esi
+movl	%eax,	a
+pushl	%esi
+pushl	$format_out
+call	printf
+addl	$8,%esp
+movl	a,	%eax
+movl	%eax,	%ecx
+xorl	%edi,	%ecx
+movl	%eax,	a
+pushl	%ecx
+pushl	$format_out
+call	printf
+addl	$8,%esp
+movl	a,	%edx
+movl	%edx,%eax
+notl	%eax
+movl	%eax,	f
+movl	%ebx,	c
+movl	f,	%ebx
+pushl	%ebx
+pushl	$format_out
+call	printf
+addl	$8,%esp
+pushl	%edx
+pushl	$format_out
+call	printf
+addl	$8,%esp
+movl	%edx,	%eax
+shrl	$2,	%eax
+movl	%eax,	g
+movl	%edi,	b
+movl	g,	%edi
+pushl	%edi
+pushl	$format_out
+call	printf
+addl	$8,%esp
+movl	%edx,	%eax
+shll	$2,	%eax
+movl	%eax,	h
+movl	%edx,	a
+movl	h,	%edx
+pushl	%edx
+pushl	$format_out
+call	printf
+addl	$8,%esp
+movl	$0,%ebx
+movl	$1,%eax
+int	$0x80
+movl	%edi,	g
+movl	%ebx,	f
+movl	%esi,	d
+movl	%ecx,	e
+movl	%edx,	h

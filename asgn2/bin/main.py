@@ -8,6 +8,8 @@ from nextuse import *
 from registers import *
 from assembly import *
 
+
+
 filename = sys.argv[1]
 f=open(filename, 'r')
 bb.append(1)
@@ -20,9 +22,9 @@ for line in f.readlines():
     param=param.strip()
     param=param.strip('\n')
     _input.append(param)
-
+  print _input
   for variables in _input[2:]:
-
+    # print type(variables)
     if(_input[1] in ["ifgoto_lt","ifgoto_leq","ifgoto_gt","ifgoto_geq","ifgoto_eq","ifgoto_neq",'print_string','ret','label'] ):
       continue
     if(isint(variables)):
@@ -35,10 +37,13 @@ for line in f.readlines():
   IRepresentation= IRDS()
   IRepresentation.represent( _input )
   statements.append(IRepresentation)
+  # print bb
 
 bb.append(len(statements))
 bb.sort()
-
+# print bb
+# print functions
+# print statements
 BuildNextUseTable( bb )
 
 # Conver to Assembly

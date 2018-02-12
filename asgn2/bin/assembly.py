@@ -277,7 +277,7 @@ def BitNeg( IRObj ):
 			reg1 = SpecialConstRegister( _src, IRObj.lineno )
 		f=open(AssemFile,'a')
 		f.write ("movl\t"+reg1+","+reg3+"\n")
-		f.write ("notl\t"+reg3+"\n")
+		f.write ("not\t"+reg3+"\n")
 		f.close
 	else:
 		print "Error: Destination is not a Variable "
@@ -386,7 +386,7 @@ def Operator2( IRObj ):			# Div, Mod
 
 		f=open(AssemFile,'a')
 
-		f.write( "movl\t" + str(reg1) +',\t' + "%eax"+"\n" )
+		f.write( "movl\t" + str(reg1) +',\t' + MainReg+"\n" )
 		f.write("cdq\n")
 		f.write( "idiv\t" + str(reg2) + "\n" )
 		f.close()
@@ -437,9 +437,10 @@ def AssemblyConverter():
 		elif IRObj.op == "exit":
 			Exit( IRObj )
 		elif IRObj.op == "label":
-			if IRObj.lineno in bb:
+			if int(IRObj.const[1:]) in bb:
 				SaveContext( IRObj.lineno )
 			Label( IRObj )
+
 		elif IRObj.op == "=":
 			Assignment( IRObj )
 
