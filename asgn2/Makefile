@@ -9,8 +9,8 @@ all:
 	sudo chmod 777 bin
 
 clean:
-	find . -type f -name '*.swp' -delete; \
-	find . -type f -name '*.pyc' -delete; \
+  find . -type f -name '*.swp' -delete; \
+  find . -type f -name '*.pyc' -delete; \
   rm *.o *.s *.out
   sudo rm -r bin
   
