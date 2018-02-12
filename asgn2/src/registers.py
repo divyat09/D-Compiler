@@ -2,7 +2,7 @@ from globalvars import *
 
 # Erase the content of a Register
 def FreeRegister( reg ):
-	print reg, RegisterData,RegisterStatus[reg]
+	# print reg, RegisterData,RegisterStatus[reg]
 	var= RegisterData[ reg ]
 	RegisterStatus[ reg ]= -1
 	RegisterData[ reg ]= None

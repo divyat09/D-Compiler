@@ -2,7 +2,7 @@ from registers import *
 from globalvars import *
 
 def datasection():
-    print ".data\n"
+    # print ".data\n"
     # for variables in global_vars:
     #     print variables.name+":\n\t.long"+variables.value
 	# f=open(AssemFile,'a')		
@@ -10,8 +10,10 @@ def datasection():
 	# f.close()
 
     f=open(AssemFile,'a')
-    format_int = "format_int: .asciz \"%d\\n\""
-    f.write(format_int+"\n")
+    format_out = "format_out: .asciz \"%d\\n\""
+    format_in = "format_in: .asciz \"%d\""
+    f.write(format_out+"\n")
+    f.write(format_in+"\n")
     f.close()
 
     ArrayStore= {}
@@ -37,16 +39,20 @@ def Print_Int( IRObj ):
 	f=open(AssemFile,'a')	
 	if IRObj.isValid()[0]:		# Int Variable printing case
 		_var= IRObj.src1['name']
+		# if Table.table[_var]['type']=='Array':
+
 		if _var in RegisterAssigned.keys():
-			f.write("pushl\t"+RegisterAssigned[_var]+"\n")
-		else:
-			f.write("pushl\t"+_var+"\n")			
+			print _var, RegisterAssigned[_var]
+			FreeRegister(RegisterAssigned[_var])
+			f.write("movl\t"+RegisterAssigned[_var]+",\t"+_var+"\n")
+		f.write("pushl\t"+_var+"\n")			
 	else:						# Int constant printing case
 		_var= IRObj.const
 		if(isint(str(_var))):
 			f.write("pushl\t$"+str(_var))
-	f.write("pushl\t"+"$format_int\n")
+	f.write("pushl\t"+"$format_out\n")
 	f.write("call\tprintf\n")
+	f.write("addl\t$8,%esp\n")
 
 	# _var = "$0x"+str(int(_var,16))
 	# length_reg = "movl\t"+"5"+",\t%edx\n" #Move 5 length of int iinto edx
@@ -57,39 +63,54 @@ def Print_Int( IRObj ):
 	# f.write( length_reg+ output + sys_write + stdout + syscall )
 	f.close()
 
-def Print_Str( IRObj ):
+# def Print_Str( IRObj ):
 
-	# if IRObj.isValid()[0]:	
-	# 	_str= IRObj.src1['name']
-	# else:
-	# 	print "Invalid Case"
-	f=open(AssemFile,'a')
-	if(IRObj.const):
-		print "hi"
-		# length_reg = "mov"+"\t"+str(len(IRObj.const))+"%edx\n"
-		# output = "mov\t"+IRObj.const+"%ecx\n"
-		# stdout = "mov"+"\t"+"1,%ebx\n"
-		# sys_write = "mov"+"\t"+"$0x4"+","+"eax\n"
-		# syscall = "int"+"\t"+"$0x80\n"
-		# f.write(length_reg+ output + sys_write + stdout + syscall )
-	else:
-		print "Invalid Print_str"
-	f.close()
+# 	# if IRObj.isValid()[0]:	
+# 	# 	_str= IRObj.src1['name']
+# 	# else:
+# 	# 	print "Invalid Case"
+# 	f=open(AssemFile,'a')
+# 	if(IRObj.const):
+# 		print "hi"
+# 		# length_reg = "mov"+"\t"+str(len(IRObj.const))+"%edx\n"
+# 		# output = "mov\t"+IRObj.const+"%ecx\n"
+# 		# stdout = "mov"+"\t"+"1,%ebx\n"
+# 		# sys_write = "mov"+"\t"+"$0x4"+","+"eax\n"
+# 		# syscall = "int"+"\t"+"$0x80\n"
+# 		# f.write(length_reg+ output + sys_write + stdout + syscall )
+# 	else:
+# 		print "Invalid Print_str"
+# 	f.close()
 
 def Input_Int( IRObj ):
 
-	if IRObj.isValid()[0]:		# Int Variable Case
-		_var= IRObj.src1['name']
-	else:						# Int constant Case
-		_var= IRObj.const
+	# if IRObj.isValid()[0]:		# Int Variable Case
+	# 	_var= IRObj.src1['name']
+	# else:						# Int constant Case
+	# 	_var= IRObj.const
 	f=open(AssemFile,'a')
-	# length_reg = "mov"+"\t"+"5"+"%edx\n"
-	# output = "mov\t"+_var+"%ecx\n"
-	# stdin = "mov"+"\t"+"0"+","+"%ebx\n"
-	# sys_read = "mov"+"\t"+"$0x3"+","+"eax\n"
-	# syscall = "int"+"\t"+"$0x80\n"
-	f.write( length_reg + output+ sys_read+ stdin+syscall)
-	f.close()
+	# # length_reg = "mov"+"\t"+"5"+"%edx\n"
+	# # output = "mov\t"+_var+"%ecx\n"
+	# # stdin = "mov"+"\t"+"0"+","+"%ebx\n"
+	# # sys_read = "mov"+"\t"+"$0x3"+","+"eax\n"
+	# # syscall = "int"+"\t"+"$0x80\n"
+	# f.write( length_reg + output+ sys_read+ stdin+syscall)
+	# f.close()
+	if IRObj.isValid()[2]:		# Int Variable printing case
+		_var= IRObj.dst['name']
+		# if Table.table[_var]['type']=='Array':
+		# if _var in RegisterAssigned.keys():
+		# 	f.write("movl\t"+RegisterAssigned[_var]+",\t"+_var+"\n")
+		FreeRegister("%eax")
+		f.write("xorl\t%eax,%eax\n")
+		f.write("pushl\t$"+_var+"\n")	
+		f.write("pushl\t"+"$format_in\n")
+		f.write("call\tscanf\n")
+		f.write("addl\t$8,%esp\n")
+
+	else:						# Int constant printing case
+		print "Input_Int error: value must be a memory location pc"
+
 
 def Input_Str( IRObj ):
 
@@ -316,6 +337,7 @@ def Operator2( IRObj ):			# Div, Mod
 		f=open(AssemFile,'a')
 
 		f.write( "movl\t" + str(reg1) +',\t' + MainReg+"\n" )
+		f.write("cdq\n")
 		f.write( "idiv\t" + str(reg2) + "\n" )
 		f.close()
 		
