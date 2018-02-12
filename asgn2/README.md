@@ -47,7 +47,7 @@ This directory contains the python code used to generate Assembly Code form Inte
 
 	- Some helpful global variables
 
-####### /test directory 
+###### /test directory 
 This directory contains the tests cases, txt files containing the Intermediate Representation of the program.
 
 TestCase1: 
@@ -66,5 +66,4 @@ TestCase7:
 
 3 Run test cases: bin/codegen test/test1.ir
 
- 	
-### Output
+4 Execute the generated x86 assembly code
