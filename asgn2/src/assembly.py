@@ -8,22 +8,30 @@ def datasection():
 	# f=open(AssemFile,'a')		
 	# f.write(str(_varname) + ': DW 0\n')
 	# f.close()
+
     f=open(AssemFile,'a')
     format_int = "format_int: .asciz \"%d\\n\""
     f.write(format_int+"\n")
     f.close()
+
+    ArrayStore= {}
+
     for _var in Table.table.keys():
 		_varname= Table.table[_var]['name']
 
 		if Table.table[_var]['type'] == 'Array':
-			f=open(AssemFile,'a')
-			f.write(str(_varname) + ': .long '+ str(4*ArraySize)+'\n')	# 1 long= 4 Bytes
-			f.close()
-
-		else:		
+			ArrayStore[ _varname.split('[')[0] ]= 1		
+		else:
 			f=open(AssemFile,'a')
 			f.write(str(_varname) + ': .long 0\n')
 			f.close()
+
+		# Printing Arrays
+		for key in ArrayStore:
+			f=open(AssemFile,'a')
+			f.write(str(key) + ': .zeros '+ str(4*ArraySize)+'\n')	# 1 long= 4 Bytes
+			f.close()			
+
 
 def Print_Int( IRObj ):
 	f=open(AssemFile,'a')	
@@ -364,14 +372,23 @@ def AssemblyConverter():
 
 		elif IRObj.op == "~":
 			BitNeg( IRObj )
-		# Save Context Information
-		if IRObj.lineno-1 in bb and IRObj.lineno-1 != bb[-1] :
-			print IRObj.lineno
-			for register in RegisterStatus:
-				if RegisterStatus[register]==1:
-					FreeRegister(register)
+
 		if str(IRObj.lineno) in labels.keys():
 			f=open(AssemFile,'a')
 			f.write(labels[str(IRObj.lineno)]+":\n")
 			f.close()			
 		
+		# Save Context Information
+		if IRObj.lineno+1 in bb and IRObj.lineno+1 != bb[-1] :
+			print IRObj.lineno
+			for register in RegisterStatus:
+				if RegisterStatus[register]==1 and '[' not in RegisterData[register]:
+					FreeRegister(register)
+
+		# Program End Context Save Case
+		if IRObj.lineno == bb[-1]:
+			print IRObj.lineno
+			for register in RegisterStatus:
+				if RegisterStatus[register]==1 and '[' not in RegisterData[register]:
+					FreeRegister(register)
+

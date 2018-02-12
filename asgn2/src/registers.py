@@ -55,18 +55,16 @@ def AssignRegister(_var, lineno, LoadCase ):
 	elif '[' in _var:	# The case of Array, you first need to assing registers to Base and Index here
 
 		BaseName= _var.split('[')[0]
-		
-		temp= _var.split('[')[1]
-		Index=.split(']')(0)
+		Index= _var.split('[')[1].split(']')[0]
 		
 		# Assigning the Register to Base Array: A
-		reg1= AssignRegister( BaseName, IRObj.lineno  , 1 )
+		reg1= AssignRegister( BaseName, lineno  , 1 )
 
 		# Assigning the Index to a Register: var in A[var]
 		if isint(Index):	# Case of A[4]
-			reg2= SpecialConstRegister( Index, IRObj.lineno , 1 )
+			reg2= SpecialConstRegister( Index, lineno , 1 )
 		else:				# Case of A[i]
-			reg2= AssignRegister( Index, IRObj.lineno , 1 )	
+			reg2= AssignRegister( Index, lineno , 1 )	
 
 		# Assigning the result of A[var] to a register
 		reg= GetFreeRegister()	
@@ -78,8 +76,8 @@ def AssignRegister(_var, lineno, LoadCase ):
 		RegisterAssigned[ _var ]= reg		
 		RegisterStatus[ reg ]= 1
 
-		f=open( AssemFile, 'w' )
-		f.write( "movl\t" + '(' + str(reg1) + ', ' + str(reg2) + ', ' + str(4) +')' + '\t' + str(reg)+'\n' )
+		f=open( AssemFile, 'a' )
+		f.write( "movl\t" + '(' + str(reg1) + ', ' + str(reg2) + ', ' + str(4) +'),' + '\t' + str(reg)+'\n' )
 		f.close()
 
 		return reg
