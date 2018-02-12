@@ -7,12 +7,32 @@ b: .long 0
 .globl _start
 _start:
 movl	$2,	%eax
-label2:
+movl	$7,	%edi
 movl	%eax,	a
-movl	$7,	%eax
-movl	a,	%edi
-addl	%eax,	%edi
-cmpl	%edi,%ebx
+movl	%edi,	b
+label2:
+movl	a,	%eax
+movl	b,	%edi
+addl	%edi,	%eax
+movl	%eax,	a
+movl	%edi,	b
+movl	a,	%eax
+cmpl	$50,%eax
 jle	label2
-movl	%eax,	b
-movl	%edi,	a
+movl	%eax,	a
+call	foo
+movl	$0,%ebx
+movl	$1,%eax
+int	$0x80
+
+.type foo , @function
+foo:
+push	%ebp
+mov	%esp,	%ebp
+pushl	a
+pushl	$format_int
+call	printf
+mov	%ebp,	%esp
+pop	%ebp
+movl	$0,%eax
+ret

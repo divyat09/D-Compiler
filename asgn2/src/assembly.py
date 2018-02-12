@@ -32,7 +32,7 @@ def Print_Int( IRObj ):
 		if _var in RegisterAssigned.keys():
 			f.write("pushl\t"+RegisterAssigned[_var]+"\n")
 		else:
-			f.write("pushl\t$"+_var+"\n")			
+			f.write("pushl\t"+_var+"\n")			
 	else:						# Int constant printing case
 		_var= IRObj.const
 		if(isint(str(_var))):
@@ -106,6 +106,8 @@ def Label( IRObj ):
 		f=open(AssemFile,'a')
 		f.write("\n.type "+IRObj.const+" , @function\n")
 		f.write(IRObj.const+":\n")
+		f.write("push\t%ebp\n")
+		f.write("mov\t%esp,\t%ebp\n")
 		f.close()
 		functions.remove(IRObj.const)
 	else:
@@ -123,19 +125,25 @@ def Call( IRObj ):
 	f.write("call\t"+IRObj.const+"\n")
 	f.close()
 
-def Ret( IRObj ):
-
+def Ret( IRObj, flag_exit ):
+	
 	if IRObj.isValid()[0]:	
 		_target= IRObj.src1['name']
+		if _target in RegisterAssigned.keys():
+			_target = RegisterAssigned[_target]
 	else:
-		_target= IRObj.const
-	if len(functions)==0:
+		_target= '$'+IRObj.const
+	
+	if flag_exit==0:
 		f=open(AssemFile,'a')
-		f.write("movl\t$"+_target+",%ebx"+"\nmovl\t$1,%eax\nint\t$0x80\n")
+		f.write("movl\t"+_target+",%ebx"+"\nmovl\t$1,%eax\nint\t$0x80\n")
 		f.close()	
 		return
+	
 	f=open(AssemFile,'a')
-	f.write("movl\t$"+_target+",%eax"+"\nret\n")
+	f.write("mov\t%ebp,\t%esp\n")
+	f.write("pop\t%ebp\n")
+	f.write("movl\t"+_target+",%eax"+"\nret\n")
 	f.close()
 
 def Assignment( IRObj ):
@@ -143,11 +151,11 @@ def Assignment( IRObj ):
 	if IRObj.isValid()[2]:
 
 		
-		if (IRObj.src1 = "*" or IRObj.src1 = "&"):
+		if IRObj.isValid()[0] and (IRObj.src1['name'][0] == "*" or IRObj.src1['name'][0] == "&"):
 			_src= IRObj.src1['name'][1:]
 			_dst= IRObj.dst['name']
 			reg2= AssignRegister(_dst, IRObj.lineno ,0)
-			if (IRObj.src1 = "*"):
+			if (IRObj.src1 == "*"):
 				reg1= AssignRegister(_src, IRObj.lineno ,1)
 				f=open(AssemFile,'a')
 				f.write( "movl\t[" + str(reg1) +',]\t' + str(reg2)+"\n" )
@@ -162,8 +170,8 @@ def Assignment( IRObj ):
 				reg1= AssignRegister(_src, IRObj.lineno ,1)
 			else:
 				_src= IRObj.const
-				reg1= _src
-			if (IRObj.dst[0]=='*'):
+				reg1= '$'+ _src
+			if (IRObj.dst['name'][0]=='*'):
 				_dst = IRObj.dst['name'][1:]
 				reg2 = AssignRegister(_dst, IRObj.lineno, 0)
 				f=open(AssemFile,'a')
@@ -188,7 +196,7 @@ def BitNeg( IRObj ):
 			reg1= AssignRegister( _src, IRObj.lineno, 1 )
 		else:
 			_src= IRObj.const
-			reg1 = _src
+			reg1 = '$'+ _src
 		f.open(AssemFile,'a')
 		f.write ("not\t"+reg3+","+reg2)
 		f.close
@@ -202,16 +210,16 @@ def Conditional ( IRObj):
 			reg1= AssignRegister( _src1, IRObj.lineno, 1 )
 	else:
 		_src1= IRObj.const
-		reg1= "$"+_src1
+		reg1= SpecialConstRegister( _src1, IRObj.lineno )
 	
 	if IRObj.isValid()[1]:
 		_src2= IRObj.src2['name']
 		reg2= AssignRegister( _src2, IRObj.lineno, 1 )
 	else:
 		_src2= IRObj.const2
-		reg2= SpecialDivisorRegister( _src2, IRObj.lineno )
+		reg2= "$" + _src2
 	f = open(AssemFile,'a')
-	f.write( "cmpl\t"+reg1+","+reg2+"\n")
+	f.write( "cmpl\t"+reg2+","+reg1+"\n")
 	f.write( str(op2wrd[IRObj.op])+"\t"+ labels[IRObj.const3]+"\n")
 	f.close()
 
@@ -223,7 +231,7 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 
 		else:
 			_src1= IRObj.const
-			reg1= _src1
+			reg1= '$'+ _src1
 		
 		if IRObj.isValid()[1]:
 			_src2= IRObj.src2['name']
@@ -231,7 +239,7 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 
 		else:
 			_src2= IRObj.const2
-			reg2= _src2
+			reg2= '$'+ _src2
 		
 		_dst= IRObj.dst['name']
 		reg3 = AssignRegister( _dst, IRObj.lineno, 0)
@@ -248,7 +256,7 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 			f.write( "movl\t" + str(reg0) +',\t' + str(reg3)+"\n" )		
 
 		# a= a op b case
-		elif(IRObj.src1== IRObj.dst) 
+		elif(IRObj.src1== IRObj.dst): 
 			f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )
 		
 		# a= b op c	 case
@@ -287,7 +295,7 @@ def Operator2( IRObj ):			# Div, Mod
 			reg1= AssignRegister( _src1, IRObj.lineno, 1 )
 		else:
 			_src1= IRObj.const
-			reg1= _src1
+			reg1= '$'+_src1
 		
 		if IRObj.isValid()[1]:
 			_src2= IRObj.src2['name']
@@ -309,8 +317,9 @@ def Operator2( IRObj ):			# Div, Mod
 	else:
 		print "Error: Destination is not a Variable "
 
-
 def AssemblyConverter():
+
+	flag_exit=0
 
 	f = open(AssemFile,'a')
 	f.write('.data\n')
@@ -320,16 +329,7 @@ def AssemblyConverter():
 	f.write('\n.text\n.globl _start\n_start:\n')
 	f.close()
 	for IRObj in statements:
-		if str(IRObj.lineno) in labels.keys():
-			f=open(AssemFile,'a')
-			f.write(labels[str(IRObj.lineno)]+":\n")
-			f.close()
-		# Save Context Information
-		if IRObj.lineno in bb and IRObj.lineno != bb[-1] :
-			for register in RegisterStatus:
-				if RegisterStatus[register]==1:
-					FreeRegister(register)
-
+		
 		if IRObj.op == "print_int":
 			Print_Int( IRObj ) 
 		elif IRObj.op == "print_string":
@@ -344,7 +344,9 @@ def AssemblyConverter():
 		elif IRObj.op == "call":
 			Call( IRObj )    
 		elif IRObj.op == "ret":
-			Ret( IRObj )
+			Ret( IRObj, flag_exit )
+			flag_exit=1
+
 		elif IRObj.op == "label":
 			Label( IRObj )
 
@@ -362,3 +364,14 @@ def AssemblyConverter():
 
 		elif IRObj.op == "~":
 			BitNeg( IRObj )
+		# Save Context Information
+		if IRObj.lineno-1 in bb and IRObj.lineno-1 != bb[-1] :
+			print IRObj.lineno
+			for register in RegisterStatus:
+				if RegisterStatus[register]==1:
+					FreeRegister(register)
+		if str(IRObj.lineno) in labels.keys():
+			f=open(AssemFile,'a')
+			f.write(labels[str(IRObj.lineno)]+":\n")
+			f.close()			
+		
