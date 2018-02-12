@@ -206,8 +206,8 @@ def BitNeg( IRObj ):
 def Conditional ( IRObj):
 
 	if IRObj.isValid()[0]:
-			_src1= IRObj.src1['name']
-			reg1= AssignRegister( _src1, IRObj.lineno, 1 )
+		_src1= IRObj.src1['name']
+		reg1= AssignRegister( _src1, IRObj.lineno, 1 )
 	else:
 		_src1= IRObj.const
 		reg1= SpecialConstRegister( _src1, IRObj.lineno )
