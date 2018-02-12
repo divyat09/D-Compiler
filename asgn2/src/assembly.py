@@ -16,34 +16,38 @@ def datasection():
     f.write(format_in+"\n")
     f.close()
 
-    ArrayStore= {}
+    # ArrayStore= {}
 
     for _var in Table.table.keys():
 		_varname= Table.table[_var]['name']
 
 		if Table.table[_var]['type'] == 'Array':
-			ArrayStore[ _varname.split('[')[0] ]= 1		
+			f=open(AssemFile,'a')
+			f.write(str(_varname) + ': .zeros '+ str(4*ArraySize)+'\n')	# 1 long= 4 Bytes
+			f.close()
 		else:
 			f=open(AssemFile,'a')
 			f.write(str(_varname) + ': .long 0\n')
 			f.close()
 
-		# Printing Arrays
-		for key in ArrayStore:
-			f=open(AssemFile,'a')
-			f.write(str(key) + ': .zeros '+ str(4*ArraySize)+'\n')	# 1 long= 4 Bytes
-			f.close()			
+		# # Printing Arrays
+		# for key in ArrayStore:
+		# 	f=open(AssemFile,'a')
+		# 	f.write(str(key) + ': .zeros '+ str(4*ArraySize)+'\n')	# 1 long= 4 Bytes
+		# 	f.close()			
 
 
 def Print_Int( IRObj ):
 	f=open(AssemFile,'a')	
 	if IRObj.isValid()[0]:		# Int Variable printing case
-		_var= IRObj.src1['name']
+		_var= IRObj.src1
 		# if Table.table[_var]['type']=='Array':
 		if _var in RegisterAssigned.keys():
 			print _var, RegisterAssigned[_var]
 			f.write("movl\t"+RegisterAssigned[_var]+",\t"+_var+"\n")
 			FreeRegister(RegisterAssigned[_var])
+			if RegisterStatus['%eax']!=-1:
+				FreeRegister("%eax")			
 		f.write("pushl\t"+_var+"\n")			
 	else:						# Int constant printing case
 		_var= IRObj.const
@@ -65,7 +69,7 @@ def Print_Int( IRObj ):
 # def Print_Str( IRObj ):
 
 # 	# if IRObj.isValid()[0]:	
-# 	# 	_str= IRObj.src1['name']
+# 	# 	_str= IRObj.src1
 # 	# else:
 # 	# 	print "Invalid Case"
 # 	f=open(AssemFile,'a')
@@ -84,7 +88,7 @@ def Print_Int( IRObj ):
 def Input_Int( IRObj ):
 
 	# if IRObj.isValid()[0]:		# Int Variable Case
-	# 	_var= IRObj.src1['name']
+	# 	_var= IRObj.src1
 	# else:						# Int constant Case
 	# 	_var= IRObj.const
 	f=open(AssemFile,'a')
@@ -96,7 +100,7 @@ def Input_Int( IRObj ):
 	# f.write( length_reg + output+ sys_read+ stdin+syscall)
 	# f.close()
 	if IRObj.isValid()[2]:		# Int Variable printing case
-		_var= IRObj.dst['name']
+		_var= IRObj.dst
 		# if Table.table[_var]['type']=='Array':
 		# if _var in RegisterAssigned.keys():
 		# 	f.write("movl\t"+RegisterAssigned[_var]+",\t"+_var+"\n")
@@ -114,7 +118,7 @@ def Input_Int( IRObj ):
 def Input_Str( IRObj ):
 
 	if IRObj.isValid()[0]:	
-		_str= IRObj.src1['name']
+		_str= IRObj.src1
 	else:
 		print "Invalid Case"
 
@@ -156,7 +160,7 @@ def Call( IRObj ):
 def Ret( IRObj, flag_exit ):
 	
 	if IRObj.isValid()[0]:	
-		_target= IRObj.src1['name']
+		_target= IRObj.src1
 		if _target in RegisterAssigned.keys():
 			_target = RegisterAssigned[_target]
 	else:
@@ -179,9 +183,9 @@ def Assignment( IRObj ):
 	if IRObj.isValid()[2]:
 
 		
-		if IRObj.isValid()[0] and (IRObj.src1['name'][0] == "*" or IRObj.src1['name'][0] == "&"):
-			_src= IRObj.src1['name'][1:]
-			_dst= IRObj.dst['name']
+		if IRObj.isValid()[0] and (IRObj.src1[0] == "*" or IRObj.src1[0] == "&"):
+			_src= IRObj.src1[1:]
+			_dst= IRObj.dst
 			reg2= AssignRegister(_dst, IRObj.lineno ,0)
 			if (IRObj.src1 == "*"):
 				reg1= AssignRegister(_src, IRObj.lineno ,1)
@@ -194,19 +198,19 @@ def Assignment( IRObj ):
 				f.close()
 		else:
 			if IRObj.isValid()[0]:
-				_src= IRObj.src1['name']
+				_src= IRObj.src1
 				reg1= AssignRegister(_src, IRObj.lineno ,1)
 			else:
 				_src= IRObj.const
 				reg1= '$'+ _src
-			if (IRObj.dst['name'][0]=='*'):
-				_dst = IRObj.dst['name'][1:]
+			if (IRObj.dst[0]=='*'):
+				_dst = IRObj.dst[1:]
 				reg2 = AssignRegister(_dst, IRObj.lineno, 0)
 				f=open(AssemFile,'a')
 				f.write( "movl\t" + str(reg1) +',\t[' + str(reg2)+"]\n" )
 				f.close()
 			else:
-				_dst = IRObj.dst['name']
+				_dst = IRObj.dst
 				reg2 = AssignRegister(_dst, IRObj.lineno, 0)
 				f=open(AssemFile,'a')
 				f.write( "movl\t" + str(reg1) +',\t' + str(reg2)+"\n" )
@@ -217,17 +221,17 @@ def Assignment( IRObj ):
 def BitNeg( IRObj ):
 
  	if IRObj.isValid()[2]:
-		_dst= IRObj.dst['name']
+		_dst= IRObj.dst
 		reg3 = AssignRegister( _dst, IRObj.lineno, 0)
 		if IRObj.isValid()[0]:	
-			_src= IRObj.src1['name']
+			_src= IRObj.src1
 			reg1= AssignRegister( _src, IRObj.lineno, 1 )
 		else:
 			_src= IRObj.const
 			reg1 = SpecialConstRegister( _src, IRObj.lineno )
 		f=open(AssemFile,'a')
 		f.write ("movl\t"+reg1+","+reg3+"\n")
-		f.write ("not\t,"reg3)
+		f.write ("not\t"+reg3+"\n")
 		f.close
 	else:
 		print "Error: Destination is not a Variable "
@@ -235,14 +239,14 @@ def BitNeg( IRObj ):
 def Conditional ( IRObj):
 
 	if IRObj.isValid()[0]:
-		_src1= IRObj.src1['name']
+		_src1= IRObj.src1
 		reg1= AssignRegister( _src1, IRObj.lineno, 1 )
 	else:
 		_src1= IRObj.const
 		reg1= SpecialConstRegister( _src1, IRObj.lineno )
 	
 	if IRObj.isValid()[1]:
-		_src2= IRObj.src2['name']
+		_src2= IRObj.src2
 		reg2= AssignRegister( _src2, IRObj.lineno, 1 )
 	else:
 		_src2= IRObj.const2
@@ -255,7 +259,7 @@ def Conditional ( IRObj):
 def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 	if IRObj.isValid()[2]:
 		if IRObj.isValid()[0]:
-			_src1= IRObj.src1['name']
+			_src1= IRObj.src1
 			reg1= AssignRegister( _src1, IRObj.lineno, 1 )
 
 		else:
@@ -263,14 +267,14 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 			reg1= '$'+ _src1
 		
 		if IRObj.isValid()[1]:
-			_src2= IRObj.src2['name']
+			_src2= IRObj.src2
 			reg2= AssignRegister( _src2, IRObj.lineno, 1 )
 
 		else:
 			_src2= IRObj.const2
 			reg2= '$'+ _src2
 		
-		_dst= IRObj.dst['name']
+		_dst= IRObj.dst
 		reg3 = AssignRegister( _dst, IRObj.lineno, 0)
 		
 		f=open(AssemFile,'a')
@@ -316,18 +320,18 @@ def Operator2( IRObj ):			# Div, Mod
 
 		# We explicitly need to store _dst in the Main Register
 		# Hence, a special Resiter Allocation Function for this case
-		_dst= IRObj.dst["name"]
+		_dst= IRObj.dst
 		AssignDivisionRegister( MainReg, SecReg, _dst, IRObj.lineno )
 
 		if IRObj.isValid()[0]:
-			_src1= IRObj.src1['name']
+			_src1= IRObj.src1
 			reg1= AssignRegister( _src1, IRObj.lineno, 1 )
 		else:
 			_src1= IRObj.const
 			reg1= '$'+_src1
 		
 		if IRObj.isValid()[1]:
-			_src2= IRObj.src2['name']
+			_src2= IRObj.src2
 			reg2= AssignRegister( _src2, IRObj.lineno, 1 )
 		else:
 			# A special Syntax Case. You cant write "idiv 4". Need to assing 4 to some register first
@@ -395,10 +399,10 @@ def AssemblyConverter():
 		elif IRObj.op == "~":
 			BitNeg( IRObj )
 
-		if str(IRObj.lineno) in labels.keys():
-			f=open(AssemFile,'a')
-			f.write(labels[str(IRObj.lineno)]+":\n")
-			f.close()			
+		# if str(IRObj.lineno-1) in labels.keys():
+		# 	f=open(AssemFile,'a')
+		# 	f.write(labels[str(IRObj.lineno)]+":\n")
+		# 	f.close()			
 		
 		# Save Context Information
 		if IRObj.lineno+1 in bb and IRObj.lineno+1 != bb[-1] :

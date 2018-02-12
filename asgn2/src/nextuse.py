@@ -17,13 +17,13 @@ def NextUse( IRobj, Global_Dict ):
 	Status= IRobj.isValid()
 
 	if Status[0]:
-  		Global_Dict[ IRobj.src1['name'] ]= IRobj.lineno
+  		Global_Dict[ IRobj.src1 ]= IRobj.lineno
   	
 	if Status[1]:
-		Global_Dict[ IRobj.src2['name'] ]= IRobj.lineno
+		Global_Dict[ IRobj.src2 ]= IRobj.lineno
 
 	if Status[2]:
-		Global_Dict[ IRobj.dst['name'] ]= int(sys.maxint)
+		Global_Dict[ IRobj.dst ]= int(sys.maxint)
 
 	return Global_Dict
 

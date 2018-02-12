@@ -11,6 +11,7 @@ class IRDS:
     self.const = None
     self.const2 = None
     self.const3 = None
+    # self.ArrIndex= None
   
   def isValid(self):
     return [bool(self.src1),bool(self.src2),bool(self.dst)]
@@ -26,12 +27,12 @@ class IRDS:
       if(isint(data[2])):
         self.const=data[2]
       else:
-        self.src1 =  data[2]
+        self.src1 =  Table.table[data[2]]
       
       if(isint(data[3])):
         self.const2=data[3]
       else:
-        self.src2 =  data[3]
+        self.src2 =  Table.table[data[3]]
 
       # jmp address can be a label hence not addded to table
       self.const3 = data[4]
@@ -53,32 +54,32 @@ class IRDS:
         self.const=data[2]
       else:
         # Table.addvar(data[2])
-        self.src1 = data[2]
-
+        self.src1 = Table.table[data[2]]
+  
     elif (data[1] == "="):
       # Table.addvar(data[2])      
-      self.dst = data[2]
+      self.dst = Table.table[data[2]]
       if(isint(data[3])):
         self.const=data[3]
       else:
         # Table.addvar(data[3])
-        self.src1 = data[3]
+        self.src1 = Table.table[data[3]]
   
     elif (data[1] == "~"):
       # Table.addvar(data[2])
-      self.dst = data[2]
+      self.dst = Table.table[data[2]]
       if(isint(data[3])):
         self.const=data[3]
       else:
         # Table.addvar(data[3])
-        self.src1 = data[3]
+        self.src1 = Table.table[data[3]]
   
     elif (data[1] == "print_int"):
       if(isint(data[2])):
         self.const=data[2]
       else:
         # Table.addvar(data[2])
-        self.src1 = data[2]
+        self.src1 =Table.table[data[2]]
   
     #here const is the address to the string 
     elif (data[1] == "print_string"):
@@ -86,7 +87,7 @@ class IRDS:
   
     elif (data[1] == "input_int"):
       # Table.addvar(data[2])
-      self.dst = data[2]
+      self.dst =Table.table[data[2]]
   
     # elif (data[1] == "input_string"):
     #   self.src1 = data[2]
@@ -96,14 +97,14 @@ class IRDS:
   
     else:
       # Table.addvar(data[2])
-      self.dst = data[2]
+      self.dst =Table.table[data[2]]
       if(isint(data[3])):
         self.const=data[3]
       else:
         # Table.addvar(data[3])
-        self.src1 = data[3]
+        self.src1 =Table.table[data[3]]
       if(isint(data[4])):
         self.const2=data[4]
       else:
         # Table.addvar(data[4])
-        self.src2 = data[4]
+        self.src2 = Table.table[data[4]]
