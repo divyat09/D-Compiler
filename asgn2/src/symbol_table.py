@@ -6,7 +6,7 @@ class SymbolTable:
     #Add variable to table 
     def addvar(self,varname):
 
-		self.table[varname]={'name':varname,'type':'None','scope':None}
+        self.table[varname]={'name':varname,'type':'None','scope':None}
 
 		# if '[' in varname:
 		# 	_name= varname.split('[')[0]

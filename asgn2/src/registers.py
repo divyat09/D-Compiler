@@ -57,16 +57,16 @@ def AssignRegister(_var, lineno, LoadCase ):
 		BaseName= _var.split('[')[0]
 		
 		temp= _var.split('[')[1]
-		Index=.split(']')(0)
+		Index=_var.split(']')[0]
 		
 		# Assigning the Register to Base Array: A
-		reg1= AssignRegister( BaseName, IRObj.lineno  , 1 )
+		reg1= AssignRegister( BaseName, lineno  , 1 )
 
 		# Assigning the Index to a Register: var in A[var]
 		if isint(Index):	# Case of A[4]
-			reg2= SpecialConstRegister( Index, IRObj.lineno , 1 )
+			reg2= SpecialConstRegister( Index, lineno , 1 )
 		else:				# Case of A[i]
-			reg2= AssignRegister( Index, IRObj.lineno , 1 )	
+			reg2= AssignRegister( Index, lineno , 1 )	
 
 		# Assigning the result of A[var] to a register
 		reg= GetFreeRegister()	

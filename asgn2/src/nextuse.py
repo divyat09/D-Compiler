@@ -16,7 +16,7 @@ def NextUse( IRobj, Global_Dict ):
   
 	Status= IRobj.isValid()
 
- 	if Status[0]:
+	if Status[0]:
   		Global_Dict[ IRobj.src1['name'] ]= IRobj.lineno
   	
 	if Status[1]:
@@ -25,7 +25,7 @@ def NextUse( IRobj, Global_Dict ):
 	if Status[2]:
 		Global_Dict[ IRobj.dst['name'] ]= int(sys.maxint)
 
-  	return Global_Dict
+	return Global_Dict
 
 		
 def BuildNextUseTable( bb ):
@@ -51,12 +51,12 @@ def BuildNextUseTable( bb ):
 	for linenum in range( EndLine, StartLine-1, -1  ):
 	  	# print linenum,statements	
 	  	# Dont include the Ending Leader unless its the case of Ending Basic Block
-	  	if( _iter!= len(bb) -1 and linenum==EndLine ):
-	  		continue
+	    if( _iter!= len(bb) -1 and linenum==EndLine ):
+	  	    continue
 
-	  	Global_Dict= NextUse( statements[linenum -1], Global_Dict )
+	    Global_Dict= NextUse( statements[linenum -1], Global_Dict )
 		# print Global_Dict
-		NextUseTable.append( Global_Dict.copy() )
+	    NextUseTable.append( Global_Dict.copy() )
 		# print NextUseTable 
 		# print "\n"
 
