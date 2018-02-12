@@ -9,8 +9,10 @@ def datasection():
 	# f.write(str(_varname) + ': DW 0\n')
 	# f.close()
     f=open(AssemFile,'a')
-    format_int = "format_int: .asciz \"%d\\n\""
-    f.write(format_int+"\n")
+    format_out = "format_out: .asciz \"%d\\n\""
+    format_in = "format_in: .asciz \"%d\""
+    f.write(format_out+"\n")
+    f.write(format_in+"\n")
     f.close()
     for _var in Table.table.keys():
 		_varname= Table.table[_var]['name']
@@ -29,16 +31,20 @@ def Print_Int( IRObj ):
 	f=open(AssemFile,'a')	
 	if IRObj.isValid()[0]:		# Int Variable printing case
 		_var= IRObj.src1['name']
+		# if Table.table[_var]['type']=='Array':
+
 		if _var in RegisterAssigned.keys():
-			f.write("pushl\t"+RegisterAssigned[_var]+"\n")
-		else:
-			f.write("pushl\t"+_var+"\n")			
+			print _var, RegisterAssigned[_var]
+			FreeRegister(RegisterAssigned[_var])
+			f.write("movl\t"+RegisterAssigned[_var]+",\t"+_var+"\n")
+		f.write("pushl\t"+_var+"\n")			
 	else:						# Int constant printing case
 		_var= IRObj.const
 		if(isint(str(_var))):
 			f.write("pushl\t$"+str(_var))
-	f.write("pushl\t"+"$format_int\n")
+	f.write("pushl\t"+"$format_out\n")
 	f.write("call\tprintf\n")
+	f.write("addl\t$8,%esp\n")
 
 	# _var = "$0x"+str(int(_var,16))
 	# length_reg = "movl\t"+"5"+",\t%edx\n" #Move 5 length of int iinto edx
@@ -70,18 +76,33 @@ def Print_Int( IRObj ):
 
 def Input_Int( IRObj ):
 
-	if IRObj.isValid()[0]:		# Int Variable Case
-		_var= IRObj.src1['name']
-	else:						# Int constant Case
-		_var= IRObj.const
+	# if IRObj.isValid()[0]:		# Int Variable Case
+	# 	_var= IRObj.src1['name']
+	# else:						# Int constant Case
+	# 	_var= IRObj.const
 	f=open(AssemFile,'a')
-	# length_reg = "mov"+"\t"+"5"+"%edx\n"
-	# output = "mov\t"+_var+"%ecx\n"
-	# stdin = "mov"+"\t"+"0"+","+"%ebx\n"
-	# sys_read = "mov"+"\t"+"$0x3"+","+"eax\n"
-	# syscall = "int"+"\t"+"$0x80\n"
-	f.write( length_reg + output+ sys_read+ stdin+syscall)
-	f.close()
+	# # length_reg = "mov"+"\t"+"5"+"%edx\n"
+	# # output = "mov\t"+_var+"%ecx\n"
+	# # stdin = "mov"+"\t"+"0"+","+"%ebx\n"
+	# # sys_read = "mov"+"\t"+"$0x3"+","+"eax\n"
+	# # syscall = "int"+"\t"+"$0x80\n"
+	# f.write( length_reg + output+ sys_read+ stdin+syscall)
+	# f.close()
+	if IRObj.isValid()[2]:		# Int Variable printing case
+		_var= IRObj.dst['name']
+		# if Table.table[_var]['type']=='Array':
+		# if _var in RegisterAssigned.keys():
+		# 	f.write("movl\t"+RegisterAssigned[_var]+",\t"+_var+"\n")
+		FreeRegister("%eax")
+		f.write("xorl\t%eax,%eax\n")
+		f.write("pushl\t$"+_var+"\n")	
+		f.write("pushl\t"+"$format_in\n")
+		f.write("call\tscanf\n")
+		f.write("addl\t$8,%esp\n")
+
+	else:						# Int constant printing case
+		print "Input_Int error: value must be a memory location pc"
+
 
 def Input_Str( IRObj ):
 
