@@ -1,0 +1,18 @@
+1, =, a, 10
+2, = , b, 5
+3, +, c, a, b
+4, print_int, c
+5, -, d, a, b
+6, print_int, d
+7, *, e, a, b
+8, print_int, e 
+9, /, f, a, b
+10, print_int, f
+11, or, g, a, b
+12, print_int g
+13, and, h, a, b
+14, print_int, h
+15, xor, i, a, b
+16, print_int, i
+17, ~, j, a
+18, print_int, j
