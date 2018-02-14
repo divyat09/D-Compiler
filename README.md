@@ -1,35 +1,23 @@
 # D-Compiler
 
-### Acknowledgement
+### Team Members
+Group 46: 
 
-Refernce we used for writing the lexer generator:
- 
-https://github.com/pankajmore/pyCPP/blob/semantics/pyCPP/lexer.py
+Prithviraj Chavan ( 14196 ) ( prithvi@iitk.ac.in )
+	  
+Pooja Yadav ( 14469 ) ( poojay@iitk.ac.in )
+
+Divyat Mahajan ( 14227 ) ( divyatm@iitk.ac.in )
+
+### T-Diagram of Compiler
+Source Language: D
+
+Implementation Language: Python
+
+Target Language: x86
 
 ### Contents
-/src directory contains the code lex.py: the lexer generator
 
-/test directory contains the test cases to be tokenised of source language D
+\asgn1:	Implementation of Lexer
 
-Makefile generates the executable "lexer" for /src/lex.py in the /bin directory
-
-### Execution
-
-First create executable of "lex.py" using makefile and then run that executable "bin/lexer" with D Lang Source Code( Test Case ) as first command line parameter
-
-### Run
-1 cd to the base directory: asgn1
-
-2 Run the command: make
-
-3 Tokenise test cases: bin/lexer test/test1.d
-
-Tokenise different test cases by passing them as input command line parameters
- 	
-### Output
-
-The output is of the form:
-
-Token \t\t Occurrances \t\t Lexemes 
-
-In cases of errors( like illegal identifier names ), the error is reported at start and then outputs the other tokens in above format.
+\asgn2: Implementer of Assembly Code Generator from IR Representation
