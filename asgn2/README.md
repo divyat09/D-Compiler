@@ -51,10 +51,15 @@ This directory contains the python code used to generate Assembly Code form Inte
 This directory contains the tests cases, txt files containing the Intermediate Representation of the program.
 
 TestCase1: cmp_2_num.ir: Compares two number and returns smaller
+
 TestCase2: inp_arr.it: Scans an array of 10 elements and prints it 
+
 TestCase3: operators1.ir: Functionality of all arithematic operators
+
 TestCase4: operators2.ir: Functionality of all Bitwise Operators
+
 TestCase5: func_fact.ir: Computes factorial of the entered number
+
 TestCase6: test_arr.ir: Computes square of numbers in an array
 ### Execution
 
