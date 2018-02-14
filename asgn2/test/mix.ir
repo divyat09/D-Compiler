@@ -1,12 +1,12 @@
 1, =, i, 0
-2, label, L1
+2, label, L2
 3, *, A[i], i, i
 4, print_int, A[i]
 5, +, i, i, 1
-6, ifgoto_lt, i, 10, L1
+6, ifgoto_lt, i, 10, L2
 7, =, i, 0
-8, label, L2
-9, ifgoto_neq, A[i], A[4], L3
+8, label, L8
+9, ifgoto_neq, A[i], A[4], L9
 10, <<, a, A[4], 2
 11, print_int, a
 12, >>, a, 1, A[4]
@@ -16,15 +16,15 @@
 16, ~, A[4], A[4]
 17, call, Power
 18, exit, 0
-19, label, L3
+19, label, L9
 20, +, i, i, 1
-21, ifgoto_lt, i, 10, L2
+21, ifgoto_lt, i, 10, L8
 22, label, Power
 23, input_int, x
 24, =, j, 1
-24, label, L4
+24, label, L24
 25, *, A[4], A[4], A[4]
 26, +, j, j, 1
-27, ifgoto_leq, j, x, L4
+27, ifgoto_leq, j, x, L24
 28, ret, 0
 29, exit, 0

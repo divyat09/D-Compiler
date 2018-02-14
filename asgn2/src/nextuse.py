@@ -42,9 +42,9 @@ def NextUse( IRobj, Global_Dict ):
 
 	if Status[2]:
 		# Array Case, Store next use for A and i too in A[i]
-		if '[' in IRobj.src1:
+		if '[' in IRobj.dst:
 			Base= IRobj.dst.split('[')[0]
-			Index= IRobj.ds.split('[')[1].split(']')[0]
+			Index= IRobj.dst.split('[')[1].split(']')[0]
 
 	  		Global_Dict[ Base ]= IRobj.lineno
 			if not isint(Index):
