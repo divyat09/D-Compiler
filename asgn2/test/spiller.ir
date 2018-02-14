@@ -7,4 +7,3 @@
 7, +, e, b, c
 8, +, e, a, d
 9, print_int, i
-10, print_int, A[1]

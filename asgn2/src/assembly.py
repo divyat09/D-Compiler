@@ -25,7 +25,7 @@ def datasection():
 			f=open(AssemFile,'a')
 			f.write(str(_varname) + ': .zero '+ str(4*ArraySize)+'\n')	# 1 long= 4 Bytes
 			f.close()
-		else:
+		elif Table.table[_var]['type'] == 'Variable':
 			f=open(AssemFile,'a')
 			f.write(str(_varname) + ': .long 0\n')
 			f.close()
