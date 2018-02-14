@@ -43,3 +43,9 @@ BuildNextUseTable( bb )
 
 # Conver to Assembly
 AssemblyConverter()
+
+# Print AssemFile
+f= open(AssemFile,'r')
+content = f.read()
+print content
+f.close()

@@ -1,5 +1,0 @@
-1,=,a,0
-2,input_int,a
-3,+,a,a,a
-4,print_int,a
-5,ret,0

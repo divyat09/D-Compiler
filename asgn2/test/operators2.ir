@@ -1,0 +1,13 @@
+1, =, a, 10
+2, =, b, 5
+3, |, c, a, b
+4, print_int, c
+5, &, d, a, b
+6, print_int, d
+7, ^, e, a, b
+8, print_int, e
+9, >>, g, a, 2
+10, print_int, g
+11, <<, h, a, 2
+12, print_int, h
+13, exit, 0
