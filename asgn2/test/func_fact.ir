@@ -1,8 +1,8 @@
 1, input_int, a
-2, call, foo
+2, call, factorial
 3, print_int, fact
 4, exit, 0
-5, label, foo
+5, label, factorial
 6, =, i, 1
 7, =, fact, 1
 8, label, L8
