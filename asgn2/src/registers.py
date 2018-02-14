@@ -29,15 +29,19 @@ def RegisterSpilling( lineno ):
 	NextUseInfo= NextUseTable[ lineno-1 ]	# Get Next Use Dictionary for the particular line
 	AssVarList= RegisterAssigned.keys()			# Get List of variables currently assigned to Registers
 
+	# for item in NextUseTable:
+	# 	print item
+	# print "\n"
+	# print NextUseInfo
+
 	NextUseList=[]							# Make a list of the nextuse of currently assigend varibles
 	for variable in AssVarList:
 		NextUseList.append( NextUseInfo[variable] )
-
+	
 	# Get Max Next Use Variable 
 	MaxIndex= NextUseList.index( max(NextUseList) )
-	print NextUseList
 	VictimVar= AssVarList[ MaxIndex ]
-	print RegisterAssigned,VictimVar
+	print lineno,VictimVar
 	VictimReg= RegisterAssigned[VictimVar]
 
 	# Setting the Register holding Longest Use Varible Free

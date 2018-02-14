@@ -3,11 +3,13 @@ import sys
 
 def InitGlobalDict():
 	Global_Dict={}
+	for item in statements:
+		Global_Dict[item.src1]= int(sys.maxint)
+		Global_Dict[item.src2]= int(sys.maxint)
+		Global_Dict[item.dst]= int(sys.maxint)
 
+	# To add the case of Array Name: i.e. adding A given A[i]
 	for _var in Table.table.keys():
-		# print int(sys.maxint)
-		# print Table.table.keys()
-		# print _var
 		Global_Dict[Table.table[_var]['name']]= int(sys.maxint)
 
 	return Global_Dict
