@@ -10,4 +10,13 @@
 10, print_int, f
 11, %, g, a, b
 12, print_int, g
-13, exit, 0
+13, -, a, a, a
+14, print_int, a
+15, /, f, f, f
+16, print_int, f
+17, -, b, 4, b
+18, print_int, b
+19, *, a, b, a
+20, print_int, a 
+21, %, c, c, b
+21, exit, 0
