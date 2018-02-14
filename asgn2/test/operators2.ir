@@ -10,4 +10,6 @@
 10, print_int, g
 11, <<, h, a, 2
 12, print_int, h
-13, exit, 0
+13, ~, j,a
+14, print_int, j
+15, exit, 0

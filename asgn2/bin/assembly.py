@@ -463,4 +463,4 @@ def AssemblyConverter():
 
 		
 	# Program End Context Save Case
-	SaveContext( IRObj.lineno )
+	# SaveContext( IRObj.lineno )
