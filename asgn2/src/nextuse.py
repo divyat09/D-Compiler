@@ -17,29 +17,45 @@ def NextUse( IRobj, Global_Dict ):
 	Status= IRobj.isValid()
 
 	if Status[0]:
+		# Array Case, Store next use for A and i too in A[i]
+		if '[' in IRobj.src1:
+			Base= IRobj.src1.split('[')[0]
+			Index= IRobj.src1.split('[')[1].split(']')[0]
+
+	  		Global_Dict[ Base ]= IRobj.lineno
+			if not isint(Index):
+		 		Global_Dict[ Index]= IRobj.lineno
+
   		Global_Dict[ IRobj.src1 ]= IRobj.lineno
   	
 	if Status[1]:
+		# Array Case, Store next use for A and i too in A[i]
+		if '[' in IRobj.src2:
+			Base= IRobj.src2.split('[')[0]
+			Index= IRobj.src2.split('[')[1].split(']')[0]
+
+	  		Global_Dict[ Base ]= IRobj.lineno
+			if not isint(Index):
+		 		Global_Dict[ Index]= IRobj.lineno
+
 		Global_Dict[ IRobj.src2 ]= IRobj.lineno
 
 	if Status[2]:
+		# Array Case, Store next use for A and i too in A[i]
+		if '[' in IRobj.src1:
+			Base= IRobj.dst.split('[')[0]
+			Index= IRobj.ds.split('[')[1].split(']')[0]
+
+	  		Global_Dict[ Base ]= IRobj.lineno
+			if not isint(Index):
+		 		Global_Dict[ Index]= IRobj.lineno
+
 		Global_Dict[ IRobj.dst ]= int(sys.maxint)
 
 	return Global_Dict
 
 		
 def BuildNextUseTable( bb ):
-
-	# for IRobj in (statements):
-	# 	Status= IRobj.isValid()
-	# 	if Status[0]:
-	# 		Global_Dict[ IRobj.src1 ]= -1
-		
-	# 	if Status[1]:
-	# 		Global_Dict[ IRobj.src2 ]= -1
-
-	# 	if Status[2]:
-	# 		Global_Dict[ IRobj.dst ]= -1
 	
 	for _iter in range( len(bb)-1, 0, -1 ):	# Need to iterate only till the 2nd element: hence 0 and not 1
 	  
