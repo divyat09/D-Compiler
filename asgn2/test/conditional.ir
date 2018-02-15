@@ -1,27 +1,22 @@
-1, input_int, a
-2, input_int, b
-3, ifgoto_leq, a, b, L12
+1, =, a, 7
+2, =, b, 5
+3, print_int, a
 4, print_int, b
-5, ifgoto_geq, b, a, L15
-6, print_int, a
-7, ifgoto_lt, 5, b, L18
-8, print_int, b
-9, ifgoto_gt, -5, -10, L21
-10, print_int, -10
-11, exit, 0
-12, label, L12
-13, print_int, a
-14, exit, 0
-15, label, L15
-16, print_int, b
-17, exit, 0
-18, label, L18
-19, print_int, 5
-20, exit, 0
+5, ifgoto_gt, a, b, L8
+6, print_int, 0
+7, jump, L20
+8, label, L8
+9, print_int, 1
+10, ifgoto_lt, a, b, L21
+11, print_int, 0
+12, ifgot_gte, a, 10, L21
+13, print_int, 0
+14, ifgoto_lte, 7, b, L21
+15 print_int, 0
+16, ifgoto_eq, 1, -1, L21
+17, print_int, 0
+18, ifgoto_neq, b, 5, L21
+19, print_int, 0
+20, exit, 0 
 21, label, L21
-22, print_int, -5
-23, ifgoto_eq, a, a, L12
-24, print_int, -1
-25, ifgoto_neq, 0, b, L15
-26, print_int, -1 
-27, exit, 0
+22, exit, 0
