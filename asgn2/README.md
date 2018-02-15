@@ -60,7 +60,10 @@ TestCase4: operators2.ir: Functionality of all Bitwise Operators
 
 TestCase5: func_fact.ir: Computes factorial of the entered number
 
-TestCase6: test_arr.ir: Computes square of numbers in an array
+TestCase6: VarSpiller.ir: Checks of correct Regiser Spilling as per Next Use in Variables
+
+TestCase7: ArrSpiller.ir: Checks for correct Register Spilling as per Next Use in Arrray
+
 ### Execution
 
 1 cd to the base directory: asgn2

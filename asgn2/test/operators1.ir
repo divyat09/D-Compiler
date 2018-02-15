@@ -18,5 +18,6 @@
 18, print_int, b
 19, *, a, b, a
 20, print_int, a 
-21, %, c, c, b
-21, exit, 0
+21, /, c, c, -1
+22, print_int, c
+23, exit, 0
