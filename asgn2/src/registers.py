@@ -15,11 +15,11 @@ def SaveArray( reg, var):
 				reg0= temp
 				break			
 		f.write( 'movl\t' + str(reg0)+',\t'+ str(RegisterData[reg0]) +"\n")
-		f.write( 'movl\t' + str(Base)+',\t'+ str(reg0) +"\n")
+		f.write( 'movl\t$' + str(Base)+',\t'+ str(reg0) +"\n")
 	else:
 		reg0= flag0
 		RegisterStatus[reg0]= 1
-		f.write( 'movl\t' + str(Base)+',\t'+ str(reg0) +"\n")
+		f.write( 'movl\t$' + str(Base)+',\t'+ str(reg0) +"\n")
 	
 	RegisterStatus[reg0]= 1
 
