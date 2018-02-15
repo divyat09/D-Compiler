@@ -137,11 +137,11 @@ def Input_Int( IRObj ):
 			reg1= AssignRegister(BaseName,IRObj.lineno,0)
 			f.write( 'movl\t$' + str(BaseName)+',\t'+ str(reg1) +"\n")
 			
-			# if isint( index ):
+			if isint( index ):
+				reg3= SpecialConstRegister( index, IRObj.lineno )
+			else:
+			 	reg3= AssignRegister( index, IRObj.lineno ,1 )
 			
-			# else:
-			# 	reg2= AssignRegister( index, IRObj.lineno ,1 )
-			reg3 = AssignRegister( index, IRObj.lineno ,1 )
 			reg2= SpecialConstRegister( 4, IRObj.lineno )
 			f.write( "imul\t" + str(reg3) +',\t' + str(reg2)+"\n" )
 			f.write( "addl\t" + str(reg2) +',\t' + str(reg1)+"\n" )
@@ -233,38 +233,38 @@ def Assignment( IRObj ):
 	if IRObj.isValid()[2]:
 
 		
-		if IRObj.isValid()[0] and (IRObj.src1[0] == "*" or IRObj.src1[0] == "&"):
-			_src= IRObj.src1[1:]
-			_dst= IRObj.dst
-			reg2= AssignRegister(_dst, IRObj.lineno ,0)
-			if (IRObj.src1 == "*"):
-				reg1= AssignRegister(_src, IRObj.lineno ,1)
-				f=open(AssemFile,'a')
-				f.write( "movl\t[" + str(reg1) +',]\t' + str(reg2)+"\n" )
-				f.close()
-			else:
-				f=open(AssemFile,'a')
-				f.write( "lea\tbyte ptr " +_src +"," + str(reg2)+"\n" )
-				f.close()
+	# 	if IRObj.isValid()[0] and (IRObj.src1[0] == "*" or IRObj.src1[0] == "&"):
+	# 		_src= IRObj.src1[1:]
+	# 		_dst= IRObj.dst
+	# 		reg2= AssignRegister(_dst, IRObj.lineno ,0)
+	# 		if (IRObj.src1 == "*"):
+	# 			reg1= AssignRegister(_src, IRObj.lineno ,1)
+	# 			f=open(AssemFile,'a')
+	# 			f.write( "movl\t[" + str(reg1) +',]\t' + str(reg2)+"\n" )
+	# 			f.close()
+	# 		else:
+	# 			f=open(AssemFile,'a')
+	# 			f.write( "lea\tbyte ptr " +_src +"," + str(reg2)+"\n" )
+	# 			f.close()
+	# 	else:
+		if IRObj.isValid()[0]:
+			_src= IRObj.src1
+			reg1= AssignRegister(_src, IRObj.lineno ,1)
 		else:
-			if IRObj.isValid()[0]:
-				_src= IRObj.src1
-				reg1= AssignRegister(_src, IRObj.lineno ,1)
-			else:
-				_src= IRObj.const
-				reg1= '$'+ _src
-			if (IRObj.dst[0]=='*'):
-				_dst = IRObj.dst[1:]
-				reg2 = AssignRegister(_dst, IRObj.lineno, 0)
-				f=open(AssemFile,'a')
-				f.write( "movl\t" + str(reg1) +',\t[' + str(reg2)+"]\n" )
-				f.close()
-			else:
-				_dst = IRObj.dst
-				reg2 = AssignRegister(_dst, IRObj.lineno, 0)
-				f=open(AssemFile,'a')
-				f.write( "movl\t" + str(reg1) +',\t' + str(reg2)+"\n" )
-				f.close()
+			_src= IRObj.const
+			reg1= '$'+ _src
+	# if (IRObj.dst[0]=='*'):
+	# 	_dst = IRObj.dst[1:]
+	# 	reg2 = AssignRegister(_dst, IRObj.lineno, 0)
+	# 	f=open(AssemFile,'a')
+	# 	f.write( "movl\t" + str(reg1) +',\t[' + str(reg2)+"]\n" )
+	# 	f.close()
+			# else:
+		_dst = IRObj.dst
+		reg2 = AssignRegister(_dst, IRObj.lineno, 0)
+		f=open(AssemFile,'a')
+		f.write( "movl\t" + str(reg1) +',\t' + str(reg2)+"\n" )
+		f.close()
 	else:
 		print "Error: Destination is not a Variable "
 
@@ -396,7 +396,7 @@ def Operator2( IRObj ):			# Div, Mod
 		f.close()
 		
 		# To free the Second Register containg the value of Modulo/Quotient which we dont need 	
-		EndDivisionRegister( SecReg )
+		EndDivisionRegister( MainReg, SecReg, _dst, IRObj.lineno  )
 		
 	else:
 		print "Error: Destination is not a Variable "

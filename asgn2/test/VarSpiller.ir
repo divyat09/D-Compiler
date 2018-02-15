@@ -8,3 +8,4 @@
 8, +, e, a, d
 9, print_int, i
 10, print_int, x 
+11, exit, 0

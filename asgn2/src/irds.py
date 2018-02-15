@@ -42,7 +42,7 @@ class IRDS:
     elif (data[1] == "jmp"):
       self.const = data[2]
       bb.append(int(self.lineno)+1)
-      bb.append(int(self.const))
+      bb.append(int(self.const[1:]))
   
     elif (data[1] == "call"):
       self.const = data[2]

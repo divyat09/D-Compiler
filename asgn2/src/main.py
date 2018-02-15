@@ -21,8 +21,7 @@ for line in f.readlines():
     param=param.strip('\n')
     _input.append(param)
   for variables in _input[2:]:
-    print _input    
-    if(_input[1] in ["ifgoto_lt","ifgoto_leq","ifgoto_gt","ifgoto_geq","ifgoto_eq","ifgoto_neq",'print_string','ret','label'] ):
+    if(_input[1] in ["ifgoto_lt","ifgoto_leq","ifgoto_gt","ifgoto_geq","ifgoto_eq","ifgoto_neq",'print_string','ret','label','jmp'] ):
       continue
     if(isint(variables)):
       continue
@@ -38,6 +37,7 @@ for line in f.readlines():
 bb.append(len(statements))
 bb.sort()
 
+# Build the next use table
 BuildNextUseTable( bb )
 
 # Conver to Assembly

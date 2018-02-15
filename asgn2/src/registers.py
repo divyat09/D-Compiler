@@ -1,17 +1,70 @@
 from globalvars import *
 
+def SaveArray( reg, var):
+
+	f= open( AssemFile, 'a' )
+	
+	Base= var.split('[')[0]
+	Index= var.split('[')[1].split(']')[0]
+
+	# Temporary Register for Base
+	flag0= GetFreeRegister()
+	if flag0 == -1:
+		for temp in RegisterStatus:
+			if  temp != reg:
+				reg0= temp
+				break			
+		f.write( 'movl\t' + str(reg0)+',\t'+ str(RegisterData[reg0]) +"\n")
+		f.write( 'movl\t' + str(Base)+',\t'+ str(reg0) +"\n")
+	else:
+		reg0= flag0
+		f.write( 'movl\t' + str(Base)+',\t'+ str(reg0) +"\n")
+
+	# Temporary Register for Index
+	if isint(Index):
+		Index= '$' + str(Index)
+	
+	flag1= GetFreeRegister()
+	if flag1 == -1:
+		for temp in RegisterData:
+			if temp != reg and temp != reg0:
+				reg1= temp
+				break
+		f.write( 'movl\t' + str(reg1)+',\t'+ str(RegisterData[reg1]) +"\n")			
+		f.write( 'movl\t' + str(Index)+',\t'+ str(reg1) +"\n")
+	else:
+		reg1= flag1
+		f.write( 'movl\t' + str(Index)+',\t'+ str(reg1) +"\n")
+					
+	# Stroing Val in memory
+	f.write( "movl\t" + str(reg) +  ',\t(' + str(reg0) + ', ' + str(reg1) + ', ' + str(4) +')' +'\n' )
+
+	if flag0 == -1:
+		f.write( 'movl\t' + str(RegisterData[reg0]) +',\t'+ str(reg0)  +"\n")
+
+	if flag1 == -1:
+		f.write( 'movl\t' +  str(RegisterData[reg1]) +',\t'+ str(reg1) +"\n")			
+
+	f.close()	
+
+
 # Erase the content of a Register
 def FreeRegister( reg ):
 	# print reg, RegisterData,RegisterStatus[reg]
 	var= RegisterData[ reg ]
+
+	# Adding the assembly instruction to save the data
+	if '[' in var:
+		SaveArray( reg, var )
+	else:
+		f= open( AssemFile, 'a' )
+		f.write( 'movl\t' + str(reg)+',\t'+ str(var) +"\n")
+		f.close()
+	
 	RegisterStatus[ reg ]= -1
 	RegisterData[ reg ]= None
 	del RegisterAssigned[ var ]	
 
-	# Adding the assembly instruction to save the data
-	f= open( AssemFile, 'a' )
-	f.write( 'movl\t' + str(reg)+',\t'+ str(var) +"\n")
-	f.close()
 
 # Return a free register from the set of all registers
 def GetFreeRegister():
@@ -25,14 +78,8 @@ def GetFreeRegister():
 
 # If no free registers available, do Register Spilling
 def RegisterSpilling( lineno ):
-
 	NextUseInfo= NextUseTable[ lineno-1 ]	# Get Next Use Dictionary for the particular line
 	AssVarList= RegisterAssigned.keys()			# Get List of variables currently assigned to Registers
-
-	# for item in NextUseTable:
-	# 	print item
-	# print "\n"
-	# print NextUseInfo
 
 	NextUseList=[]							# Make a list of the nextuse of currently assigend varibles
 	for variable in AssVarList:
@@ -41,7 +88,6 @@ def RegisterSpilling( lineno ):
 	# Get Max Next Use Variable 
 	MaxIndex= NextUseList.index( max(NextUseList) )
 	VictimVar= AssVarList[ MaxIndex ]
-	print lineno,VictimVar
 	VictimReg= RegisterAssigned[VictimVar]
 
 	# Setting the Register holding Longest Use Varible Free
@@ -132,13 +178,19 @@ def AssignDivisionRegister( MainReg, SecReg, _var, lineno ):
 		FreeRegister( MainReg )
 	if RegisterStatus[SecReg] != -1:
 		FreeRegister( SecReg )
-
+	
+	# Preserving the eax and edx registers as they contain result of division
 	RegisterStatus[MainReg]= 1
-	RegisterData[MainReg]= _var
-	RegisterAssigned[_var]= MainReg
-
 	RegisterStatus[SecReg]= 1
 
-def EndDivisionRegister( SecReg ):
+def EndDivisionRegister( MainReg, SecReg, _var, lineno  ):
 
 	RegisterStatus[SecReg]= -1
+
+	reg= AssignRegister( _var, lineno, 1)
+	f= open( AssemFile, 'a' )
+	f.write( 'movl\t' + str(MainReg)+',\t'+ str(reg) +"\n")
+	f.close()
+
+	RegisterStatus[MainReg]= -1
+

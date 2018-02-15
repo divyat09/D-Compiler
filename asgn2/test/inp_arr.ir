@@ -7,6 +7,6 @@
 7, label, L7
 8, -, j, 9, i
 9, print_int, A[j]
-11, +, i, i, 1
-12, ifgoto_lt, i, 10, L7
-13, exit, 0
+10, +, i, i, 1
+11, ifgoto_lt, i, 10, L7
+12, exit, 0

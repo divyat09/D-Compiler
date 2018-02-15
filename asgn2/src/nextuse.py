@@ -61,22 +61,19 @@ def BuildNextUseTable( bb ):
 	
 	for _iter in range( len(bb)-1, 0, -1 ):	# Need to iterate only till the 2nd element: hence 0 and not 1
 	  
-	  Global_Dict= InitGlobalDict()
+		Global_Dict= InitGlobalDict()
 
-	  StartLine= bb[_iter -1 ] 
-	  EndLine= bb[_iter] 
+		StartLine= bb[_iter -1 ] 
+		EndLine= bb[_iter] 
 
-	for linenum in range( EndLine, StartLine-1, -1  ):
-	  	# print linenum,statements	
-	  	# Dont include the Ending Leader unless its the case of Ending Basic Block
-	    if( _iter!= len(bb) -1 and linenum==EndLine ):
-	  	    continue
-
-	    Global_Dict= NextUse( statements[linenum -1], Global_Dict )
-		# print Global_Dict
-	    NextUseTable.append( Global_Dict.copy() )
-		# print NextUseTable 
-		# print "\n"
+		for linenum in range( EndLine, StartLine-1, -1  ):
+			# print linenum,statements	
+			# Dont include the Ending Leader unless its the case of Ending Basic Block
+			if( _iter!= len(bb) - 1 and linenum==EndLine ):
+				continue
+			print linenum,EndLine,len(statements)
+			Global_Dict= NextUse( statements[linenum -1], Global_Dict )
+			# print Global_Dict
+			NextUseTable.append( Global_Dict.copy() )
 
 	NextUseTable.reverse()
-	# print NextUseTable
