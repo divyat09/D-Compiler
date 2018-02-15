@@ -287,14 +287,17 @@ def BitNeg( IRObj ):
 		print "Error: Destination is not a Variable "
 
 def Conditional ( IRObj):
-
+	
+	flag_= 0
 	if IRObj.isValid()[0]:
 		_src1= IRObj.src1
 		reg1= AssignRegister( _src1, IRObj.lineno, 1 )
 	else:
 		_src1= IRObj.const
+		flag_= 1
 		reg1= SpecialConstRegister( _src1, IRObj.lineno )
-	
+		RegisterStatus[reg1]= 1
+
 	if IRObj.isValid()[1]:
 		_src2= IRObj.src2
 		reg2= AssignRegister( _src2, IRObj.lineno, 1 )
@@ -305,6 +308,9 @@ def Conditional ( IRObj):
 	f.write( "cmpl\t"+reg2+","+reg1+"\n")
 	f.write( str(op2wrd[IRObj.op])+"\t"+ IRObj.const3+"\n")
 	f.close()
+
+	if flag_:
+		RegisterStatus[ reg1 ]= -1
 
 def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 	if IRObj.isValid()[2]:
@@ -348,6 +354,7 @@ def Operator1( IRObj ):			# Add, Mul, Sub, xor, or ,and
 			f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )
 	
 		f.close()
+		
 
 	else:
 		print "Error: Destination is not a Variable "
@@ -460,10 +467,9 @@ def SaveContext( lineno ):
 	# Save Context Information
 	if lineno in bb:
 		for register in RegisterStatus : 		
-			if RegisterStatus[register]==1 and '[' not in RegisterData[register]:
+			if RegisterStatus[register]==1:
 				varname= RegisterData[register]
-				if Table.table[varname]['type'] == 'Variable':
-					FreeRegister(register)
+				FreeRegister(register)
 
 def AssemblyConverter():
 
@@ -488,7 +494,9 @@ def AssemblyConverter():
 			Input_Str( IRObj )
 
 		elif IRObj.op == "jmp":
+			SaveContext( IRObj.lineno + 1 )
 			Jump( IRObj )
+
 		elif IRObj.op == "call":
 			Call( IRObj )    
 		elif IRObj.op == "ret":
@@ -503,7 +511,7 @@ def AssemblyConverter():
 			Assignment( IRObj )
 
 		elif IRObj.op[0] == "i":
-			SaveContext( IRObj.lineno +  1 )
+			SaveContext( IRObj.lineno + 1 )
 		 	Conditional( IRObj )
 
 		elif IRObj.op in ["+", "-", "*", "&", "|",  "^"]:

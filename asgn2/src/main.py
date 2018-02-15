@@ -36,6 +36,7 @@ for line in f.readlines():
 
 bb.append(len(statements))
 bb.sort()
+print bb
 
 # Build the next use table
 BuildNextUseTable( bb )

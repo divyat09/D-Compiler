@@ -18,7 +18,10 @@ def SaveArray( reg, var):
 		f.write( 'movl\t' + str(Base)+',\t'+ str(reg0) +"\n")
 	else:
 		reg0= flag0
+		RegisterStatus[reg0]= 1
 		f.write( 'movl\t' + str(Base)+',\t'+ str(reg0) +"\n")
+	
+	RegisterStatus[reg0]= 1
 
 	# Temporary Register for Index
 	if isint(Index):
@@ -39,6 +42,7 @@ def SaveArray( reg, var):
 	# Stroing Val in memory
 	f.write( "movl\t" + str(reg) +  ',\t(' + str(reg0) + ', ' + str(reg1) + ', ' + str(4) +')' +'\n' )
 
+	RegisterStatus[reg0]= -1
 	if flag0 == -1:
 		f.write( 'movl\t' + str(RegisterData[reg0]) +',\t'+ str(reg0)  +"\n")
 
@@ -80,6 +84,7 @@ def GetFreeRegister():
 def RegisterSpilling( lineno ):
 	NextUseInfo= NextUseTable[ lineno-1 ]	# Get Next Use Dictionary for the particular line
 	AssVarList= RegisterAssigned.keys()			# Get List of variables currently assigned to Registers
+
 
 	NextUseList=[]							# Make a list of the nextuse of currently assigend varibles
 	for variable in AssVarList:

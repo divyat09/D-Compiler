@@ -1,0 +1,16 @@
+1, =, i, 0
+2, label, L2
+3, =, A[i], i
+4, +, i, i, 1
+5, ifgoto_lt, i, 3, L2
+6, ifgoto_eq, 5, -5, L8
+7, call, power
+8, label, L8
+9, exit, 0
+10, label, power
+11, =, i, 0
+12, label, L12
+13, print_int, A[i]
+14, +, i, i, 1
+15, ifgoto_lt, i, 3, L12
+16, ret,0
