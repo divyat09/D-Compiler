@@ -50,7 +50,7 @@ This directory contains the python code used to generate Assembly Code form Inte
 ###### /test directory 
 This directory contains the tests cases, txt files containing the Intermediate Representation of the program.
 
-TestCase1: cmp_2_num.ir: Compares two number and returns smaller
+TestCase1: cmp_3_num.ir: Compares 3 numbers and returns smallest
 
 TestCase2: inp_arr.it: Scans an array of 10 elements and prints it 
 
@@ -63,6 +63,8 @@ TestCase5: func_fact.ir: Computes factorial of the entered number
 TestCase6: VarSpiller.ir: Checks of correct Regiser Spilling as per Next Use in Variables
 
 TestCase7: ArrSpiller.ir: Checks for correct Register Spilling as per Next Use in Arrray
+
+TestCase8: conditional.ir: All the conditional operators 
 
 ### Execution
 
