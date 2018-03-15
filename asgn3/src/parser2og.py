@@ -37,7 +37,9 @@ def p_multiplestorageClass(p):
 
 def p_aliasInitializer(p):
     ''' aliasInitializer : IDENTIFIER ASSIGN multiplestorageClass type 
+                        | IDENTIFIER templateParameters ASSIGN multiplestorageClass type
                         | IDENTIFIER ASSIGN functionLiteralExpression SEMICOLON
+                        | IDENTIFIER templateParameters ASSIGN functionLiteralExpression SEMICOLON
     '''
     revoutput.append(p.slice)
           
@@ -186,8 +188,8 @@ def p_builtinType(p):
                     | LONG 
                     | ULONG 
                     | CHAR
-                    | FLOAT 
-                    | DOUBLE
+                    | float 
+                    | d
     '''
     revoutput.append(p.slice)   
 
@@ -353,9 +355,9 @@ def p_anonymousEnumMember(p):
     '''
     revoutput.append(p.slice)
 
-def p_anonymousEnumDeclaration(p):
+def anonymousEnumDeclaration(p):
     ''' anonymousEnumDeclaration : ENUM LBRACE anonymousEnumMember multipleanonymousEnumMember  RBRACE
-                               	 | ENUM COLON type LBRACE anonymousEnumMember multipleanonymousEnumMember RBRACE
+                               | ENUM COLON type LBRACE anonymousEnumMember multipleanonymousEnumMember RBRACE
     '''
     revouput.slice(p)
 
@@ -383,13 +385,6 @@ def p_equalExpression(p):
                       | shiftExpression NOT_EQ shiftExpression 
     '''
     revoutput.append(p.slice)
-
-def p_shiftExpression(p):
-	''' shiftExpression : addExpression
-     					| shiftExpression LEFT_SHIFT addExpression
-     					| shiftExpression RIGHT_SHIFT  addExpression
-	'''
-	revouput.append(p.slice)
 
 def p_expression(p):
     ''' expression : assignExpression 
@@ -592,8 +587,23 @@ def p_isExpression(p):
 					 | IS LPAREN type identifier COLON typeSpecialization RPAREN 					  
 					 | IS LPAREN type ASSIGN typeSpecialization RPAREN
 					 | IS LPAREN type identifier ASSIGN typeSpecialization RPAREN 					  
+					 | IS LPAREN type COLON typeSpecialization COMMA templateParameterList RPAREN
+					 | IS LPAREN type identifier COLON typeSpecialization COMMA templateParameterList RPAREN 					  
+					 | IS LPAREN type ASSIGN typeSpecialization COMMA templateParameterList RPAREN
+					 | IS LPAREN type identifier ASSIGN typeSpecialization COMMA templateParameterList RPAREN 					  
 	'''
 	revoutput.append(p.slice)
+
+def p_templateParameters(p):
+	''' templateParameters : LPAREN templateParameterList RPAREN
+						   | LPAREN RPAREN
+	'''
+	revouput.append(p.slice)
+
+def p_templateParameterList(p):
+	''' templateParameterList : templateParameter 
+	'''
+	revouput.append(p.slice)
 
 def p_labeledStatement(p):
     ''' labeledStatement : IDENTIFIER COLON 
@@ -699,7 +709,7 @@ def p_parameterAttribute(p):
     '''
     revoutput.append(p.slice)
 
-def p_CommaParameterStar(p):
+def CommaParameterStar(p):
   ''' 
         CommaParameterStar : COMMA parameter CommaParameterStar
                            | empty      
