@@ -854,13 +854,21 @@ def p_structBody(p):
     revouput.append(p.slice)
 def p_switchStatement(p):
     '''
-        switchStatement : SWITCH LBRACKET expression RBRACKET statement ......
+        switchStatement : SWITCH LBRACKET expression RBRACKET statement
+    '''
+    revoutput.append(p.slice)
+
+def p_symbol(p):
+    '''
+        symbol : DOT identifierOrTemplateChain
+              | identifierOrTemplateChain
     '''
     revoutput.append(p.slice)
 
 def p_ternaryExpression(p):
     '''
-        ternaryExpression : orOrExpression ( '?' expression COLON ternaryExpression )? 
+        ternaryExpression : orOrExpression QUESTION expression COLON ternaryExpression
+                          | orOrExpression
     '''
     revoutput.append(p.slice)
 
@@ -1002,4 +1010,3 @@ def xorExpression(p):
     revoutput.append(p.slice)
 
 yacc.yacc()
-    
