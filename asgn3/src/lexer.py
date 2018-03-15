@@ -202,43 +202,21 @@ def t_IDENTIFIER(t):
     if Keywords.has_key(t.value):
         t.type=Keywords[t.value]
     return t
-"""
-def t_ILLEGAL_ID(t):
-    r'(?<=[\d])[A-Za-z_][\w]*'
-    print "Ill_formed Identifier %s' at line number %d" % (t.value, t.lineno)
-"""
 # Match a decimal number
 def t_DNUMBER(t):
-    r'((\d*)\.((\d*([eE][+-]\d+))|\d+)(?=[+<>!=\-*/%(),;\s\]])|([eE][+-]\d+)(?=[+<>!=\-*/()%,;\s\]]))'
+    r'(([0-9]+)?\.([0-9]+)((e|E)((\+|-)?[0-9]+))?([fFdD])?|[0-9]+(e|E)(\+|-)?[0-9]+)'
+#(?=[+<>!=\-*/%(),;\s\]])|([eE][+-]\d+)(?=[+<>!=\-*/()%,;\s\]]))'
     return t
 
 # Match an integer
 def t_INUMBER(t):
-    r'\d+(?=[+<>!=\-*/()%,;\s\]])'
+#r'\d+(?=[+<>!=\-*/()%,;\s\]])'
+    r'-?[0-9]+'
     return t
 
 def t_DOT(t):
     r'\.'
     return t
-
-c1=r'[eE]([eE]*[+-]*\d*)*(?=[+\-*/()%,;\s\]])'
-c2=r'([eE]+[+-]*\d*)*\.(\d*\.*[eE]*[+-]*)*(?=[+\-*/%(),;\s\]])'
-c3=r'(\d*)\.((\d*([eE][+-]\d+))|\d+)([^+()\-*/%,;\s][a-zA-Z_]*)'
-c4=r'([eE][+-]\d+)[^+()\-*/%,;\s][a-zA-Z_]*'
-c5=r'[eE]([eE]*[+-]*\d*)*([^+\-*/()%,;\s][a-zA-Z_]*)'
-c6=r'([eE]+[+-]*\d*)*\.(\d*\.*[eE]*[+-]*)*([^+\-*/%(),;\s][a-zA-Z_]*)'
-Il_Dnum=r'('+c4+r'|'+c5+r'|'+c6+'|'+c1+r'|'+c2+r'|'+c3+r')'
-
-@TOKEN(Il_Dnum)
-# """
-# def t_ILLEGAL_DNUMBER(t):
-#     print "Ill_formed Double Number '%s' at line number %d" % (t.value, t.lineno)
-
-
-# def t_ILLEGAL_INUMBER(t):
-#     r'\d+([^+\-*/()%,;\s][a-zA-Z_]*)'
-#     print "Ill_formed Integer Number '%s' at line number %d" % (t.value, t.lineno)
-# """
 
 def t_LIT_CHAR(t):
     r'\'[\w\W]\''
@@ -278,7 +256,7 @@ def t_error(t):
     t.lexer.skip(1)
     global success
     #print "Illegal character '%s' at line number %d" % (t.value[0], t.lineno)
-    t.lexer.skip(1)
+    #t.lexer.skip(1)
     success = False
 
 def test_lexer(lexer, string):
