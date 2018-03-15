@@ -1009,4 +1009,8 @@ def xorExpression(p):
     '''
     revoutput.append(p.slice)
 
+def p_empty(p):
+    'empty :'
+    pass
+
 yacc.yacc()
