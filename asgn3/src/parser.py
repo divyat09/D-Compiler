@@ -730,9 +730,10 @@ def p_powExpression(p):
     '''
     revoutput.append(p.slice)
 
-def StringLiteralPlus(p):
+def p_StringLiteralPlus(p):
   '''
-      StringLiteralPlus: StringLiteral StringLiteralPlus | StringLiteral
+      StringLiteralPlus : LIT_STR StringLiteralPlus 
+	  					| LIT_STR
   '''
   revoutput.append(p.slice)
 
@@ -753,16 +754,16 @@ def p_primaryExpression(p):
                           | NULL 
                           | TRUE 
                           | FALSE 
-                          | IntegerLiteral 
-                          | FloatLiteral
+                          | INUMBER 
+                          | DNUMBER
                           | StringLiteralPlus
-                          | CharacterLiteral
+                          | LIT_CHAR
     '''
     revoutput.append(p.slice)
 
 def p_register(p):
     ''' register : IDENTIFIER 
-                 | IDENTIFIER LPAREN IntegerLiteral RPAREN 
+                 | IDENTIFIER LPAREN INUMBER RPAREN 
     '''
     revoutput.append(p.slice)
   
@@ -940,6 +941,12 @@ def p_typeSuffix(p):
                    | SEMICOLON typeofExpression COLON TYPEOF LBRACKET RETURN RBRACKET 
     '''   
     revoutput.append(p.slice)    
+
+def p_typeidExpression(p):
+	''' typeidExpression : TYPEID LPAREN type RPAREN
+						 | TYPEID LPAREN expression RPAREN
+	'''
+	revouput.append(p.slice)
 
 def p_unaryExpression(p):
     '''       
