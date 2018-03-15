@@ -6,6 +6,18 @@ import logging
 
 revoutput = []
 
+
+def p_CompilationUnit(p):
+    '''CompilationUnit : ProgramFile
+    '''
+    revoutput.append(p.slice)
+
+def p_ProgramFile(p):
+    ''' ProgramFile : multiple_declaration
+    '''
+    revoutput.append(p.slice)
+
+
 def p_addExpression(p) : 
   ''' addExpression : mulExpression 
             | addExpression PLUS mulExpression 
@@ -26,14 +38,14 @@ def p_comma_aliasInitializer(p):
     ''' comma_aliasInitializer : COMMA aliasInitializer comma_aliasInitializer
                               | empty
     '''
-    revouput.append(p.slice)
+    revoutput.append(p.slice)
 
 
 def p_multiplestorageClass(p):
     ''' multiplestorageClass : storageClass multiplestorageClass
                              | empty
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_aliasInitializer(p):
     ''' aliasInitializer : IDENTIFIER ASSIGN multiplestorageClass type 
@@ -85,7 +97,7 @@ def p_comma_arrayMemberInitialization(p):
     ''' comma_arrayMemberInitialization : COMMA arrayMemberInitialization comma_arrayMemberInitialization
                                         | empty
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_arrayLiteral(p):
     ''' arrayLiteral : LBRACKET RBRACKET 
@@ -141,19 +153,19 @@ def p_attributeDeclaration(p):
 def p_autoDeclaration(p):
     ''' autoDeclaration : storageClass multiplestorageClass IDENTIFIER ASSIGN initializer comma_identifier_assign_initializer SEMICOLON
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_comma_identifier_assign_initializer(p):
     ''' comma_identifier_assign_initializer : COMMA IDENTIFIER ASSIGN initializer comma_identifier_assign_initializer
                                            | empty
     '''
-    revouput.slice(p)   
+    revoutput.append(p.slice)   
 
 def p_blockStatement(p):
     ''' blockStatement : LBRACE RBRACE 
                       | LBRACE declarationsAndStatements RBRACE
     ''' 
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_bodyStatement(p):
     ''' bodyStatement : BODY blockStatement 
@@ -232,7 +244,7 @@ def p_shiftExpression(p):
     					| shiftExpression RIGHT_SHIFT addExpression
     					| shiftExpression LEFT_SHIFT addExpression
 	'''
-	revouput.append(p.slice)
+	revoutput.append(p.slice)
 
 def p_constraint(p):
     ''' constraint : IF LPAREN expression RPAREN
@@ -251,7 +263,7 @@ def p_multiple_memberFunctionAttribute(p):
     ''' multiple_memberFunctionAttribute : memberFunctionAttribute multiple_memberFunctionAttribute
                                         | empty
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_continueStatement(p):
     ''' continueStatement : CONTINUE SEMICOLON
@@ -269,13 +281,13 @@ def p_multiple_declaration(p):
   ''' multiple_declaration : declaration multiple_declaration
                | empty
   '''
-  revouput.append(p.slice)
+  revoutput.append(p.slice)
 
 def p_multipleattributes(p):
     ''' multipleattributes : attribute multipleattributes
                           | empty
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_declaration2(p):
     ''' declaration2 : aliasDeclaration 
@@ -304,7 +316,7 @@ def p_declarationOrStatement(p):
     ''' declarationOrStatement : declaration 
                                | statement 
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_declarator(p):
     ''' declarator : IDENTIFIER 
@@ -337,16 +349,16 @@ def p_enumBody(p):
     ''' enumBody : DOUBLE_QUOTE enumMember DOUBLE_QUOTE
                  | DOUBLE_QUOTE enumMember comma_enumMember DOUBLE_QUOTE
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_comma_enumMember(p):
     ''' comma_enumMember : COMMA enumMember comma_enumMember
                         | empty
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_anonymousEnumMember(p):
-    ''' anonymousEnumMember : TYPEDEF IDENTIFIER ASSIGN assignExpression 
+    ''' anonymousEnumMember : type IDENTIFIER ASSIGN assignExpression 
                            | IDENTIFIER ASSIGN assignExpression 
                            | IDENTIFIER
     '''
@@ -356,18 +368,18 @@ def p_anonymousEnumDeclaration(p):
     ''' anonymousEnumDeclaration : ENUM LBRACE anonymousEnumMember multipleanonymousEnumMember  RBRACE
                                  | ENUM COLON type LBRACE anonymousEnumMember multipleanonymousEnumMember RBRACE
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_multipleanonymousEnumMember(p):
     ''' multipleanonymousEnumMember : anonymousEnumMember multipleanonymousEnumMember
                                     | empty
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_enumDeclaration(p):
     ''' enumDeclaration : ENUM IDENTIFIER SEMICOLON
-                       | ENUM IDENTIFIER COLON TYPEDEF SEMICOLON
-                       | ENUM IDENTIFIER COLON TYPEDEF enumBody
+                       | ENUM IDENTIFIER COLON type SEMICOLON
+                       | ENUM IDENTIFIER COLON type enumBody
     '''
     revoutput.append(p.slice)
 
@@ -392,7 +404,7 @@ def p_expression(p):
 def p_expressionStatement(p):
     ''' expressionStatement : expression SEMICOLON
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_forStatement(p):
     ''' forStatement : FOR LPAREN declaration SEMICOLON RPAREN declarationOrStatement
@@ -404,7 +416,7 @@ def p_forStatement(p):
                     | FOR LPAREN declaration expression SEMICOLON expression RPAREN declarationOrStatement  
                     | FOR LPAREN statementNoCaseNoDefault expression SEMICOLON expression RPAREN declarationOrStatement                      
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 
 def p_foreachStatement(p):
@@ -413,7 +425,7 @@ def p_foreachStatement(p):
                          | FOREACH_REVERSE LPAREN foreachTypeList SEMICOLON expression RPAREN declarationOrStatement 
                          | FOREACH_REVERSE LPAREN foreachType SEMICOLON expression RANGE expression RPAREN declarationOrStatement 
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_foreachType(p):
   '''
@@ -447,15 +459,15 @@ def p_functionDeclaration(p):
   '''
       functionDeclaration : storageClass multiplestorageClass IDENTIFIER parameters multiple_memberFunctionAttribute SEMICOLON
                 | storageClass multiplestorageClass IDENTIFIER parameters multiple_memberFunctionAttribute functionBody 
-                | TYPEDEF IDENTIFIER parameters multiple_memberFunctionAttribute SEMICOLON 
-                | TYPEDEF IDENTIFIER parameters multiple_memberFunctionAttribute functionBody 
+                | type IDENTIFIER parameters multiple_memberFunctionAttribute SEMICOLON 
+                | type IDENTIFIER parameters multiple_memberFunctionAttribute functionBody 
   '''
   revoutput.append(p.slice)
 
 def p_functionLiteralExpression(p):
     '''
       functionLiteralExpression : FUNCTION functionBody
-                                | FUNCTION TYPEDEF functionBody
+                                | FUNCTION type functionBody
                                 | functionBody 
                                 | IDENTIFIER assignExpression 
   '''
@@ -502,7 +514,7 @@ def p_ifStatement(p):
 
 def p_ifCondition(p):
   ''' ifCondition : AUTO IDENTIFIER ASSIGN expression 
-              | TYPEDEF IDENTIFIER ASSIGN expression 
+              | type IDENTIFIER ASSIGN expression 
           | expression
   '''
   revoutput.append(p.slice)
@@ -548,7 +560,7 @@ def p_comma_index(p):
   ''' comma_index : COMMA index comma_index
           | empty
   '''
-  revouput.append(p.slice)
+  revoutput.append(p.slice)
 
 def p_initializer(p):
   ''' initializer : VOID 
@@ -560,7 +572,7 @@ def p_labeledStatement(p):
     ''' labeledStatement : IDENTIFIER COLON 
                          |  IDENTIFIER COLON declarationOrStatement
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_memberFunctionAttribute(p):
     ''' memberFunctionAttribute : IMMUTABLE 
@@ -577,7 +589,7 @@ def p_mixinDeclaration(p):
 def p_mixinExpression(p):
     ''' mixinExpression : MIXIN LPAREN assignExpression RPAREN 
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 
 def p_mulExpression(p):
@@ -824,7 +836,7 @@ def p_structBody(p):
     '''
     structBody : LBRACE declarationStar RBRACE
     '''
-    revouput.append(p.slice)
+    revoutput.append(p.slice)
 def p_switchStatement(p):
     '''
         switchStatement : SWITCH LBRACKET expression RBRACKET statement
@@ -866,7 +878,7 @@ def p_type2(p):
               | symbol 
               | typeofExpression DOT identifierOrTemplateChain
               | typeofExpression   
-              | typeConstructor LBRACKET TYPEDEF RBRACKET 
+              | typeConstructor LBRACKET type RBRACKET 
     '''
     revoutput.append(p.slice)    
 
@@ -913,9 +925,9 @@ def p_typeSuffix(p):
                    | LBRACKET RBRACKET 
                    | LBRACKET assignExpression RBRACKET 
                    | LBRACKET assignExpression RANGE assignExpression RBRACKET
-                   | DELEGATE parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET TYPEDEF RBRACKET
+                   | DELEGATE parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET type RBRACKET
                    | DELEGATE parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET expression RBRACKET
-                   | FUNCTION  parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET TYPEDEF RBRACKET
+                   | FUNCTION  parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET type RBRACKET
                    | FUNCTION  parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET expression RBRACKET
                    | SEMICOLON typeofExpression COLON TYPEOF LBRACKET expression RBRACKET 
                    | SEMICOLON typeofExpression COLON TYPEOF LBRACKET RETURN RBRACKET 
@@ -926,7 +938,7 @@ def p_typeidExpression(p):
 	''' typeidExpression : TYPEID LPAREN type RPAREN
 						 | TYPEID LPAREN expression RPAREN
 	'''
-	revouput.append(p.slice)
+	revoutput.append(p.slice)
 
 def p_unaryExpression(p):
     '''       
@@ -944,7 +956,7 @@ def p_unaryExpression(p):
                         | castExpression 
                         | functionCallExpression 
                         | indexExpression 
-                        | LBRACKET TYPEDEF RBRACKET DOT identifierOrTemplateInstance 
+                        | LBRACKET type RBRACKET DOT identifierOrTemplateInstance 
                         | unaryExpression DOT newExpression 
                         | unaryExpression DOT 
                         | identifierOrTemplateInstance 
@@ -972,8 +984,8 @@ def p_CommaDeclarator(p):
 
 def p_variableDeclaration(p):
     '''
-    variableDeclaration : multiplestorageClass TYPEDEF declarator CommaDeclarator SEMICOLON 
-                        | multiplestorageClass TYPEDEF IDENTIFIER ASSIGN functionBody SEMICOLON 
+    variableDeclaration : multiplestorageClass type declarator CommaDeclarator SEMICOLON 
+                        | multiplestorageClass type IDENTIFIER ASSIGN functionBody SEMICOLON 
                         | autoDeclaration
     '''
     revoutput.append(p.slice)    
@@ -982,12 +994,12 @@ def p_whileStatement(p):
     '''
     whileStatement : WHILE LBRACKET expression RBRACKET declarationOrStatement
     '''
-    revouput.append(p.slice)  
+    revoutput.append(p.slice)  
 def p_withStatement(p):
     '''
          withStatement : WITH LBRACKET expression RBRACKET statementNoCaseNoDefault
     '''
-    revouput.slice(p)
+    revoutput.append(p.slice)
 
 def p_xorExpression(p):
     ''' xorExpression : andExpression 
@@ -999,9 +1011,12 @@ def p_empty(p):
     'empty :'
     pass
 
+
 yacc.yacc()
 a=open(sys.argv[1],'r')
 a=a.read()
 data = ""
 a+="\n"
 yacc.parse(a)
+for item in revoutput:
+	print item

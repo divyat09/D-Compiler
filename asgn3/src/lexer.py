@@ -275,6 +275,9 @@ def create_tokendictionary():
         token_dict.setdefault(token, [])
 
 
+
+lexer = lex.lex()
+
 # Function added to output all the tokens, occurences and lexemes in the required format
 if __name__ == '__main__':
     file = open(sys.argv[1])
@@ -284,7 +287,6 @@ if __name__ == '__main__':
     for i in lines:
         strings += i
     # run lexer on input
-    lexer = lex.lex()
     create_tokendictionary()
     test_lexer(lexer, strings)
     for key in token_dict:
