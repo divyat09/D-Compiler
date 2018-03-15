@@ -230,15 +230,16 @@ c6=r'([eE]+[+-]*\d*)*\.(\d*\.*[eE]*[+-]*)*([^+\-*/%(),;\s][a-zA-Z_]*)'
 Il_Dnum=r'('+c4+r'|'+c5+r'|'+c6+'|'+c1+r'|'+c2+r'|'+c3+r')'
 
 @TOKEN(Il_Dnum)
-"""
-def t_ILLEGAL_DNUMBER(t):
-    print "Ill_formed Double Number '%s' at line number %d" % (t.value, t.lineno)
+# """
+# def t_ILLEGAL_DNUMBER(t):
+#     print "Ill_formed Double Number '%s' at line number %d" % (t.value, t.lineno)
 
 
-def t_ILLEGAL_INUMBER(t):
-    r'\d+([^+\-*/()%,;\s][a-zA-Z_]*)'
-    print "Ill_formed Integer Number '%s' at line number %d" % (t.value, t.lineno)
-"""
+# def t_ILLEGAL_INUMBER(t):
+#     r'\d+([^+\-*/()%,;\s][a-zA-Z_]*)'
+#     print "Ill_formed Integer Number '%s' at line number %d" % (t.value, t.lineno)
+# """
+
 def t_LIT_CHAR(t):
     r'\'[\w\W]\''
     return t

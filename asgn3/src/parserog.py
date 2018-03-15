@@ -7,7 +7,7 @@ import logging
 revoutput = []
 
 def p_addExpression(p) : 
-	''' addExpression : mulExpression 
+	'''addExpression: mulExpression 
     				| addExpression PLUS mulExpression 
 					| addExpression MINUS mulExpression 
 					| addExpression TILDE mulExpression;
@@ -15,18 +15,20 @@ def p_addExpression(p) :
 	revoutput.append(p.slice)
 
 def p_aliasDeclaration(p): 
-	''' aliasDeclaration : ALIAS aliasInitializer comma_aliasInitializer SEMICOLON | ALIAS multiplestorageClass type identifierList SEMICOLON
+	''' aliasDeclaration: ALIAS aliasInitializer comma_aliasInitializer SEMICOLON | ALIAS multiplestorageClass type identifierList SEMICOLON
 	'''
 	revoutput.append(p.slice)
 
 
+# equivalent to (’,’ aliasInitializer)*
 
 def p_comma_aliasInitializer(p):
-	''' comma_aliasInitializer : COMMA aliasInitializer comma_aliasInitializer
+	'''comma_aliasInitializer : COMMA aliasInitializer comma_aliasInitializer
 							  | empty
 	'''
 	revouput.append(p.slice)
 
+# multiplestorageClass is equivalent to storageClass*
 
 def p_multiplestorageClass(p):
 	''' multiplestorageClass : storageClass multiplestorageClass
@@ -35,7 +37,7 @@ def p_multiplestorageClass(p):
 	revouput.slice(p)
 
 def p_aliasInitializer(p):
-	'''	aliasInitializer : Identifier ASSIGN multiplestorageClass type 
+	'''	aliasInitializer: Identifier ASSIGN multiplestorageClass type 
 						| Identifier templateParameters ASSIGN multiplestorageClass type
 						| Identifier ASSIGN functionLiteralExpression SEMICOLON
 						| Identifier templateParameters ASSIGN functionLiteralExpression SEMICOLON
@@ -48,12 +50,12 @@ def p_aliasThisDeclaration(p):
 	revoutput.append(p.slice)
           
 def p_andAndExpression(p): 
-	''' andAndExpression : orExpression 
+	'''andAndExpression : orExpression 
 						| andAndExpression DOUBLE_AMPERSAND orExpression
 	'''
 	revoutput.append(p.slice)
 def p_andExpression(p): 
-	''' andExpression : cmpExpression 
+	'''andExpression : cmpExpression 
 					 | andExpression AMPERSAND cmpExpression
 	'''
 	revoutput.append(p.slice)
@@ -64,8 +66,9 @@ def p_argumentList(p):
 	'''
 	revoutput.append(p.slice)
 
+# Equivalent to ',' assignExpression
 def p_comma_assign(p):
-	''' comma_assign : COMMA assignExpression comma_assign
+	'''comma_assign : COMMA assignExpression comma_assign
 					| empty
 	'''
 	revoutput.append(p.slice)
@@ -82,6 +85,7 @@ def p_arrayInitializer(p):
 	'''
 	revoutput.append(p.slice)
 
+# equivalent to (, arrayMemberInitialization)*
 def p_comma_arrayMemberInitialization(p):
 	''' comma_arrayMemberInitialization : COMMA arrayMemberInitialization comma_arrayMemberInitialization
 										| empty
@@ -95,13 +99,13 @@ def p_arrayLiteral(p):
 	revoutput.append(p.slice)
           
 def p_arrayMemberInitialization(p): 
-	''' arrayMemberInitialization : assignExpression COLON nonVoidInitializer 
+	'''arrayMemberInitialization : assignExpression COLON nonVoidInitializer 
 				  				 | nonVoidInitializer
 	'''
 	revoutput.append(p.slice)
 
 def p_assignExpression(p):
-	''' assignExpression : ternaryExpression 
+	'''assignExpression : ternaryExpression 
 						| ternaryExpression assignOperator expression
 	'''
 	revoutput.append(p.slice)
@@ -122,7 +126,7 @@ def p_assignOperator(p):
 	revoutput.append(p.slice)
 
 def p_attribute(p):
-	''' attribute : PRIVATE 
+	'''attribute : PRIVATE 
 				 | PROTECTED 
 				 | PUBLIC 
 				 | STATIC 
@@ -144,20 +148,21 @@ def p_autoDeclaration(p):
 	'''
 	revouput.slice(p)
 
+# equivalent to (',' identifier = initializer) *
 def p_comma_identifier_assign_initializer(p):
-	''' comma_identifier_assign_initializer : COMMA Identifier ASSIGN initializer comma_identifier_assign_initializer
+	'''comma_identifier_assign_initializer : COMMA Identifier ASSIGN initializer comma_identifier_assign_initializer
 										   | empty
 	'''
 	revouput.slice(p)	
 
 def p_blockStatement(p):
-	''' blockStatement : LBRACE RBRACE 
+	'''blockStatement : LBRACE RBRACE 
 					  | LBRACE declarationsAndStatements RBRACE
 	''' 
 	revouput.slice(p)
 
 def p_bodyStatement(p):
-	''' bodyStatement : BODY blockStatement 
+	''' bodyStatement: BODY blockStatement 
 	'''
 	revoutput.append(p.slice)
           
@@ -168,7 +173,7 @@ def p_breakStatement(p):
 	revoutput.append(p.slice)
 
 def p_baseClass(p):
-	''' baseClass : type2 
+	'''baseClass : type2 
 	'''
 	revoutput.append(p.slice)
 
@@ -203,7 +208,7 @@ def p_caseStatement(p):
 	revoutput.append(p.slice) 
 
 def p_castExpression(p):
-	''' castExpression : CAST LPAREN RPAREN unaryExpression
+	'''castExpression : CAST LPAREN RPAREN unaryExpression
 				      | CAST LPAREN type RPAREN unaryExpression
 				      | CAST LPAREN castQualifier RPAREN unaryExpression 
 	'''
@@ -247,8 +252,9 @@ def p_constructor(p):
 	'''
 	revoutput.append(p.slice)
 
+# Equivalent to memberFunctionAttribute*
 def p_multiple_memberFunctionAttribute(p):
-	''' multiple_memberFunctionAttribute : memberFunctionAttribute multiple_memberFunctionAttribute
+	'''multiple_memberFunctionAttribute : memberFunctionAttribute multiple_memberFunctionAttribute
 										| empty
 	'''
 	revouput.slice(p)
@@ -264,8 +270,9 @@ def p_declaration(p):
 	'''
 	revoutput.append(p.slice)
 
+# Equivalent to attribute*
 def p_multipleattributes(p):
-	''' multipleattributes : attribute multipleattributes
+	'''multipleattributes : attribute multipleattributes
 						  | empty
 	'''
 	revouput.slice(p)
@@ -313,7 +320,7 @@ def p_defaultStatement(p):
 	revoutput.append(p.slice)
 
 def p_deleteExpression(p): 
-	''' deleteExpression : DELETE unaryExpression
+	''' deleteExpression = DELETE unaryExpression
 	'''
 	revoutput.append(p.slice)
 
@@ -334,63 +341,65 @@ def p_enumBody(p):
 	'''
 	revouput.slice(p)
 
+# Equivalent to (, enumMember)*
 def p_comma_enumMember(p):
-	''' comma_enumMember : COMMA enumMember comma_enumMember
+	'''comma_enumMember : COMMA enumMember comma_enumMember
 						| empty
 	'''
 	revouput.slice(p)
 
 def p_anonymousEnumMember(p):
-	''' anonymousEnumMember : TYPEDEF IDENTIFIER ASSIGN assignExpression 
+	'''anonymousEnumMember : TYPEDEF IDENTIFIER ASSIGN assignExpression 
 						   | IDENTIFIER ASSIGN assignExpression 
 						   | IDENTIFIER
 	'''
 	revoutput.append(p.slice)
 
 def anonymousEnumDeclaration(p):
-	''' anonymousEnumDeclaration : ENUM LBRACE anonymousEnumMember multipleanonymousEnumMember  RBRACE
+	'''anonymousEnumDeclaration: ENUM LBRACE anonymousEnumMember multipleanonymousEnumMember  RBRACE
 							   | ENUM COLON type LBRACE anonymousEnumMember multipleanonymousEnumMember RBRACE
 	'''
 	revouput.slice(p)
 
+#Equivalent to anonymousEnumMember*
 def p_multipleanonymousEnumMember(p):
-	''' multipleanonymousEnumMember : anonymousEnumMember multipleanonymousEnumMember
+	'''multipleanonymousEnumMember : anonymousEnumMember multipleanonymousEnumMember
 								   | empty
 	'''
 	revouput.slice(p)
 
 def p_enumDeclaration(p):
-	''' enumDeclaration : ENUM IDENTIFIER SEMICOLON
+	'''enumDeclaration : ENUM IDENTIFIER SEMICOLON
 					   | ENUM IDENTIFIER COLON TYPEDEF SEMICOLON
 					   | ENUM IDENTIFIER COLON TYPEDEF enumBody
   	'''
 	revoutput.append(p.slice)
 
 def p_enumMember(p):
-	''' enumMember : IDENTIFIER
+	'''enumMember : IDENTIFIER
 				  | IDENTIFIER ASSIGN assignExpression
 	  '''
 	revoutput.append(p.slice)
   
 def p_equalExpression(p):
-	''' equalExpression : shiftExpression IS_EQ shiftExpression
+	'''equalExpression: shiftExpression IS_EQ shiftExpression
 					  | shiftExpression NOT_EQ shiftExpression 
   	'''
 	revoutput.append(p.slice)
 
 def p_expression(p):
-	''' expression : assignExpression 
+	'''expression : assignExpression 
 				  | expression COMMA assignExpression
   	'''
 	revoutput.append(p.slice)
 
 def p_expressionStatement(p):
-	''' expressionStatement : expression SEMICOLON
+	'''expressionStatement : expression SEMICOLON
 	'''
 	revouput.slice(p)
 
 def p_forStatement(p):
-	''' forStatement : FOR LPAREN declaration SEMICOLON RPAREN declarationOrStatement
+	''' forStatement: FOR LPAREN declaration SEMICOLON RPAREN declarationOrStatement
 					| FOR LPAREN statementNoCaseNoDefault SEMICOLON RPAREN declarationOrStatement
 					| FOR LPAREN declaration SEMICOLON expression RPAREN declarationOrStatement
 					| FOR LPAREN statementNoCaseNoDefault SEMICOLON expression RPAREN declarationOrStatement
@@ -402,7 +411,7 @@ def p_forStatement(p):
 	revouput.slice(p)
 
 
-def p_foreachStatement(p):
+def p_foreachStatement():
 	''' foreachStatement : FOREACH LPAREN foreachTypeList SEMICOLON expression RPAREN declarationOrStatement 
 						 | FOREACH LPAREN foreachType SEMICOLON expression RANGE expression RBRACKET declarationOrStatement 
 						 | FOREACH_REVERSE LPAREN foreachTypeList SEMICOLON expression RPAREN declarationOrStatement 
@@ -412,43 +421,43 @@ def p_foreachStatement(p):
 
 def p_foreachType(p):
   '''
-      foreachType : typeConstructors? type ? IDENTIFIER | typeConstructors? type? IDENTIFIER 
+      foreachType: typeConstructors? type ? IDENTIFIER | typeConstructors? type? IDENTIFIER 
   '''
   revoutput.append(p.slice)  
 
 def p_foreachTypeList(p):
-	''' foreachTypeList : foreachType 
+	'''foreachTypeList: foreachType 
 			  | foreachTypeList COMMA foreachType
 	'''
 	revoutput.append(p.slice)
 
 def p_functionBody(p):
-	''' functionBody : blockStatement
+	'''functionBody: blockStatement
 	'''
 	revoutput.append(p.slice)
 
 def p_functionCallExpression(p):
-	''' functionCallExpression : symbol arguments unaryExpression arguments
+	'''functionCallExpression: symbol arguments unaryExpression arguments
 				 | type arguments ;
 	'''
 	revoutput.append(p.slice)
          
 def p_functionDeclaration(p):
   '''
-      functionDeclaration : ( storageClass+ | TYPEDEF ) IDENTIFIER parameters memberFunctionAttribute* ( functionBody | SEMICOLON ) | ( storageClass+ | TYPEDEF )
-      					  | IDENTIFIER templateParameters parameters memberFunctionAttribute* constraint? ( functionBody | SEMICOLON )
+      functionDeclaration: ( storageClass+ | TYPEDEF ) IDENTIFIER parameters memberFunctionAttribute* ( functionBody | SEMICOLON ) | ( storageClass+ | TYPEDEF )
+      IDENTIFIER templateParameters parameters memberFunctionAttribute* constraint? ( functionBody | SEMICOLON )
   '''
   revoutput.append(p.slice)
 
 def p_functionLiteralExpression(p):
   '''
-      functionLiteralExpression : FUNCTION TYPEDEF? (parameters functionAttribute*)? functionBody | parameters functionAttribute* functionBody 
-	  							| functionBody | IDENTIFIER assignExpression | FUNCTION TYPEDEF? parameters functionAttribute* assignExpression | parameters functionAttribute( ).....
+      functionLiteralExpression: | FUNCTION TYPEDEF? (parameters functionAttribute*)? functionBody | parameters functionAttribute* functionBody |
+      functionBody | IDENTIFIER assignExpression | FUNCTION TYPEDEF? parameters functionAttribute* assignExpression | parameters functionAttribute( ).....
   '''
   revoutput.append(p.slice)
 
 def p_gotoStatement(p):
-	''' gotoStatement : GOTO IDENTIFIER SEMICOLON
+	'''gotoStatement: GOTO IDENTIFIER SEMICOLON
 			| GOTO DEFAULT SEMICOLON
 			| GOTO CASE SEMICOLON
 			| GOTO CASE expression SEMICOLON
@@ -456,56 +465,56 @@ def p_gotoStatement(p):
 	revoutput.append(p.slice)
 
 def p_identifierChain(p):
-	''' identifierChain : IDENTIFIER
+	'''identifierChain: IDENTIFIER
 			  | identifierChain DOT IDENTIFIER
 	'''
 	revoutput.append(p.slice)
 
 def p_identifierList(p):
-	''' identifierList : IDENTIFIER
+	'''identifierList: IDENTIFIER
 			  | identifierList COMMA IDENTIFIER
 	'''
 	revoutput.append(p.slice)
 
 
 def p_identifierOrTemplateChain(p):
-	''' identifierList : identifierOrTemplateInstance
+	'''identifierList: identifierOrTemplateInstance
 			  | identifierOrTemplateChain DOT identifierOrTemplateInstance
 	'''
 	revoutput.append(p.slice)
 def p_identifierOrTemplateInstance(p):
-	''' identifierOrTemplateInstance : IDENTIFIER | templateInstance ;
+	'''identifierOrTemplateInstance: IDENTIFIER | templateInstance ;
 	'''
 def p_identityExpression(p):
-	''' identityExpression : shiftExpression IS shiftExpression
+	'''identityExpression: shiftExpression IS shiftExpression
 			     | shiftExpression EXCLAMATION IS shiftExpression
 	'''
 	revoutput.append(p.slice)
 def p_ifStatement(p):
-	''' ifStatement : IF LPAREN ifCondition RPAREN declarationOrStatement 
+	'''ifStatement: IF LPAREN ifCondition RPAREN declarationOrStatement 
 			| IF LPAREN ifCondition RPAREN declarationOrStatement ELSE declarationOrStatement
 	'''
 	revoutput.append(p.slice)
 
 def p_ifCondition(p):
-	''' ifCondition : AUTO IDENTIFIER ASSIGN expression 
+	'''ifCondition: AUTO IDENTIFIER ASSIGN expression 
 		        | TYPEDEF IDENTIFIER ASSIGN expression 
 			| expression
 	'''
 	revoutput.append(p.slice)
 def p_importBind(p):
-	''' importBind : IDENTIFIER
+	'''importBind: IDENTIFIER
 		       | IDENTIFIER ASSIGN IDENTIFIER 
 	'''
 	revoutput.append(p.slice)
 def p_importBindings(p):
-	''' importBindings : singleImport COLON importBind
+	'''importBindings: singleImport COLON importBind
 			   | singleImport COLON importBind COLON importBind
 	'''
 	revoutput.append(p.slice)
 
 def p_importDeclaration(p):
-	''' importDeclaration : IMPORT singleImport (COMMA singleImport)* (COMMA importBindings)? SEMICOLON
+	'''importDeclaration: IMPORT singleImport (’,’ singleImport)* (’,’ importBindings)? SEMICOLON
 			      | IMPORT importBindings SEMICOLON
 	'''
 	revoutput.append(p.slice)
@@ -517,11 +526,13 @@ def p_index(p):
 	'''			
 	revoutput.append(p.slice)
 
+#############################################
 def p_indexExpression(p):
 	''' indexExpression : unaryExpression LBRACKET RBRACKET 
-					    | unaryExpression LBRACKET index (COMMA index)* RBRACKET
+					    | unaryExpression LBRACKET index (’,’index)* RBRACKET
 	'''
 	revoutput.append(p.slice)
+#############################################
 
 def p_initializer(p):
 	''' initializer : VOID 
@@ -529,10 +540,12 @@ def p_initializer(p):
 	'''
 	revoutput.append(p.slice)
 
+#####################################################
 def p_isExpression(p):
 	''' isExpression : IS LPAREN type identifier? RPAREN IS LPAREN type identifier? COLON typeSpecialization RPAREN IS LPAREN type identifier? 		ASSIGN typeSpecialization RPAREN IS LPAREN type identifier? COLON typeSpecialization COMMA templateParameterList RPAREN IS LPAREN type 			identifier? ASSIGN typeSpecialization COMMA templateParameterList RPAREN 
 	'''
 	revoutput.append(p.slice)
+#####################################################
 
 def p_labeledStatement(p):
 	''' labeledStatement : Identifier COLON 
@@ -568,11 +581,12 @@ def p_mulExpression(p):
 	'''
 	revoutput.append(p.slice)
 
+##########################################
 def p_newAnonClassExpression(p):
 	''' newAnonClassExpression : NEW arguments? CLASS arguments? baseClassList? structBody 
 	'''
 	revoutput.append(p.slice)
-
+###########################################
 def p_newExpression(p):
 	''' newExpression : NEW type 
 					  | NEW type LBRACKET assignExpression RBRACKET 
@@ -599,12 +613,12 @@ def p_orOrExpression(p):
 					   | orOrExpression DOUBLE_PIPE andAndExpression
 	'''
 	revoutput.append(p.slice)
-
+###############################################################################
 def p_parameter(p):
-	''' parameter : parameterAttribute* type parameterAttribute* type Identifier? ELLIPSIS parameterAttribute* type Identifier? (ASSIGN assignExpression)?;
+	''' parameter : parameterAttribute* type parameterAttribute* type Identifier? ’...’ parameterAttribute* type Identifier? (’=’assignExpression)?;
 	'''
 	revoutput.append(p.slice)
-
+###############################################################################
 def p_parameterAttribute(p):
 	''' parameterAttribute : typeConstructor 
 						   | FINAL 
@@ -614,22 +628,26 @@ def p_parameterAttribute(p):
 	'''
 	revoutput.append(p.slice)
 
+############################
 def p_parameters(p):
-	''' parameters : LPAREN parameter (COMMA parameter)* (COMMA ELLIPSIS)? RPAREN | LPAREN ELLIPSIS RPAREN | LPAREN RPAREN
+	''' parameters : LPAREN parameter (’,’ parameter)* (’,’ ’...’)? ’)’ | ’(’ ’...’ ’)’ | ’(’ ’)’
 	'''
 	revoutput.append(p.slice)
-
+############################
+###############################################
 def p_postblit(p):
 	''' postblit : THIS LPAREN THIS RPAREN multiple_memberFunctionAttribute functionBody
 				 | THIS LPAREN THIS RPAREN multiple_memberFunctionAttribute SEMICOLON
 	'''
 	revoutput.append(p.slice)
+################################################
 
 def p_powExpression(p):
 	''' powExpression : unaryExpression 
-					  | powExpression DOUBLEXOR unaryExpression 
+					  | powExpression ’ˆitemˆ’ unaryExpression 
 	'''
 	revoutput.append(p.slice)
+################################################
 
 def p_primaryExpression(p):
 	''' primaryExpression : identifierOrTemplateInstance 
@@ -650,7 +668,9 @@ def p_primaryExpression(p):
 						  | FALSE 
 						  | IntegerLiteral 
 						  | FloatLiteral
+#######################################################################
 						  | StringLiteral+ 
+##################################################################
 						  | CharacterLiteral
 	'''
 	revoutput.append(p.slice)
@@ -661,167 +681,167 @@ def p_register(p):
 	'''
 	revoutput.append(p.slice)
   
-def p_relExpression(p):
+def p_relExpression():
   '''
-      relExpression : shiftExpression | relExpression relOperator shiftExpression
+      relExpression: shiftExpression | relExpression relOperator shiftExpression
 
   '''
   revoutput.append(p.slice)  
 
-def p_relOperator(p):
+def p_relOperator():
   '''
-      relOperator : LESS | LESSEQ | GREATER | GREATER_EQ | IS_EQ_DIFF | NOT_EQ_DIFF | LESS_EQ_DIFF
+      relOperator: LESS | LESSEQ | GREATER | GREATER_EQ | IS_EQ_DIFF | NOT_EQ_DIFF | LESS_EQ_DIFF
       | LESS_DIFF | GREATER_EQ__DIFF |  GREATER_DIFF
 
   '''
   revoutput.append(p.slice)
 
-def returnStatement(p):
+def returnStatement():
   '''
-      returnStatement : RETURN expression? SEMICOLON
+      returnStatement: RETURN expression? SEMICOLON
   '''
   revoutput.append(p.slice)
 
-def shiftExpression(p):
+def shiftExpression():
   ''' 
-      shiftExpression : addExpression | shiftExpression ( LEFTSHIFT | RIGHTSHIFT ) addExpression
+      shiftExpression: addExpression | shiftExpression ( LEFTSHIFT | RIGHTSHIFT ) addExpression
   '''
   revoutput.append(p.slice)
 
-def p_singleImport(p):
+def p_singleImport():
   '''
-      singleImport : ( IDENTIFIER ASSIGN )? identifierChain
+      singleImport: ( IDENTIFIER ASSIGN )? identifierChain
   '''
   revoutput.append(p.slice)
 
-def p_statement(p):
+def p_statement():
   '''
-      statement : statementNoCaseNoDefault | caseStatement | caseRangeStatment | defaultStatement
+      statement: statementNoCaseNoDefault | caseStatement | caseRangeStatment | defaultStatement
   '''
   revoutput.append(p.slice)
   
-def statementNoCaseNoDefault(p):
+def statementNoCaseNoDefault():
   '''
-      statementNoCaseNoDefault : labeledStatement | blockStatement | ifStatement | whileStatement | doStatement | forStatement | foreachStatement | switchStatement | finalSwitchStatement | continueStatement | breakStatement | returnStatement | gotoStatement | withStatement | conditionalStatement | expressionStatement
+      statementNoCaseNoDefault: labeledStatement | blockStatement | ifStatement | whileStatement | doStatement | forStatement | foreachStatement | switchStatement | finalSwitchStatement | continueStatement | breakStatement | returnStatement | gotoStatement | withStatement | conditionalStatement | expressionStatement
   '''
   revoutput.append(p.slice)
   
 def p_storageClass(p):
-    ''' storageClass : typeConstructor | AUTO | ENUM | EXTERN | FINAL | STATIC
+    ''' storageClass : typeConstructor | ’AUTO’ | ’ENUM’ | ’EXTERN’ | ’FINAL’ | ’STATIC’
     '''
     revoutput.append(p.slice)
  
 
-def p_statement(p):
+def p_statement():
   '''
-      statement : statementNoCaseNoDefault | caseStatement | caseRangeStatment | defaultStatement
+      statement: statementNoCaseNoDefault | caseStatement | caseRangeStatment | defaultStatement
   '''
   revoutput.append(p.slice)
   
-def statementNoCaseNoDefault(p):
+def statementNoCaseNoDefault():
     '''
-        statementNoCaseNoDefault : labeledStatement | blockStatement | ifStatement | whileStatement | doStatement | forStatement | foreachStatement | switchStatement | finalSwitchStatement | continueStatement | breakStatement | returnStatement | gotoStatement | withStatement | conditionalStatement | expressionStatement
+        statementNoCaseNoDefault: labeledStatement | blockStatement | ifStatement | whileStatement | doStatement | forStatement | foreachStatement | switchStatement | finalSwitchStatement | continueStatement | breakStatement | returnStatement | gotoStatement | withStatement | conditionalStatement | expressionStatement
     '''
     revoutput.append(p.slice)
     
 def p_storageClass(p):
     ''' 
-        storageClass : typeConstructor | AUTO | ENUM | EXTERN | FINAL | STATIC
+        storageClass : typeConstructor | ’AUTO’ | ’ENUM’ | ’EXTERN’ | ’FINAL’ | ’STATIC’
     '''
     revoutput.append(p.slice)
  
-def p_structBody(p):
+def p_structBody():
     '''
-	structBody : LBRACE declaration* RBRACE
+	structBody: LBRACE declaration* RBRACE
     '''
     revouput.append(p.slice)
-def p_switchStatement(p):
+def p_switchStatement():
     '''
-        switchStatement : SWITCH LBRACKET expression RBRACKET statement ......
-    '''
-    revoutput.append(p.slice)
-
-def p_ternaryExpression(p):
-    '''
-        ternaryExpression : orOrExpression ( '?' expression COLON ternaryExpression )? 
+        switchStatement: SWITCH LBRACKET expression RBRACKET statement ......
     '''
     revoutput.append(p.slice)
 
+def p_ternaryExpression():
+    '''
+        ternaryExpression: orOrExpression ( '?' expression COLON ternaryExpression )? 
+    '''
+    revoutput.append(p.slice)
 
-def p_type(p):
+
+def p_type():
     '''
         type : typeConstructors? type2 typeSuffix*
     '''
     revoutput.append(p.slice)    
 
-def p_type2(p):
+def p_type2():
     '''
         type2 : builtinType | symbol | typeofExpression ( DOT identifierOrTemplateChain )? | typeConstructor LBRACKET TYPEDEF RBRACKET 
     '''
     revoutput.append(p.slice)    
 
 
-def p_typeConstructor(p):
+def p_typeConstructor():
     '''
         typeConstructor : 'CONST' | 'IMMUTABLE'
     '''
     revoutput.append(p.slice)    
 
-def p_typeConstructors(p):
+def p_typeConstructors():
     '''       
         typeConstructors : typeConstructor | typeConstructor typeConstructors
     '''
     revoutput.append(p.slice)    
 
-def p_typeSpecialization(p):
-    ''' typeSpecialization : type | UNION | CLASS | ENUM | FUNCTION | CONST | IMMUTABLE | RETURN | TYPEDEF
+def p_typeSpecialization():
+    ''' typeSpecialization : type | ’UNION’ | ’CLASS’ | ’ENUM’ | ’FUNCTION’ | ’CONST’ | ’IMMUTABLE’ | ’RETURN’ | ’TYPEDEF’
     '''
     revoutput.append(p.slice)    
 
-def p_typeSuffix(p):
+def p_typeSuffix():
     '''       
-        typeSuffix : TIMES | LBRACKET type? RBRACKET | LBRACKET assignExpression RBRACKET | LBRACKET assignExpression RANGE assignExpression RBRACKET
-        		   | ( DELEGATE | FUNCTION ) parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET ( TYPEDEF | expression ) RBRACKET 
-        		   | SEMICOLON typeofExpression COLON TYPEOF LBRACKET ( expression | RETURN ) RBRACKET 
+        typeSuffix : '*' | LBRACKET type? RBRACKET | LBRACKET assignExpression RBRACKET | LBRACKET assignExpression RANGE assignExpression RBRACKET |
+        ( DELEGATE | FUNCTION ) parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET ( TYPEDEF | expression ) RBRACKET 
+        SEMICOLON typeofExpression COLON TYPEOF LBRACKET ( expression | RETURN ) RBRACKET 
     '''
     revoutput.append(p.slice)    
 
-def p_unaryExpression(p):
+def p_unaryExpression():
     '''       
-        unaryExpression : primaryExpression | AMPERSAND unaryExpression | EXCLAMATION unaryExpression | TIMES unaryExpression | PLUS unaryExpression
-    					| MINUS unaryExpression | DOT |  PLUS_PLUS unaryExpression  | ELIPSIS | newExpression | deleteExpression | castExpression | functionCallExpression 
-						| indexExpression } LBRACKET TYPEDEF RBRACKET DOT identifierOrTemplateInstance | unaryExpression DOT newExpression | unaryExpression DOT 
-        				| identifierOrTemplateInstance | RANGE | unaryExpression PLUS_PLUS
+        unaryExpression: primaryExpression | AMPERSAND unaryExpression | '!' unaryExpression | TIMES unaryExpression | PLUS unaryExpression | 
+        MINUS unaryExpression | . |  PLUS_PLUS unaryExpression  | ... | newExpression | deleteExpression | castExpression | functionCallExpression |
+        indexExpression } LBRACKET TYPEDEF RBRACKET DOT identifierOrTemplateInstance | unaryExpression DOT newExpression | unaryExpression DOT 
+        identifierOrTemplateInstance | .. | unaryExpression PLUS_PLUS
 
     '''
     revoutput.append(p.slice)    
 
-def p_unionDeclaration(p):
+def p_unionDeclaration():
     '''
-        unionDeclaration : UNION Idefntifier templateParameters constraint? structBody | UNION IDENTIFIER ( structBody | SEMICOLON ) | UNION structBody 
+        unionDeclaration: UNION Idefntifier templateParameters constraint? structBody | UNION IDENTIFIER ( structBody | SEMICOLON ) | UNION structBody 
     '''
     revoutput.append(p.slice)    
 
-def p_variableDeclaration(p):
+def p_variableDeclaration():
     '''
-	variableDeclaration : multiplestorageClass TYPEDEF declarator ( COMMA declarator )* SEMICOLON | multiplestorageClass TYPEDEF IDENTIFIER ASSIGN functionBody SEMICOLOON 
+	variableDeclaration: multiplestorageClass TYPEDEF declarator ( COMMA declarator )* SEMICOLON | multiplestorageClass TYPEDEF IDENTIFIER ASSIGN functionBody SEMICOLOON 
 	| autoDeclaration
     '''
     revoutput.append(p.slice)    
 
-def p_whileStatement(p):
+def p_whileStatement():
 	'''
-	whileStatement : WHILE LBRACKET expression RBRACKET declarationOrStatement
+	whileStatement: WHILE LBRACKET expression RBRACKET declarationOrStatement
   	'''
 	revouput.append(p.slice)  
-def p_withStatement(p):
+def p_withStatement():
 	'''
-	withStatement : WITH LBRACKET expression RBRACKET statementNoCaseNoDefault
+	withStatement: WITH LBRACKET expression RBRACKET statementNoCaseNoDefault
 	'''
 	revouput.slice(p)
 
-def xorExpression(p):
-	''' storageClass :andExpression | xorExpression CARET andExpression
+def xorExpression():
+	''' storageClass :andExpression | <xorExpression> ’ˆ’ <andExpression>
 	'''
 	revoutput.append(p.slice)
 
