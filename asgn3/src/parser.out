@@ -27,696 +27,716 @@ Rule 8     comma_aliasInitializer -> empty
 Rule 9     multiplestorageClass -> storageClass multiplestorageClass
 Rule 10    multiplestorageClass -> empty
 Rule 11    aliasInitializer -> IDENTIFIER ASSIGN multiplestorageClass type
-Rule 12    aliasInitializer -> IDENTIFIER ASSIGN functionLiteralExpression SEMICOLON
-Rule 13    aliasThisDeclaration -> ALIAS IDENTIFIER THIS SEMICOLON
-Rule 14    andAndExpression -> orExpression
-Rule 15    andAndExpression -> andAndExpression DOUBLE_AMPERSAND orExpression
-Rule 16    andExpression -> cmpExpression
-Rule 17    andExpression -> andExpression AMPERSAND cmpExpression
-Rule 18    argumentList -> assignExpression
-Rule 19    argumentList -> argumentList comma_assign
-Rule 20    comma_assign -> COMMA assignExpression comma_assign
-Rule 21    comma_assign -> empty
-Rule 22    arguments -> LPAREN RPAREN
-Rule 23    arguments -> LPAREN argumentList RPAREN
-Rule 24    arrayInitializer -> LBRACKET RBRACKET
-Rule 25    arrayInitializer -> LBRACKET arrayMemberInitialization comma_arrayMemberInitialization RBRACKET
-Rule 26    comma_arrayMemberInitialization -> COMMA arrayMemberInitialization comma_arrayMemberInitialization
-Rule 27    comma_arrayMemberInitialization -> empty
-Rule 28    array_Literal -> LBRACKET RBRACKET
-Rule 29    array_Literal -> LBRACKET argumentList RBRACKET
-Rule 30    arrayMemberInitialization -> assignExpression COLON nonVoidInitializer
-Rule 31    arrayMemberInitialization -> nonVoidInitializer
-Rule 32    assignExpression -> ternaryExpression
-Rule 33    assignExpression -> ternaryExpression assignOperator expression
-Rule 34    assignOperator -> ASSIGN
-Rule 35    assignOperator -> EQ_LEFT
-Rule 36    assignOperator -> EQ_RIGHT
-Rule 37    assignOperator -> EQ_PLUS
-Rule 38    assignOperator -> EQ_MINUS
-Rule 39    assignOperator -> EQ_TIMES
-Rule 40    assignOperator -> EQ_MODULO
-Rule 41    assignOperator -> EQ_AND_BIT
-Rule 42    assignOperator -> EQ_DIV
-Rule 43    assignOperator -> EQ_OR_BIT
-Rule 44    assignOperator -> EQ_XOR_BIT
-Rule 45    attribute -> PRIVATE
-Rule 46    attribute -> PROTECTED
-Rule 47    attribute -> PUBLIC
-Rule 48    attribute -> STATIC
-Rule 49    attribute -> EXTERN
-Rule 50    attribute -> FINAL
-Rule 51    attribute -> AUTO
-Rule 52    attribute -> CONST
-Rule 53    attribute -> IMMUTABLE
-Rule 54    attributeDeclaration -> attribute COLON
-Rule 55    autoDeclaration -> storageClass multiplestorageClass IDENTIFIER ASSIGN initializer comma_identifier_assign_initializer SEMICOLON
-Rule 56    comma_identifier_assign_initializer -> COMMA IDENTIFIER ASSIGN initializer comma_identifier_assign_initializer
-Rule 57    comma_identifier_assign_initializer -> empty
-Rule 58    blockStatement -> LBRACE RBRACE
-Rule 59    blockStatement -> LBRACE declarationsAndStatements RBRACE
-Rule 60    bodyStatement -> BODY blockStatement
-Rule 61    breakStatement -> BREAK SEMICOLON
-Rule 62    breakStatement -> BREAK IDENTIFIER SEMICOLON
-Rule 63    baseClass -> type2
-Rule 64    baseClassList -> baseClass
-Rule 65    baseClassList -> baseClassList COMMA baseClass
-Rule 66    builtinType -> BOOL
-Rule 67    builtinType -> SHORT
-Rule 68    builtinType -> USHORT
-Rule 69    builtinType -> INT
-Rule 70    builtinType -> UINT
-Rule 71    builtinType -> LONG
-Rule 72    builtinType -> ULONG
-Rule 73    builtinType -> CHAR
-Rule 74    builtinType -> FLOAT
-Rule 75    builtinType -> DOUBLE
-Rule 76    caseRangeStatement -> CASE assignExpression COLON ELLIPSIS CASE assignExpression COLON declarationsAndStatements
-Rule 77    caseStatement -> CASE argumentList COLON declarationsAndStatements
-Rule 78    castExpression -> CAST LPAREN RPAREN unaryExpression
-Rule 79    castExpression -> CAST LPAREN type RPAREN unaryExpression
-Rule 80    castExpression -> CAST LPAREN castQualifier RPAREN unaryExpression
-Rule 81    castQualifier -> CONST
-Rule 82    castQualifier -> IMMUTABLE
-Rule 83    classDeclaration -> CLASS IDENTIFIER SEMICOLON
-Rule 84    classDeclaration -> CLASS IDENTIFIER COLON baseClassList structBody
-Rule 85    classDeclaration -> CLASS IDENTIFIER structBody
-Rule 86    cmpExpression -> shiftExpression
-Rule 87    cmpExpression -> equalExpression
-Rule 88    cmpExpression -> identityExpression
-Rule 89    cmpExpression -> relExpression
-Rule 90    constraint -> IF LPAREN expression RPAREN
-Rule 91    constructor -> THIS parameters multiple_memberFunctionAttribute functionBody
-Rule 92    constructor -> THIS parameters multiple_memberFunctionAttribute SEMICOLON
-Rule 93    constructor -> THIS templateParameters parameters multiple_memberFunctionAttribute functionBody
-Rule 94    constructor -> THIS templateParameters parameters multiple_memberFunctionAttribute SEMICOLON
-Rule 95    constructor -> THIS parameters multiple_memberFunctionAttribute constraint functionBody
-Rule 96    constructor -> THIS parameters multiple_memberFunctionAttribute constraint SEMICOLON
-Rule 97    constructor -> THIS templateParameters parameters multiple_memberFunctionAttribute constraint functionBody
-Rule 98    constructor -> THIS templateParameters parameters multiple_memberFunctionAttribute constraint SEMICOLON
-Rule 99    multiple_memberFunctionAttribute -> memberFunctionAttribute multiple_memberFunctionAttribute
-Rule 100   multiple_memberFunctionAttribute -> empty
-Rule 101   continueStatement -> CONTINUE SEMICOLON
-Rule 102   continueStatement -> CONTINUE IDENTIFIER SEMICOLON
-Rule 103   declaration -> multipleattributes declaration2
-Rule 104   declaration -> attribute multipleattributes LBRACE multiple_declaration RBRACE
-Rule 105   multiple_declaration -> declaration multiple_declaration
-Rule 106   multiple_declaration -> empty
-Rule 107   multipleattributes -> attribute multipleattributes
-Rule 108   multipleattributes -> empty
-Rule 109   declaration2 -> aliasDeclaration
-Rule 110   declaration2 -> aliasThisDeclaration
-Rule 111   declaration2 -> anonymousEnumDeclaration
-Rule 112   declaration2 -> attributeDeclaration
-Rule 113   declaration2 -> classDeclaration
-Rule 114   declaration2 -> conditionalDeclaration
-Rule 115   declaration2 -> constructor
-Rule 116   declaration2 -> destructor
-Rule 117   declaration2 -> enumDeclaration
-Rule 118   declaration2 -> functionDeclaration
-Rule 119   declaration2 -> importDeclaration
-Rule 120   declaration2 -> mixinDeclaration
-Rule 121   declaration2 -> unionDeclaration
-Rule 122   declaration2 -> variableDeclaration
-Rule 123   declarationsAndStatements -> declarationOrStatement
-Rule 124   declarationsAndStatements -> declarationOrStatement declarationsAndStatements
-Rule 125   declarationOrStatement -> declaration
-Rule 126   declarationOrStatement -> statement
-Rule 127   declarator -> IDENTIFIER
-Rule 128   declarator -> IDENTIFIER ASSIGN initializer
-Rule 129   declarator -> IDENTIFIER templateParameters ASSIGN initializer
-Rule 130   defaultStatement -> DEFAULT COLON declarationsAndStatements
-Rule 131   deleteExpression -> DELETE unaryExpression
-Rule 132   destructor -> TILDE THIS LPAREN RPAREN multiple_memberFunctionAttribute functionBody
-Rule 133   destructor -> TILDE THIS LPAREN RPAREN multiple_memberFunctionAttribute SEMICOLON
-Rule 134   doStatement -> DO statementNoCaseNoDefault WHILE LPAREN expression RPAREN SEMICOLON
-Rule 135   enumBody -> DOUBLE_QUOTE enumMember DOUBLE_QUOTE
-Rule 136   enumBody -> DOUBLE_QUOTE enumMember comma_enumMember DOUBLE_QUOTE
-Rule 137   comma_enumMember -> COMMA enumMember comma_enumMember
-Rule 138   comma_enumMember -> empty
-Rule 139   anonymousEnumMember -> TYPEDEF IDENTIFIER ASSIGN assignExpression
-Rule 140   anonymousEnumMember -> IDENTIFIER ASSIGN assignExpression
-Rule 141   anonymousEnumMember -> IDENTIFIER
-Rule 142   anonymousEnumDeclaration -> ENUM LBRACE anonymousEnumMember multipleanonymousEnumMember RBRACE
-Rule 143   anonymousEnumDeclaration -> ENUM COLON type LBRACE anonymousEnumMember multipleanonymousEnumMember RBRACE
-Rule 144   multipleanonymousEnumMember -> anonymousEnumMember multipleanonymousEnumMember
-Rule 145   multipleanonymousEnumMember -> empty
-Rule 146   enumDeclaration -> ENUM IDENTIFIER SEMICOLON
-Rule 147   enumDeclaration -> ENUM IDENTIFIER COLON TYPEDEF SEMICOLON
-Rule 148   enumDeclaration -> ENUM IDENTIFIER COLON TYPEDEF enumBody
-Rule 149   enumMember -> IDENTIFIER
-Rule 150   enumMember -> IDENTIFIER ASSIGN assignExpression
-Rule 151   equalExpression -> shiftExpression IS_EQ shiftExpression
-Rule 152   equalExpression -> shiftExpression NOT_EQ shiftExpression
-Rule 153   shiftExpression -> addExpression
-Rule 154   shiftExpression -> shiftExpression LEFT_SHIFT addExpression
-Rule 155   shiftExpression -> shiftExpression RIGHT_SHIFT addExpression
-Rule 156   expression -> assignExpression
-Rule 157   expression -> expression COMMA assignExpression
-Rule 158   expressionStatement -> expression SEMICOLON
-Rule 159   forStatement -> FOR LPAREN declaration SEMICOLON RPAREN declarationOrStatement
-Rule 160   forStatement -> FOR LPAREN statementNoCaseNoDefault SEMICOLON RPAREN declarationOrStatement
-Rule 161   forStatement -> FOR LPAREN declaration SEMICOLON expression RPAREN declarationOrStatement
-Rule 162   forStatement -> FOR LPAREN statementNoCaseNoDefault SEMICOLON expression RPAREN declarationOrStatement
-Rule 163   forStatement -> FOR LPAREN declaration expression SEMICOLON RPAREN declarationOrStatement
-Rule 164   forStatement -> FOR LPAREN statementNoCaseNoDefault expression SEMICOLON RPAREN declarationOrStatement
-Rule 165   forStatement -> FOR LPAREN declaration expression SEMICOLON expression RPAREN declarationOrStatement
-Rule 166   forStatement -> FOR LPAREN statementNoCaseNoDefault expression SEMICOLON expression RPAREN declarationOrStatement
-Rule 167   foreachStatement -> FOREACH LPAREN foreachTypeList SEMICOLON expression RPAREN declarationOrStatement
-Rule 168   foreachStatement -> FOREACH LPAREN foreachType SEMICOLON expression RANGE expression RBRACKET declarationOrStatement
-Rule 169   foreachStatement -> FOREACH_REVERSE LPAREN foreachTypeList SEMICOLON expression RPAREN declarationOrStatement
-Rule 170   foreachStatement -> FOREACH_REVERSE LPAREN foreachType SEMICOLON expression RANGE expression RPAREN declarationOrStatement
-Rule 171   foreachType -> IDENTIFIER
-Rule 172   foreachType -> type IDENTIFIER
-Rule 173   foreachType -> typeConstructors IDENTIFIER
-Rule 174   foreachType -> typeConstructors type IDENTIFIER
-Rule 175   foreachTypeList -> foreachType
-Rule 176   foreachTypeList -> foreachTypeList COMMA foreachType
-Rule 177   functionBody -> blockStatement
-Rule 178   functionCallExpression -> symbol arguments unaryExpression arguments
-Rule 179   functionCallExpression -> type arguments
-Rule 180   functionDeclaration -> storageClass multiplestorageClass IDENTIFIER parameters multiple_memberFunctionAttribute SEMICOLON
-Rule 181   functionDeclaration -> storageClass multiplestorageClass IDENTIFIER parameters multiple_memberFunctionAttribute functionBody
-Rule 182   functionDeclaration -> TYPEDEF IDENTIFIER parameters multiple_memberFunctionAttribute SEMICOLON
-Rule 183   functionDeclaration -> TYPEDEF IDENTIFIER parameters multiple_memberFunctionAttribute functionBody
-Rule 184   functionDeclaration -> storageClass multiplestorageClass IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute constraint SEMICOLON
-Rule 185   functionDeclaration -> storageClass multiplestorageClass IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute SEMICOLON
-Rule 186   functionDeclaration -> storageClass multiplestorageClass IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute constraint functionBody
-Rule 187   functionDeclaration -> storageClass multiplestorageClass IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute functionBody
-Rule 188   functionDeclaration -> TYPEDEF IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute constraint SEMICOLON
-Rule 189   functionDeclaration -> TYPEDEF IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute SEMICOLON
-Rule 190   functionDeclaration -> TYPEDEF IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute constraint functionBody
-Rule 191   functionDeclaration -> TYPEDEF IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute functionBody
-Rule 192   functionLiteralExpression -> FUNCTION parameters multiple_functionAttribute functionBody
-Rule 193   functionLiteralExpression -> FUNCTION functionBody
-Rule 194   functionLiteralExpression -> FUNCTION TYPEDEF functionBody
-Rule 195   functionLiteralExpression -> FUNCTION TYPEDEF parameters multiple_functionAttribute functionBody
-Rule 196   functionLiteralExpression -> parameters multiple_functionAttribute functionBody
-Rule 197   functionLiteralExpression -> functionBody
-Rule 198   functionLiteralExpression -> IDENTIFIER assignExpression
-Rule 199   functionLiteralExpression -> FUNCTION parameters multiple_functionAttribute assignExpression
-Rule 200   functionLiteralExpression -> FUNCTION TYPEDEF parameters multiple_functionAttribute assignExpression
-Rule 201   multiple_functionAttribute -> functionAttribute multiple_functionAttribute
-Rule 202   gotoStatement -> GOTO IDENTIFIER SEMICOLON
-Rule 203   gotoStatement -> GOTO DEFAULT SEMICOLON
-Rule 204   gotoStatement -> GOTO CASE SEMICOLON
-Rule 205   gotoStatement -> GOTO CASE expression SEMICOLON
-Rule 206   identifierChain -> IDENTIFIER
-Rule 207   identifierChain -> identifierChain DOT IDENTIFIER
-Rule 208   identifierList -> IDENTIFIER
-Rule 209   identifierList -> identifierList COMMA IDENTIFIER
-Rule 210   identifierList -> identifierOrTemplateInstance
-Rule 211   identifierList -> identifierOrTemplateChain DOT identifierOrTemplateInstance
-Rule 212   identifierOrTemplateInstance -> IDENTIFIER
-Rule 213   identifierOrTemplateInstance -> templateInstance
-Rule 214   identityExpression -> shiftExpression IS shiftExpression
-Rule 215   identityExpression -> shiftExpression EXCLAMATION IS shiftExpression
-Rule 216   ifStatement -> IF LPAREN ifCondition RPAREN declarationOrStatement
-Rule 217   ifStatement -> IF LPAREN ifCondition RPAREN declarationOrStatement ELSE declarationOrStatement
-Rule 218   ifCondition -> AUTO IDENTIFIER ASSIGN expression
-Rule 219   ifCondition -> TYPEDEF IDENTIFIER ASSIGN expression
-Rule 220   ifCondition -> expression
-Rule 221   importBind -> IDENTIFIER
-Rule 222   importBind -> IDENTIFIER ASSIGN IDENTIFIER
-Rule 223   importBindings -> singleImport COLON importBind
-Rule 224   importBindings -> singleImport COLON importBind COLON importBind
-Rule 225   importDeclaration -> IMPORT singleImport comma_singleImport COMMA importBindings SEMICOLON
-Rule 226   importDeclaration -> IMPORT singleImport comma_singleImport SEMICOLON
-Rule 227   importDeclaration -> IMPORT importBindings SEMICOLON
-Rule 228   comma_singleImport -> COMMA singleImport comma_singleImport
-Rule 229   comma_singleImport -> empty
-Rule 230   index -> assignExpression
-Rule 231   index -> assignExpression RANGE assignExpression
-Rule 232   indexExpression -> unaryExpression LBRACKET RBRACKET
-Rule 233   indexExpression -> unaryExpression LBRACKET index comma_index RBRACKET
-Rule 234   comma_index -> COMMA index comma_index
-Rule 235   comma_index -> empty
-Rule 236   initializer -> VOID
-Rule 237   initializer -> nonVoidInitializer
-Rule 238   isExpression -> IS LPAREN type RPAREN
-Rule 239   isExpression -> IS LPAREN type identifier RPAREN
-Rule 240   isExpression -> IS LPAREN type COLON typeSpecialization RPAREN
-Rule 241   isExpression -> IS LPAREN type identifier COLON typeSpecialization RPAREN
-Rule 242   isExpression -> IS LPAREN type ASSIGN typeSpecialization RPAREN
-Rule 243   isExpression -> IS LPAREN type identifier ASSIGN typeSpecialization RPAREN
-Rule 244   labeledStatement -> IDENTIFIER COLON
-Rule 245   labeledStatement -> IDENTIFIER COLON declarationOrStatement
-Rule 246   memberFunctionAttribute -> functionAttribute
-Rule 247   memberFunctionAttribute -> IMMUTABLE
-Rule 248   memberFunctionAttribute -> CONST
-Rule 249   memberFunctionAttribute -> RETURN
-Rule 250   mixinDeclaration -> mixinExpression SEMICOLON
-Rule 251   mixinDeclaration -> templateMixinExpression SEMICOLON
-Rule 252   mixinExpression -> MIXIN LPAREN assignExpression RPAREN
-Rule 253   mulExpression -> powExpression
-Rule 254   mulExpression -> mulExpression TIMES
-Rule 255   mulExpression -> mulExpression DIV
-Rule 256   mulExpression -> mulExpression MODULO
-Rule 257   newAnonClassExpression -> NEW CLASS arguments baseClassList structBody
-Rule 258   newAnonClassExpression -> NEW CLASS arguments structBody
-Rule 259   newAnonClassExpression -> NEW CLASS baseClassList structBody
-Rule 260   newAnonClassExpression -> NEW CLASS structBody
-Rule 261   newAnonClassExpression -> NEW arguments CLASS structBody
-Rule 262   newAnonClassExpression -> NEW arguments CLASS arguments structBody
-Rule 263   newAnonClassExpression -> NEW arguments CLASS baseClassList structBody
-Rule 264   newAnonClassExpression -> NEW arguments CLASS arguments baseClassList structBody
-Rule 265   newExpression -> NEW type
-Rule 266   newExpression -> NEW type LBRACKET assignExpression RBRACKET
-Rule 267   newExpression -> NEW type arguments
-Rule 268   newExpression -> newAnonClassExpression
-Rule 269   nonVoidInitializer -> assignExpression
-Rule 270   nonVoidInitializer -> arrayInitializer
-Rule 271   nonVoidInitializer -> structInitializer
-Rule 272   orExpression -> xorExpression
-Rule 273   orExpression -> orExpression PIPE xorExpression
-Rule 274   orOrExpression -> andAndExpression
-Rule 275   orOrExpression -> orOrExpression DOUBLE_PIPE andAndExpression
-Rule 276   parameterAttributeStar -> parameterAttribute parameterAttributeStar
-Rule 277   parameterAttributeStar -> empty
-Rule 278   parameter -> parameterAttributeStar type parameterAttributeStar type IDENTIFIER ELLIPSIS parameterAttributeStar type IDENTIFIER ASSIGN assignExpression
-Rule 279   parameter -> parameterAttributeStar type parameterAttributeStar type IDENTIFIER ELLIPSIS parameterAttributeStar type IDENTIFIER
-Rule 280   parameter -> parameterAttributeStar type parameterAttributeStar type IDENTIFIER ELLIPSIS parameterAttributeStar type ASSIGN assignExpression
-Rule 281   parameter -> parameterAttributeStar type parameterAttributeStar type IDENTIFIER ELLIPSIS parameterAttributeStar type
-Rule 282   parameter -> parameterAttributeStar type parameterAttributeStar type ELLIPSIS parameterAttributeStar type IDENTIFIER ASSIGN assignExpression
-Rule 283   parameter -> parameterAttributeStar type parameterAttributeStar type ELLIPSIS parameterAttributeStar type IDENTIFIER
-Rule 284   parameter -> parameterAttributeStar type parameterAttributeStar type ELLIPSIS parameterAttributeStar type ASSIGN assignExpression
-Rule 285   parameter -> parameterAttributeStar type parameterAttributeStar type ELLIPSIS parameterAttributeStar type
-Rule 286   parameterAttribute -> typeConstructor
-Rule 287   parameterAttribute -> FINAL
-Rule 288   parameterAttribute -> OUT
-Rule 289   parameterAttribute -> AUTO
-Rule 290   parameterAttribute -> RETURN
-Rule 291   CommaParameterStar -> COMMA parameter CommaParameterStar
-Rule 292   CommaParameterStar -> empty
-Rule 293   parameters -> LPAREN parameter CommaParameterStar COMMA ELLIPSIS RPAREN
-Rule 294   parameters -> LPAREN parameter CommaParameterStar RPAREN
-Rule 295   parameters -> LPAREN ELLIPSIS RPAREN
-Rule 296   parameters -> LPAREN RPAREN
-Rule 297   postblit -> THIS LPAREN THIS RPAREN multiple_memberFunctionAttribute functionBody
-Rule 298   postblit -> THIS LPAREN THIS RPAREN multiple_memberFunctionAttribute SEMICOLON
-Rule 299   powExpression -> unaryExpression
-Rule 300   powExpression -> powExpression DOUBLEXOR unaryExpression
-Rule 301   StringLiteralPlus -> LIT_STR StringLiteralPlus
-Rule 302   StringLiteralPlus -> LIT_STR
-Rule 303   primaryExpression -> identifierOrTemplateInstance
-Rule 304   primaryExpression -> DOT identifierOrTemplateInstance
-Rule 305   primaryExpression -> typeConstructor LPAREN basicType RPAREN DOT IDENTIFIER
-Rule 306   primaryExpression -> basicType DOT IDENTIFIER
-Rule 307   primaryExpression -> basicType arguments
-Rule 308   primaryExpression -> arrayLiteral
-Rule 309   primaryExpression -> LPAREN expression RPAREN
-Rule 310   primaryExpression -> functionLiteralExpression
-Rule 311   primaryExpression -> traitsExpression
-Rule 312   primaryExpression -> mixinExpression
-Rule 313   primaryExpression -> importExpression
-Rule 314   primaryExpression -> DOLLAR
-Rule 315   primaryExpression -> THIS
-Rule 316   primaryExpression -> NULL
-Rule 317   primaryExpression -> TRUE
-Rule 318   primaryExpression -> FALSE
-Rule 319   primaryExpression -> INUMBER
-Rule 320   primaryExpression -> DNUMBER
-Rule 321   primaryExpression -> StringLiteralPlus
-Rule 322   primaryExpression -> LIT_CHAR
-Rule 323   register -> IDENTIFIER
-Rule 324   register -> IDENTIFIER LPAREN INUMBER RPAREN
-Rule 325   relExpression -> shiftExpression
-Rule 326   relExpression -> relExpression relOperator shiftExpression
-Rule 327   relOperator -> LESS
-Rule 328   relOperator -> LESSEQ
-Rule 329   relOperator -> GREATER
-Rule 330   relOperator -> GREATER_EQ
-Rule 331   relOperator -> IS_EQ_DIFF
-Rule 332   relOperator -> NOT_EQ_DIFF
-Rule 333   relOperator -> LESS_EQ_DIFF
-Rule 334   relOperator -> LESS_DIFF
-Rule 335   relOperator -> GREATER_EQ__DIFF
-Rule 336   relOperator -> GREATER_DIFF
-Rule 337   singleImport -> IDENTIFIER ASSIGN identifierChain
-Rule 338   singleImport -> identifierChain
-Rule 339   statement -> statementNoCaseNoDefault
-Rule 340   statement -> caseStatement
-Rule 341   statement -> caseRangeStatment
-Rule 342   statement -> defaultStatement
-Rule 343   storageClass -> typeConstructor
-Rule 344   storageClass -> AUTO
-Rule 345   storageClass -> ENUM
-Rule 346   storageClass -> EXTERN
-Rule 347   storageClass -> FINAL
-Rule 348   storageClass -> STATIC
-Rule 349   declarationStar -> declaration declarationStar
-Rule 350   declarationStar -> empty
-Rule 351   structBody -> LBRACE declarationStar RBRACE
-Rule 352   switchStatement -> SWITCH LBRACKET expression RBRACKET statement
-Rule 353   symbol -> DOT identifierOrTemplateChain
-Rule 354   symbol -> identifierOrTemplateChain
-Rule 355   ternaryExpression -> orOrExpression QUESTION expression COLON ternaryExpression
-Rule 356   ternaryExpression -> orOrExpression
-Rule 357   typeSuffixStar -> typeSuffix typeSuffixStar
-Rule 358   typeSuffixStar -> empty
-Rule 359   type -> typeConstructors type2 typeSuffixStar
-Rule 360   type -> type2 typeSuffixStar
-Rule 361   type2 -> builtinType
-Rule 362   type2 -> symbol
-Rule 363   type2 -> typeofExpression DOT identifierOrTemplateChain
-Rule 364   type2 -> typeofExpression
-Rule 365   type2 -> typeConstructor LBRACKET TYPEDEF RBRACKET
-Rule 366   typeConstructor -> CONST
-Rule 367   typeConstructor -> IMMUTABLE
-Rule 368   typeConstructors -> typeConstructor
-Rule 369   typeConstructors -> typeConstructor typeConstructors
-Rule 370   typeSpecialization -> type
-Rule 371   typeSpecialization -> UNION
-Rule 372   typeSpecialization -> CLASS
-Rule 373   typeSpecialization -> ENUM
-Rule 374   typeSpecialization -> FUNCTION
-Rule 375   typeSpecialization -> CONST
-Rule 376   typeSpecialization -> IMMUTABLE
-Rule 377   typeSpecialization -> RETURN
-Rule 378   typeSpecialization -> TYPEDEF
-Rule 379   typeSuffix -> TIMES
-Rule 380   typeSuffix -> LBRACKET type RBRACKET
-Rule 381   typeSuffix -> LBRACKET RBRACKET
-Rule 382   typeSuffix -> LBRACKET assignExpression RBRACKET
-Rule 383   typeSuffix -> LBRACKET assignExpression RANGE assignExpression RBRACKET
-Rule 384   typeSuffix -> DELEGATE parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET TYPEDEF RBRACKET
-Rule 385   typeSuffix -> DELEGATE parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET expression RBRACKET
-Rule 386   typeSuffix -> FUNCTION parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET TYPEDEF RBRACKET
-Rule 387   typeSuffix -> FUNCTION parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET expression RBRACKET
-Rule 388   typeSuffix -> SEMICOLON typeofExpression COLON TYPEOF LBRACKET expression RBRACKET
-Rule 389   typeSuffix -> SEMICOLON typeofExpression COLON TYPEOF LBRACKET RETURN RBRACKET
-Rule 390   typeidExpression -> TYPEID LPAREN type RPAREN
-Rule 391   typeidExpression -> TYPEID LPAREN expression RPAREN
-Rule 392   unaryExpression -> primaryExpression
-Rule 393   unaryExpression -> AMPERSAND unaryExpression
-Rule 394   unaryExpression -> EXCLAMATION unaryExpression
-Rule 395   unaryExpression -> TIMES unaryExpression
-Rule 396   unaryExpression -> PLUS unaryExpression
-Rule 397   unaryExpression -> MINUS unaryExpression
-Rule 398   unaryExpression -> DOT
-Rule 399   unaryExpression -> PLUS_PLUS unaryExpression
-Rule 400   unaryExpression -> ELIPSIS
-Rule 401   unaryExpression -> newExpression
-Rule 402   unaryExpression -> deleteExpression
-Rule 403   unaryExpression -> castExpression
-Rule 404   unaryExpression -> functionCallExpression
-Rule 405   unaryExpression -> indexExpression
-Rule 406   unaryExpression -> LBRACKET TYPEDEF RBRACKET DOT identifierOrTemplateInstance
-Rule 407   unaryExpression -> unaryExpression DOT newExpression
-Rule 408   unaryExpression -> unaryExpression DOT
-Rule 409   unaryExpression -> identifierOrTemplateInstance
-Rule 410   unaryExpression -> RANGE
-Rule 411   unaryExpression -> unaryExpression PLUS_PLUS
-Rule 412   unionDeclaration -> UNION Idefntifier templateParameters structBody
-Rule 413   unionDeclaration -> UNION Idefntifier templateParameters constraint structBody
-Rule 414   unionDeclaration -> UNION IDENTIFIER structBody
-Rule 415   unionDeclaration -> UNION IDENTIFIER SEMICOLON
-Rule 416   unionDeclaration -> UNION structBody
-Rule 417   CommaDeclarator -> COMMA declarator CommaDeclarator
-Rule 418   CommaDeclarator -> empty
-Rule 419   variableDeclaration -> multiplestorageClass TYPEDEF declarator CommaDeclarator SEMICOLON
-Rule 420   variableDeclaration -> multiplestorageClass TYPEDEF IDENTIFIER ASSIGN functionBody SEMICOLOON
-Rule 421   variableDeclaration -> autoDeclaration
-Rule 422   whileStatement -> WHILE LBRACKET expression RBRACKET declarationOrStatement
-Rule 423   withStatement -> WITH LBRACKET expression RBRACKET statementNoCaseNoDefault
-Rule 424   empty -> <empty>
+Rule 12    aliasInitializer -> IDENTIFIER templateParameters ASSIGN multiplestorageClass type
+Rule 13    aliasInitializer -> IDENTIFIER ASSIGN functionLiteralExpression SEMICOLON
+Rule 14    aliasInitializer -> IDENTIFIER templateParameters ASSIGN functionLiteralExpression SEMICOLON
+Rule 15    aliasThisDeclaration -> ALIAS IDENTIFIER THIS SEMICOLON
+Rule 16    andAndExpression -> orExpression
+Rule 17    andAndExpression -> andAndExpression DOUBLE_AMPERSAND orExpression
+Rule 18    andExpression -> cmpExpression
+Rule 19    andExpression -> andExpression AMPERSAND cmpExpression
+Rule 20    argumentList -> assignExpression
+Rule 21    argumentList -> argumentList comma_assign
+Rule 22    comma_assign -> COMMA assignExpression comma_assign
+Rule 23    comma_assign -> empty
+Rule 24    arguments -> LPAREN RPAREN
+Rule 25    arguments -> LPAREN argumentList RPAREN
+Rule 26    arrayInitializer -> LBRACKET RBRACKET
+Rule 27    arrayInitializer -> LBRACKET arrayMemberInitialization comma_arrayMemberInitialization RBRACKET
+Rule 28    comma_arrayMemberInitialization -> COMMA arrayMemberInitialization comma_arrayMemberInitialization
+Rule 29    comma_arrayMemberInitialization -> empty
+Rule 30    array_Literal -> LBRACKET RBRACKET
+Rule 31    array_Literal -> LBRACKET argumentList RBRACKET
+Rule 32    arrayMemberInitialization -> assignExpression COLON nonVoidInitializer
+Rule 33    arrayMemberInitialization -> nonVoidInitializer
+Rule 34    assignExpression -> ternaryExpression
+Rule 35    assignExpression -> ternaryExpression assignOperator expression
+Rule 36    assignOperator -> ASSIGN
+Rule 37    assignOperator -> EQ_LEFT
+Rule 38    assignOperator -> EQ_RIGHT
+Rule 39    assignOperator -> EQ_PLUS
+Rule 40    assignOperator -> EQ_MINUS
+Rule 41    assignOperator -> EQ_TIMES
+Rule 42    assignOperator -> EQ_MODULO
+Rule 43    assignOperator -> EQ_AND_BIT
+Rule 44    assignOperator -> EQ_DIV
+Rule 45    assignOperator -> EQ_OR_BIT
+Rule 46    assignOperator -> EQ_XOR_BIT
+Rule 47    attribute -> PRIVATE
+Rule 48    attribute -> PROTECTED
+Rule 49    attribute -> PUBLIC
+Rule 50    attribute -> STATIC
+Rule 51    attribute -> EXTERN
+Rule 52    attribute -> FINAL
+Rule 53    attribute -> AUTO
+Rule 54    attribute -> CONST
+Rule 55    attribute -> IMMUTABLE
+Rule 56    attributeDeclaration -> attribute COLON
+Rule 57    autoDeclaration -> storageClass multiplestorageClass IDENTIFIER ASSIGN initializer comma_identifier_assign_initializer SEMICOLON
+Rule 58    comma_identifier_assign_initializer -> COMMA IDENTIFIER ASSIGN initializer comma_identifier_assign_initializer
+Rule 59    comma_identifier_assign_initializer -> empty
+Rule 60    blockStatement -> LBRACE RBRACE
+Rule 61    blockStatement -> LBRACE declarationsAndStatements RBRACE
+Rule 62    bodyStatement -> BODY blockStatement
+Rule 63    breakStatement -> BREAK SEMICOLON
+Rule 64    breakStatement -> BREAK IDENTIFIER SEMICOLON
+Rule 65    baseClass -> type2
+Rule 66    baseClassList -> baseClass
+Rule 67    baseClassList -> baseClassList COMMA baseClass
+Rule 68    builtinType -> BOOL
+Rule 69    builtinType -> SHORT
+Rule 70    builtinType -> USHORT
+Rule 71    builtinType -> INT
+Rule 72    builtinType -> UINT
+Rule 73    builtinType -> LONG
+Rule 74    builtinType -> ULONG
+Rule 75    builtinType -> CHAR
+Rule 76    builtinType -> FLOAT
+Rule 77    builtinType -> DOUBLE
+Rule 78    caseRangeStatement -> CASE assignExpression COLON ELLIPSIS CASE assignExpression COLON declarationsAndStatements
+Rule 79    caseStatement -> CASE argumentList COLON declarationsAndStatements
+Rule 80    castExpression -> CAST LPAREN RPAREN unaryExpression
+Rule 81    castExpression -> CAST LPAREN type RPAREN unaryExpression
+Rule 82    castExpression -> CAST LPAREN castQualifier RPAREN unaryExpression
+Rule 83    castQualifier -> CONST
+Rule 84    castQualifier -> IMMUTABLE
+Rule 85    classDeclaration -> CLASS IDENTIFIER SEMICOLON
+Rule 86    classDeclaration -> CLASS IDENTIFIER COLON baseClassList structBody
+Rule 87    classDeclaration -> CLASS IDENTIFIER structBody
+Rule 88    cmpExpression -> shiftExpression
+Rule 89    cmpExpression -> equalExpression
+Rule 90    cmpExpression -> identityExpression
+Rule 91    cmpExpression -> relExpression
+Rule 92    shiftExpression -> addExpression
+Rule 93    shiftExpression -> shiftExpression RIGHT_SHIFT addExpression
+Rule 94    shiftExpression -> shiftExpression LEFT_SHIFT addExpression
+Rule 95    constraint -> IF LPAREN expression RPAREN
+Rule 96    constructor -> THIS parameters multiple_memberFunctionAttribute functionBody
+Rule 97    constructor -> THIS parameters multiple_memberFunctionAttribute SEMICOLON
+Rule 98    constructor -> THIS templateParameters parameters multiple_memberFunctionAttribute functionBody
+Rule 99    constructor -> THIS templateParameters parameters multiple_memberFunctionAttribute SEMICOLON
+Rule 100   constructor -> THIS parameters multiple_memberFunctionAttribute constraint functionBody
+Rule 101   constructor -> THIS parameters multiple_memberFunctionAttribute constraint SEMICOLON
+Rule 102   constructor -> THIS templateParameters parameters multiple_memberFunctionAttribute constraint functionBody
+Rule 103   constructor -> THIS templateParameters parameters multiple_memberFunctionAttribute constraint SEMICOLON
+Rule 104   multiple_memberFunctionAttribute -> memberFunctionAttribute multiple_memberFunctionAttribute
+Rule 105   multiple_memberFunctionAttribute -> empty
+Rule 106   continueStatement -> CONTINUE SEMICOLON
+Rule 107   continueStatement -> CONTINUE IDENTIFIER SEMICOLON
+Rule 108   declaration -> multipleattributes declaration2
+Rule 109   declaration -> attribute multipleattributes LBRACE multiple_declaration RBRACE
+Rule 110   multiple_declaration -> declaration multiple_declaration
+Rule 111   multiple_declaration -> empty
+Rule 112   multipleattributes -> attribute multipleattributes
+Rule 113   multipleattributes -> empty
+Rule 114   declaration2 -> aliasDeclaration
+Rule 115   declaration2 -> aliasThisDeclaration
+Rule 116   declaration2 -> anonymousEnumDeclaration
+Rule 117   declaration2 -> attributeDeclaration
+Rule 118   declaration2 -> classDeclaration
+Rule 119   declaration2 -> constructor
+Rule 120   declaration2 -> destructor
+Rule 121   declaration2 -> enumDeclaration
+Rule 122   declaration2 -> functionDeclaration
+Rule 123   declaration2 -> importDeclaration
+Rule 124   declaration2 -> mixinDeclaration
+Rule 125   declaration2 -> unionDeclaration
+Rule 126   declaration2 -> variableDeclaration
+Rule 127   declarationsAndStatements -> declarationOrStatement
+Rule 128   declarationsAndStatements -> declarationOrStatement declarationsAndStatements
+Rule 129   declarationOrStatement -> declaration
+Rule 130   declarationOrStatement -> statement
+Rule 131   declarator -> IDENTIFIER
+Rule 132   declarator -> IDENTIFIER ASSIGN initializer
+Rule 133   declarator -> IDENTIFIER templateParameters ASSIGN initializer
+Rule 134   defaultStatement -> DEFAULT COLON declarationsAndStatements
+Rule 135   deleteExpression -> DELETE unaryExpression
+Rule 136   destructor -> TILDE THIS LPAREN RPAREN multiple_memberFunctionAttribute functionBody
+Rule 137   destructor -> TILDE THIS LPAREN RPAREN multiple_memberFunctionAttribute SEMICOLON
+Rule 138   doStatement -> DO statementNoCaseNoDefault WHILE LPAREN expression RPAREN SEMICOLON
+Rule 139   enumBody -> DOUBLE_QUOTE enumMember DOUBLE_QUOTE
+Rule 140   enumBody -> DOUBLE_QUOTE enumMember comma_enumMember DOUBLE_QUOTE
+Rule 141   comma_enumMember -> COMMA enumMember comma_enumMember
+Rule 142   comma_enumMember -> empty
+Rule 143   anonymousEnumMember -> TYPEDEF IDENTIFIER ASSIGN assignExpression
+Rule 144   anonymousEnumMember -> IDENTIFIER ASSIGN assignExpression
+Rule 145   anonymousEnumMember -> IDENTIFIER
+Rule 146   anonymousEnumDeclaration -> ENUM LBRACE anonymousEnumMember multipleanonymousEnumMember RBRACE
+Rule 147   anonymousEnumDeclaration -> ENUM COLON type LBRACE anonymousEnumMember multipleanonymousEnumMember RBRACE
+Rule 148   multipleanonymousEnumMember -> anonymousEnumMember multipleanonymousEnumMember
+Rule 149   multipleanonymousEnumMember -> empty
+Rule 150   enumDeclaration -> ENUM IDENTIFIER SEMICOLON
+Rule 151   enumDeclaration -> ENUM IDENTIFIER COLON TYPEDEF SEMICOLON
+Rule 152   enumDeclaration -> ENUM IDENTIFIER COLON TYPEDEF enumBody
+Rule 153   enumMember -> IDENTIFIER
+Rule 154   enumMember -> IDENTIFIER ASSIGN assignExpression
+Rule 155   equalExpression -> shiftExpression IS_EQ shiftExpression
+Rule 156   equalExpression -> shiftExpression NOT_EQ shiftExpression
+Rule 157   expression -> assignExpression
+Rule 158   expression -> expression COMMA assignExpression
+Rule 159   expressionStatement -> expression SEMICOLON
+Rule 160   forStatement -> FOR LPAREN declaration SEMICOLON RPAREN declarationOrStatement
+Rule 161   forStatement -> FOR LPAREN statementNoCaseNoDefault SEMICOLON RPAREN declarationOrStatement
+Rule 162   forStatement -> FOR LPAREN declaration SEMICOLON expression RPAREN declarationOrStatement
+Rule 163   forStatement -> FOR LPAREN statementNoCaseNoDefault SEMICOLON expression RPAREN declarationOrStatement
+Rule 164   forStatement -> FOR LPAREN declaration expression SEMICOLON RPAREN declarationOrStatement
+Rule 165   forStatement -> FOR LPAREN statementNoCaseNoDefault expression SEMICOLON RPAREN declarationOrStatement
+Rule 166   forStatement -> FOR LPAREN declaration expression SEMICOLON expression RPAREN declarationOrStatement
+Rule 167   forStatement -> FOR LPAREN statementNoCaseNoDefault expression SEMICOLON expression RPAREN declarationOrStatement
+Rule 168   foreachStatement -> FOREACH LPAREN foreachTypeList SEMICOLON expression RPAREN declarationOrStatement
+Rule 169   foreachStatement -> FOREACH LPAREN foreachType SEMICOLON expression RANGE expression RBRACKET declarationOrStatement
+Rule 170   foreachStatement -> FOREACH_REVERSE LPAREN foreachTypeList SEMICOLON expression RPAREN declarationOrStatement
+Rule 171   foreachStatement -> FOREACH_REVERSE LPAREN foreachType SEMICOLON expression RANGE expression RPAREN declarationOrStatement
+Rule 172   foreachType -> IDENTIFIER
+Rule 173   foreachType -> type IDENTIFIER
+Rule 174   foreachType -> typeConstructors IDENTIFIER
+Rule 175   foreachType -> typeConstructors type IDENTIFIER
+Rule 176   foreachTypeList -> foreachType
+Rule 177   foreachTypeList -> foreachTypeList COMMA foreachType
+Rule 178   functionBody -> blockStatement
+Rule 179   functionCallExpression -> symbol arguments unaryExpression arguments
+Rule 180   functionCallExpression -> type arguments
+Rule 181   functionDeclaration -> storageClass multiplestorageClass IDENTIFIER parameters multiple_memberFunctionAttribute SEMICOLON
+Rule 182   functionDeclaration -> storageClass multiplestorageClass IDENTIFIER parameters multiple_memberFunctionAttribute functionBody
+Rule 183   functionDeclaration -> TYPEDEF IDENTIFIER parameters multiple_memberFunctionAttribute SEMICOLON
+Rule 184   functionDeclaration -> TYPEDEF IDENTIFIER parameters multiple_memberFunctionAttribute functionBody
+Rule 185   functionDeclaration -> storageClass multiplestorageClass IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute constraint SEMICOLON
+Rule 186   functionDeclaration -> storageClass multiplestorageClass IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute SEMICOLON
+Rule 187   functionDeclaration -> storageClass multiplestorageClass IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute constraint functionBody
+Rule 188   functionDeclaration -> storageClass multiplestorageClass IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute functionBody
+Rule 189   functionDeclaration -> TYPEDEF IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute constraint SEMICOLON
+Rule 190   functionDeclaration -> TYPEDEF IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute SEMICOLON
+Rule 191   functionDeclaration -> TYPEDEF IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute constraint functionBody
+Rule 192   functionDeclaration -> TYPEDEF IDENTIFIER templateParameters parameters multiple_memberFunctionAttribute functionBody
+Rule 193   functionLiteralExpression -> FUNCTION parameters multiple_functionAttribute functionBody
+Rule 194   functionLiteralExpression -> FUNCTION functionBody
+Rule 195   functionLiteralExpression -> FUNCTION TYPEDEF functionBody
+Rule 196   functionLiteralExpression -> FUNCTION TYPEDEF parameters multiple_functionAttribute functionBody
+Rule 197   functionLiteralExpression -> parameters multiple_functionAttribute functionBody
+Rule 198   functionLiteralExpression -> functionBody
+Rule 199   functionLiteralExpression -> IDENTIFIER assignExpression
+Rule 200   functionLiteralExpression -> FUNCTION parameters multiple_functionAttribute assignExpression
+Rule 201   functionLiteralExpression -> FUNCTION TYPEDEF parameters multiple_functionAttribute assignExpression
+Rule 202   multiple_functionAttribute -> functionAttribute multiple_functionAttribute
+Rule 203   gotoStatement -> GOTO IDENTIFIER SEMICOLON
+Rule 204   gotoStatement -> GOTO DEFAULT SEMICOLON
+Rule 205   gotoStatement -> GOTO CASE SEMICOLON
+Rule 206   gotoStatement -> GOTO CASE expression SEMICOLON
+Rule 207   identifierChain -> IDENTIFIER
+Rule 208   identifierChain -> identifierChain DOT IDENTIFIER
+Rule 209   identifierList -> IDENTIFIER
+Rule 210   identifierList -> identifierList COMMA IDENTIFIER
+Rule 211   identifierList -> identifierOrTemplateInstance
+Rule 212   identifierList -> identifierOrTemplateChain DOT identifierOrTemplateInstance
+Rule 213   identifierOrTemplateInstance -> IDENTIFIER
+Rule 214   identifierOrTemplateInstance -> templateInstance
+Rule 215   identityExpression -> shiftExpression IS shiftExpression
+Rule 216   identityExpression -> shiftExpression EXCLAMATION IS shiftExpression
+Rule 217   ifStatement -> IF LPAREN ifCondition RPAREN declarationOrStatement
+Rule 218   ifStatement -> IF LPAREN ifCondition RPAREN declarationOrStatement ELSE declarationOrStatement
+Rule 219   ifCondition -> AUTO IDENTIFIER ASSIGN expression
+Rule 220   ifCondition -> TYPEDEF IDENTIFIER ASSIGN expression
+Rule 221   ifCondition -> expression
+Rule 222   importBind -> IDENTIFIER
+Rule 223   importBind -> IDENTIFIER ASSIGN IDENTIFIER
+Rule 224   importBindings -> singleImport COLON importBind
+Rule 225   importBindings -> singleImport COLON importBind COLON importBind
+Rule 226   importDeclaration -> IMPORT singleImport comma_singleImport COMMA importBindings SEMICOLON
+Rule 227   importDeclaration -> IMPORT singleImport comma_singleImport SEMICOLON
+Rule 228   importDeclaration -> IMPORT importBindings SEMICOLON
+Rule 229   comma_singleImport -> COMMA singleImport comma_singleImport
+Rule 230   comma_singleImport -> empty
+Rule 231   index -> assignExpression
+Rule 232   index -> assignExpression RANGE assignExpression
+Rule 233   indexExpression -> unaryExpression LBRACKET RBRACKET
+Rule 234   indexExpression -> unaryExpression LBRACKET index comma_index RBRACKET
+Rule 235   comma_index -> COMMA index comma_index
+Rule 236   comma_index -> empty
+Rule 237   initializer -> VOID
+Rule 238   initializer -> nonVoidInitializer
+Rule 239   isExpression -> IS LPAREN type RPAREN
+Rule 240   isExpression -> IS LPAREN type identifier RPAREN
+Rule 241   isExpression -> IS LPAREN type COLON typeSpecialization RPAREN
+Rule 242   isExpression -> IS LPAREN type identifier COLON typeSpecialization RPAREN
+Rule 243   isExpression -> IS LPAREN type ASSIGN typeSpecialization RPAREN
+Rule 244   isExpression -> IS LPAREN type identifier ASSIGN typeSpecialization RPAREN
+Rule 245   isExpression -> IS LPAREN type COLON typeSpecialization COMMA templateParameterList RPAREN
+Rule 246   isExpression -> IS LPAREN type identifier COLON typeSpecialization COMMA templateParameterList RPAREN
+Rule 247   isExpression -> IS LPAREN type ASSIGN typeSpecialization COMMA templateParameterList RPAREN
+Rule 248   isExpression -> IS LPAREN type identifier ASSIGN typeSpecialization COMMA templateParameterList RPAREN
+Rule 249   labeledStatement -> IDENTIFIER COLON
+Rule 250   labeledStatement -> IDENTIFIER COLON declarationOrStatement
+Rule 251   memberFunctionAttribute -> functionAttribute
+Rule 252   memberFunctionAttribute -> IMMUTABLE
+Rule 253   memberFunctionAttribute -> CONST
+Rule 254   memberFunctionAttribute -> RETURN
+Rule 255   mixinDeclaration -> mixinExpression SEMICOLON
+Rule 256   mixinDeclaration -> templateMixinExpression SEMICOLON
+Rule 257   mixinExpression -> MIXIN LPAREN assignExpression RPAREN
+Rule 258   mulExpression -> powExpression
+Rule 259   mulExpression -> mulExpression TIMES
+Rule 260   mulExpression -> mulExpression DIV
+Rule 261   mulExpression -> mulExpression MODULO
+Rule 262   newAnonClassExpression -> NEW CLASS arguments baseClassList structBody
+Rule 263   newAnonClassExpression -> NEW CLASS arguments structBody
+Rule 264   newAnonClassExpression -> NEW CLASS baseClassList structBody
+Rule 265   newAnonClassExpression -> NEW CLASS structBody
+Rule 266   newAnonClassExpression -> NEW arguments CLASS structBody
+Rule 267   newAnonClassExpression -> NEW arguments CLASS arguments structBody
+Rule 268   newAnonClassExpression -> NEW arguments CLASS baseClassList structBody
+Rule 269   newAnonClassExpression -> NEW arguments CLASS arguments baseClassList structBody
+Rule 270   newExpression -> NEW type
+Rule 271   newExpression -> NEW type LBRACKET assignExpression RBRACKET
+Rule 272   newExpression -> NEW type arguments
+Rule 273   newExpression -> newAnonClassExpression
+Rule 274   nonVoidInitializer -> assignExpression
+Rule 275   nonVoidInitializer -> arrayInitializer
+Rule 276   nonVoidInitializer -> structInitializer
+Rule 277   orExpression -> xorExpression
+Rule 278   orExpression -> orExpression PIPE xorExpression
+Rule 279   orOrExpression -> andAndExpression
+Rule 280   orOrExpression -> orOrExpression DOUBLE_PIPE andAndExpression
+Rule 281   parameterAttributeStar -> parameterAttribute parameterAttributeStar
+Rule 282   parameterAttributeStar -> empty
+Rule 283   parameter -> parameterAttributeStar type parameterAttributeStar type IDENTIFIER ELLIPSIS parameterAttributeStar type IDENTIFIER ASSIGN assignExpression
+Rule 284   parameter -> parameterAttributeStar type parameterAttributeStar type IDENTIFIER ELLIPSIS parameterAttributeStar type IDENTIFIER
+Rule 285   parameter -> parameterAttributeStar type parameterAttributeStar type IDENTIFIER ELLIPSIS parameterAttributeStar type ASSIGN assignExpression
+Rule 286   parameter -> parameterAttributeStar type parameterAttributeStar type IDENTIFIER ELLIPSIS parameterAttributeStar type
+Rule 287   parameter -> parameterAttributeStar type parameterAttributeStar type ELLIPSIS parameterAttributeStar type IDENTIFIER ASSIGN assignExpression
+Rule 288   parameter -> parameterAttributeStar type parameterAttributeStar type ELLIPSIS parameterAttributeStar type IDENTIFIER
+Rule 289   parameter -> parameterAttributeStar type parameterAttributeStar type ELLIPSIS parameterAttributeStar type ASSIGN assignExpression
+Rule 290   parameter -> parameterAttributeStar type parameterAttributeStar type ELLIPSIS parameterAttributeStar type
+Rule 291   parameterAttribute -> typeConstructor
+Rule 292   parameterAttribute -> FINAL
+Rule 293   parameterAttribute -> OUT
+Rule 294   parameterAttribute -> AUTO
+Rule 295   parameterAttribute -> RETURN
+Rule 296   parameters -> LPAREN parameter CommaParameterStar COMMA ELLIPSIS RPAREN
+Rule 297   parameters -> LPAREN parameter CommaParameterStar RPAREN
+Rule 298   parameters -> LPAREN ELLIPSIS RPAREN
+Rule 299   parameters -> LPAREN RPAREN
+Rule 300   postblit -> THIS LPAREN THIS RPAREN multiple_memberFunctionAttribute functionBody
+Rule 301   postblit -> THIS LPAREN THIS RPAREN multiple_memberFunctionAttribute SEMICOLON
+Rule 302   powExpression -> unaryExpression
+Rule 303   powExpression -> powExpression DOUBLEXOR unaryExpression
+Rule 304   StringLiteralPlus -> LIT_STR StringLiteralPlus
+Rule 305   StringLiteralPlus -> LIT_STR
+Rule 306   primaryExpression -> identifierOrTemplateInstance
+Rule 307   primaryExpression -> DOT identifierOrTemplateInstance
+Rule 308   primaryExpression -> typeConstructor LPAREN basicType RPAREN DOT IDENTIFIER
+Rule 309   primaryExpression -> basicType DOT IDENTIFIER
+Rule 310   primaryExpression -> basicType arguments
+Rule 311   primaryExpression -> arrayLiteral
+Rule 312   primaryExpression -> LPAREN expression RPAREN
+Rule 313   primaryExpression -> functionLiteralExpression
+Rule 314   primaryExpression -> traitsExpression
+Rule 315   primaryExpression -> mixinExpression
+Rule 316   primaryExpression -> importExpression
+Rule 317   primaryExpression -> DOLLAR
+Rule 318   primaryExpression -> THIS
+Rule 319   primaryExpression -> NULL
+Rule 320   primaryExpression -> TRUE
+Rule 321   primaryExpression -> FALSE
+Rule 322   primaryExpression -> INUMBER
+Rule 323   primaryExpression -> DNUMBER
+Rule 324   primaryExpression -> StringLiteralPlus
+Rule 325   primaryExpression -> LIT_CHAR
+Rule 326   register -> IDENTIFIER
+Rule 327   register -> IDENTIFIER LPAREN INUMBER RPAREN
+Rule 328   relExpression -> shiftExpression
+Rule 329   relExpression -> relExpression relOperator shiftExpression
+Rule 330   relOperator -> LESS
+Rule 331   relOperator -> LESSEQ
+Rule 332   relOperator -> GREATER
+Rule 333   relOperator -> GREATER_EQ
+Rule 334   relOperator -> IS_EQ_DIFF
+Rule 335   relOperator -> NOT_EQ_DIFF
+Rule 336   relOperator -> LESS_EQ_DIFF
+Rule 337   relOperator -> LESS_DIFF
+Rule 338   relOperator -> GREATER_EQ__DIFF
+Rule 339   relOperator -> GREATER_DIFF
+Rule 340   singleImport -> IDENTIFIER ASSIGN identifierChain
+Rule 341   singleImport -> identifierChain
+Rule 342   statement -> statementNoCaseNoDefault
+Rule 343   statement -> caseStatement
+Rule 344   statement -> caseRangeStatment
+Rule 345   statement -> defaultStatement
+Rule 346   statementNoCaseNoDefault -> labeledStatement
+Rule 347   statementNoCaseNoDefault -> blockStatement
+Rule 348   statementNoCaseNoDefault -> ifStatement
+Rule 349   statementNoCaseNoDefault -> whileStatement
+Rule 350   statementNoCaseNoDefault -> doStatement
+Rule 351   statementNoCaseNoDefault -> forStatement
+Rule 352   statementNoCaseNoDefault -> foreachStatement
+Rule 353   statementNoCaseNoDefault -> switchStatement
+Rule 354   statementNoCaseNoDefault -> finalSwitchStatement
+Rule 355   statementNoCaseNoDefault -> continueStatement
+Rule 356   statementNoCaseNoDefault -> breakStatement
+Rule 357   statementNoCaseNoDefault -> returnStatement
+Rule 358   statementNoCaseNoDefault -> gotoStatement
+Rule 359   statementNoCaseNoDefault -> withStatement
+Rule 360   statementNoCaseNoDefault -> conditionalStatement
+Rule 361   statementNoCaseNoDefault -> expressionStatement
+Rule 362   storageClass -> typeConstructor
+Rule 363   storageClass -> AUTO
+Rule 364   storageClass -> ENUM
+Rule 365   storageClass -> EXTERN
+Rule 366   storageClass -> FINAL
+Rule 367   storageClass -> STATIC
+Rule 368   declarationStar -> declaration declarationStar
+Rule 369   declarationStar -> empty
+Rule 370   structBody -> LBRACE declarationStar RBRACE
+Rule 371   switchStatement -> SWITCH LBRACKET expression RBRACKET statement
+Rule 372   symbol -> DOT identifierOrTemplateChain
+Rule 373   symbol -> identifierOrTemplateChain
+Rule 374   ternaryExpression -> orOrExpression QUESTION expression COLON ternaryExpression
+Rule 375   ternaryExpression -> orOrExpression
+Rule 376   typeSuffixStar -> typeSuffix typeSuffixStar
+Rule 377   typeSuffixStar -> empty
+Rule 378   type -> typeConstructors type2 typeSuffixStar
+Rule 379   type -> type2 typeSuffixStar
+Rule 380   type2 -> builtinType
+Rule 381   type2 -> symbol
+Rule 382   type2 -> typeofExpression DOT identifierOrTemplateChain
+Rule 383   type2 -> typeofExpression
+Rule 384   type2 -> typeConstructor LBRACKET TYPEDEF RBRACKET
+Rule 385   typeConstructor -> CONST
+Rule 386   typeConstructor -> IMMUTABLE
+Rule 387   typeConstructors -> typeConstructor
+Rule 388   typeConstructors -> typeConstructor typeConstructors
+Rule 389   typeSpecialization -> type
+Rule 390   typeSpecialization -> UNION
+Rule 391   typeSpecialization -> CLASS
+Rule 392   typeSpecialization -> ENUM
+Rule 393   typeSpecialization -> FUNCTION
+Rule 394   typeSpecialization -> CONST
+Rule 395   typeSpecialization -> IMMUTABLE
+Rule 396   typeSpecialization -> RETURN
+Rule 397   typeSpecialization -> TYPEDEF
+Rule 398   typeSuffix -> TIMES
+Rule 399   typeSuffix -> LBRACKET type RBRACKET
+Rule 400   typeSuffix -> LBRACKET RBRACKET
+Rule 401   typeSuffix -> LBRACKET assignExpression RBRACKET
+Rule 402   typeSuffix -> LBRACKET assignExpression RANGE assignExpression RBRACKET
+Rule 403   typeSuffix -> DELEGATE parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET TYPEDEF RBRACKET
+Rule 404   typeSuffix -> DELEGATE parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET expression RBRACKET
+Rule 405   typeSuffix -> FUNCTION parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET TYPEDEF RBRACKET
+Rule 406   typeSuffix -> FUNCTION parameters multiple_memberFunctionAttribute SEMICOLON typeidExpression COLON TYPEID LBRACKET expression RBRACKET
+Rule 407   typeSuffix -> SEMICOLON typeofExpression COLON TYPEOF LBRACKET expression RBRACKET
+Rule 408   typeSuffix -> SEMICOLON typeofExpression COLON TYPEOF LBRACKET RETURN RBRACKET
+Rule 409   typeidExpression -> TYPEID LPAREN type RPAREN
+Rule 410   typeidExpression -> TYPEID LPAREN expression RPAREN
+Rule 411   unaryExpression -> primaryExpression
+Rule 412   unaryExpression -> AMPERSAND unaryExpression
+Rule 413   unaryExpression -> EXCLAMATION unaryExpression
+Rule 414   unaryExpression -> TIMES unaryExpression
+Rule 415   unaryExpression -> PLUS unaryExpression
+Rule 416   unaryExpression -> MINUS unaryExpression
+Rule 417   unaryExpression -> DOT
+Rule 418   unaryExpression -> PLUS_PLUS unaryExpression
+Rule 419   unaryExpression -> ELIPSIS
+Rule 420   unaryExpression -> newExpression
+Rule 421   unaryExpression -> deleteExpression
+Rule 422   unaryExpression -> castExpression
+Rule 423   unaryExpression -> functionCallExpression
+Rule 424   unaryExpression -> indexExpression
+Rule 425   unaryExpression -> LBRACKET TYPEDEF RBRACKET DOT identifierOrTemplateInstance
+Rule 426   unaryExpression -> unaryExpression DOT newExpression
+Rule 427   unaryExpression -> unaryExpression DOT
+Rule 428   unaryExpression -> identifierOrTemplateInstance
+Rule 429   unaryExpression -> RANGE
+Rule 430   unaryExpression -> unaryExpression PLUS_PLUS
+Rule 431   unionDeclaration -> UNION IDENTIFIER templateParameters structBody
+Rule 432   unionDeclaration -> UNION IDENTIFIER templateParameters constraint structBody
+Rule 433   unionDeclaration -> UNION IDENTIFIER structBody
+Rule 434   unionDeclaration -> UNION IDENTIFIER SEMICOLON
+Rule 435   unionDeclaration -> UNION structBody
+Rule 436   CommaDeclarator -> COMMA declarator CommaDeclarator
+Rule 437   CommaDeclarator -> empty
+Rule 438   variableDeclaration -> multiplestorageClass TYPEDEF declarator CommaDeclarator SEMICOLON
+Rule 439   variableDeclaration -> multiplestorageClass TYPEDEF IDENTIFIER ASSIGN functionBody SEMICOLON
+Rule 440   variableDeclaration -> autoDeclaration
+Rule 441   whileStatement -> WHILE LBRACKET expression RBRACKET declarationOrStatement
+Rule 442   withStatement -> WITH LBRACKET expression RBRACKET statementNoCaseNoDefault
+Rule 443   empty -> <empty>
 
 Terminals, with rules where they appear
 
-ALIAS                : 5 6 13
-AMPERSAND            : 17 393
+ALIAS                : 5 6 15
+AMPERSAND            : 19 412
 ARROW                : 
-ASSIGN               : 11 12 34 55 56 128 129 139 140 150 218 219 222 242 243 278 280 282 284 337 420
-AUTO                 : 51 218 289 344
+ASSIGN               : 11 12 13 14 36 57 58 132 133 143 144 154 219 220 223 243 244 247 248 283 285 287 289 340 439
+AUTO                 : 53 219 294 363
 BACK_SLASH           : 
-BODY                 : 60
-BOOL                 : 66
-BREAK                : 61 62
+BODY                 : 62
+BOOL                 : 68
+BREAK                : 63 64
 CARET                : 
-CASE                 : 76 76 77 204 205
-CAST                 : 78 79 80
-CHAR                 : 73
-CLASS                : 83 84 85 257 258 259 260 261 262 263 264 372
-COLON                : 30 54 76 76 77 84 130 143 147 148 223 224 224 240 241 244 245 355 384 385 386 387 388 389
-COMMA                : 7 20 26 56 65 137 157 176 209 225 228 234 291 293 417
+CASE                 : 78 78 79 205 206
+CAST                 : 80 81 82
+CHAR                 : 75
+CLASS                : 85 86 87 262 263 264 265 266 267 268 269 391
+COLON                : 32 56 78 78 79 86 134 147 151 152 224 225 225 241 242 245 246 249 250 374 403 404 405 406 407 408
+COMMA                : 7 22 28 58 67 141 158 177 210 226 229 235 245 246 247 248 296 436
 COMMENT              : 
-CONST                : 52 81 248 366 375
-CONTINUE             : 101 102
-DEFAULT              : 130 203
-DELEGATE             : 384 385
-DELETE               : 131
-DIV                  : 255
-DNUMBER              : 320
-DO                   : 134
-DOLLAR               : 314
-DOT                  : 207 211 304 305 306 353 363 398 406 407 408
-DOUBLE               : 75
-DOUBLE_AMPERSAND     : 15
-DOUBLE_PIPE          : 275
-DOUBLE_QUOTE         : 135 135 136 136
-ELLIPSIS             : 76 278 279 280 281 282 283 284 285 293 295
-ELSE                 : 217
-ENUM                 : 142 143 146 147 148 345 373
-EQ_AND_BIT           : 41
-EQ_DIV               : 42
-EQ_LEFT              : 35
-EQ_MINUS             : 38
-EQ_MODULO            : 40
-EQ_OR_BIT            : 43
-EQ_PLUS              : 37
-EQ_RIGHT             : 36
-EQ_TIMES             : 39
-EQ_XOR_BIT           : 44
-EXCLAMATION          : 215 394
-EXTERN               : 49 346
-FALSE                : 318
-FINAL                : 50 287 347
-FLOAT                : 74
-FOR                  : 159 160 161 162 163 164 165 166
-FOREACH              : 167 168
-FOREACH_REVERSE      : 169 170
-FUNCTION             : 192 193 194 195 199 200 374 386 387
-GOTO                 : 202 203 204 205
-GREATER              : 329
-GREATER_DIFF         : 336
-GREATER_EQ           : 330
+CONST                : 54 83 253 385 394
+CONTINUE             : 106 107
+DEFAULT              : 134 204
+DELEGATE             : 403 404
+DELETE               : 135
+DIV                  : 260
+DNUMBER              : 323
+DO                   : 138
+DOLLAR               : 317
+DOT                  : 208 212 307 308 309 372 382 417 425 426 427
+DOUBLE               : 77
+DOUBLE_AMPERSAND     : 17
+DOUBLE_PIPE          : 280
+DOUBLE_QUOTE         : 139 139 140 140
+ELLIPSIS             : 78 283 284 285 286 287 288 289 290 296 298
+ELSE                 : 218
+ENUM                 : 146 147 150 151 152 364 392
+EQ_AND_BIT           : 43
+EQ_DIV               : 44
+EQ_LEFT              : 37
+EQ_MINUS             : 40
+EQ_MODULO            : 42
+EQ_OR_BIT            : 45
+EQ_PLUS              : 39
+EQ_RIGHT             : 38
+EQ_TIMES             : 41
+EQ_XOR_BIT           : 46
+EXCLAMATION          : 216 413
+EXTERN               : 51 365
+FALSE                : 321
+FINAL                : 52 292 366
+FLOAT                : 76
+FOR                  : 160 161 162 163 164 165 166 167
+FOREACH              : 168 169
+FOREACH_REVERSE      : 170 171
+FUNCTION             : 193 194 195 196 200 201 393 405 406
+GOTO                 : 203 204 205 206
+GREATER              : 332
+GREATER_DIFF         : 339
+GREATER_EQ           : 333
 GREATER_EQ_DIFF      : 
-IDENTIFIER           : 11 12 13 55 56 62 83 84 85 102 127 128 129 139 140 141 146 147 148 149 150 171 172 173 174 180 181 182 183 184 185 186 187 188 189 190 191 198 202 206 207 208 209 212 218 219 221 222 222 244 245 278 278 279 279 280 281 282 283 305 306 323 324 337 414 415 420
-IF                   : 90 216 217
-IMMUTABLE            : 53 82 247 367 376
-IMPORT               : 225 226 227
-INT                  : 69
-INUMBER              : 319 324
-IS_EQ                : 151
-IS_EQ_DIFF           : 331
-LBRACE               : 58 59 104 142 143 351
-LBRACKET             : 24 25 28 29 232 233 266 352 365 380 381 382 383 384 385 386 387 388 389 406 422 423
-LEFT_SHIFT           : 154
-LESS                 : 327
-LESS_DIFF            : 334
+IDENTIFIER           : 11 12 13 14 15 57 58 64 85 86 87 107 131 132 133 143 144 145 150 151 152 153 154 172 173 174 175 181 182 183 184 185 186 187 188 189 190 191 192 199 203 207 208 209 210 213 219 220 222 223 223 249 250 283 283 284 284 285 286 287 288 308 309 326 327 340 431 432 433 434 439
+IF                   : 95 217 218
+IMMUTABLE            : 55 84 252 386 395
+IMPORT               : 226 227 228
+INT                  : 71
+INUMBER              : 322 327
+IS_EQ                : 155
+IS_EQ_DIFF           : 334
+LBRACE               : 60 61 109 146 147 370
+LBRACKET             : 26 27 30 31 233 234 271 371 384 399 400 401 402 403 404 405 406 407 408 425 441 442
+LEFT_SHIFT           : 94
+LESS                 : 330
+LESS_DIFF            : 337
 LESS_EQ              : 
-LESS_EQ_DIFF         : 333
-LIT_CHAR             : 322
-LIT_STR              : 301 302
-LONG                 : 71
-LPAREN               : 22 23 78 79 80 90 132 133 134 159 160 161 162 163 164 165 166 167 168 169 170 216 217 238 239 240 241 242 243 252 293 294 295 296 297 298 305 309 324 390 391
-MINUS                : 3 397
+LESS_EQ_DIFF         : 336
+LIT_CHAR             : 325
+LIT_STR              : 304 305
+LONG                 : 73
+LPAREN               : 24 25 80 81 82 95 136 137 138 160 161 162 163 164 165 166 167 168 169 170 171 217 218 239 240 241 242 243 244 245 246 247 248 257 296 297 298 299 300 301 308 312 327 409 410
+MINUS                : 3 416
 MINUS_MINUS          : 
-MIXIN                : 252
-MODULO               : 256
-NEW                  : 257 258 259 260 261 262 263 264 265 266 267
-NOT_EQ               : 152
-NOT_EQ_DIFF          : 332
-NULL                 : 316
-PIPE                 : 273
-PLUS                 : 2 396
-PLUS_PLUS            : 399 411
-PRIVATE              : 45
-PROTECTED            : 46
-PUBLIC               : 47
-QUESTION             : 355
-RANGE                : 168 170 231 383 410
-RBRACE               : 58 59 104 142 143 351
-RBRACKET             : 24 25 28 29 168 232 233 266 352 365 380 381 382 383 384 385 386 387 388 389 406 422 423
-RETURN               : 249 290 377 389
-RIGHT_SHIFT          : 155
-RPAREN               : 22 23 78 79 80 90 132 133 134 159 160 161 162 163 164 165 166 167 169 170 216 217 238 239 240 241 242 243 252 293 294 295 296 297 298 305 309 324 390 391
+MIXIN                : 257
+MODULO               : 261
+NEW                  : 262 263 264 265 266 267 268 269 270 271 272
+NOT_EQ               : 156
+NOT_EQ_DIFF          : 335
+NULL                 : 319
+PIPE                 : 278
+PLUS                 : 2 415
+PLUS_PLUS            : 418 430
+PRIVATE              : 47
+PROTECTED            : 48
+PUBLIC               : 49
+QUESTION             : 374
+RANGE                : 169 171 232 402 429
+RBRACE               : 60 61 109 146 147 370
+RBRACKET             : 26 27 30 31 169 233 234 271 371 384 399 400 401 402 403 404 405 406 407 408 425 441 442
+RETURN               : 254 295 396 408
+RIGHT_SHIFT          : 93
+RPAREN               : 24 25 80 81 82 95 136 137 138 160 161 162 163 164 165 166 167 168 170 171 217 218 239 240 241 242 243 244 245 246 247 248 257 296 297 298 299 300 301 308 312 327 409 410
 SCOPE                : 
-SEMICOLON            : 5 6 12 13 55 61 62 83 92 94 96 98 101 102 133 134 146 147 158 159 160 161 162 163 164 165 166 167 168 169 170 180 182 184 185 188 189 202 203 204 205 225 226 227 250 251 298 384 385 386 387 388 389 415 419
-SHORT                : 67
+SEMICOLON            : 5 6 13 14 15 57 63 64 85 97 99 101 103 106 107 137 138 150 151 159 160 161 162 163 164 165 166 167 168 169 170 171 181 183 185 186 189 190 203 204 205 206 226 227 228 255 256 301 403 404 405 406 407 408 434 438 439
+SHORT                : 69
 SINGLE_QUOTE         : 
 SIZEOF               : 
-STATIC               : 48 348
-SWITCH               : 352
-THIS                 : 13 91 92 93 94 95 96 97 98 132 133 297 297 298 298 315
-TILDE                : 4 132 133
-TIMES                : 254 379 395
-TRUE                 : 317
-TYPEDEF              : 139 147 148 182 183 188 189 190 191 194 195 200 219 365 378 384 386 406 419 420
-TYPEID               : 384 385 386 387 390 391
-TYPEOF               : 388 389
-UINT                 : 70
-ULONG                : 72
-UNION                : 371 412 413 414 415 416
-USHORT               : 68
-VOID                 : 236
-WHILE                : 134 422
-WITH                 : 423
+STATIC               : 50 367
+SWITCH               : 371
+THIS                 : 15 96 97 98 99 100 101 102 103 136 137 300 300 301 301 318
+TILDE                : 4 136 137
+TIMES                : 259 398 414
+TRUE                 : 320
+TYPEDEF              : 143 151 152 183 184 189 190 191 192 195 196 201 220 384 397 403 405 425 438 439
+TYPEID               : 403 404 405 406 409 410
+TYPEOF               : 407 408
+UINT                 : 72
+ULONG                : 74
+UNION                : 390 431 432 433 434 435
+USHORT               : 70
+VOID                 : 237
+WHILE                : 138 441
+WITH                 : 442
 error                : 
 
 Nonterminals, with rules where they appear
 
-CommaDeclarator      : 417 419
-CommaParameterStar   : 291 293 294
-DOUBLEXOR            : 300
-ELIPSIS              : 400
-GREATER_EQ__DIFF     : 335
-IS                   : 214 215 238 239 240 241 242 243
-Idefntifier          : 412 413
-LESSEQ               : 328
-OUT                  : 288
-SEMICOLOON           : 420
-StringLiteralPlus    : 301 321
-addExpression        : 2 3 4 153 154 155 0
-aliasDeclaration     : 109
+CommaDeclarator      : 436 438
+CommaParameterStar   : 296 297
+DOUBLEXOR            : 303
+ELIPSIS              : 419
+GREATER_EQ__DIFF     : 338
+IS                   : 215 216 239 240 241 242 243 244 245 246 247 248
+LESSEQ               : 331
+OUT                  : 293
+StringLiteralPlus    : 304 324
+addExpression        : 2 3 4 92 93 94 0
+aliasDeclaration     : 114
 aliasInitializer     : 5 7
-aliasThisDeclaration : 110
-andAndExpression     : 15 274 275
-andExpression        : 17
-anonymousEnumDeclaration : 111
-anonymousEnumMember  : 142 143 144
-argumentList         : 19 23 29 77
-arguments            : 178 178 179 257 258 261 262 262 263 264 264 267 307
-arrayInitializer     : 270
-arrayLiteral         : 308
-arrayMemberInitialization : 25 26
+aliasThisDeclaration : 115
+andAndExpression     : 17 279 280
+andExpression        : 19
+anonymousEnumDeclaration : 116
+anonymousEnumMember  : 146 147 148
+argumentList         : 21 25 31 79
+arguments            : 179 179 180 262 263 266 267 267 268 269 269 272 310
+arrayInitializer     : 275
+arrayLiteral         : 311
+arrayMemberInitialization : 27 28
 array_Literal        : 
-assignExpression     : 18 20 30 76 76 139 140 150 156 157 198 199 200 230 231 231 252 266 269 278 280 282 284 382 383 383
-assignOperator       : 33
-attribute            : 54 104 107
-attributeDeclaration : 112
-autoDeclaration      : 421
-baseClass            : 64 65
-baseClassList        : 65 84 257 259 263 264
-basicType            : 305 306 307
-blockStatement       : 60 177
+assignExpression     : 20 22 32 78 78 143 144 154 157 158 199 200 201 231 232 232 257 271 274 283 285 287 289 401 402 402
+assignOperator       : 35
+attribute            : 56 109 112
+attributeDeclaration : 117
+autoDeclaration      : 440
+baseClass            : 66 67
+baseClassList        : 67 86 262 264 268 269
+basicType            : 308 309 310
+blockStatement       : 62 178 347
 bodyStatement        : 
-breakStatement       : 
-builtinType          : 361
+breakStatement       : 356
+builtinType          : 380
 caseRangeStatement   : 
-caseRangeStatment    : 341
-caseStatement        : 340
-castExpression       : 403
-castQualifier        : 80
-classDeclaration     : 113
-cmpExpression        : 16 17
+caseRangeStatment    : 344
+caseStatement        : 343
+castExpression       : 422
+castQualifier        : 82
+classDeclaration     : 118
+cmpExpression        : 18 19
 comma_aliasInitializer : 5 7
-comma_arrayMemberInitialization : 25 26
-comma_assign         : 19 20
-comma_enumMember     : 136 137
-comma_identifier_assign_initializer : 55 56
-comma_index          : 233 234
-comma_singleImport   : 225 226 228
-conditionalDeclaration : 114
-constraint           : 95 96 97 98 184 186 188 190 413
-constructor          : 115
-continueStatement    : 
-declaration          : 105 125 159 161 163 165 349
-declaration2         : 103
-declarationOrStatement : 123 124 159 160 161 162 163 164 165 166 167 168 169 170 216 217 217 245 422
-declarationStar      : 349 351
-declarationsAndStatements : 59 76 77 124 130
-declarator           : 417 419
-defaultStatement     : 342
-deleteExpression     : 402
-destructor           : 116
-doStatement          : 
-empty                : 8 10 21 27 57 100 106 108 138 145 229 235 277 292 350 358 418
-enumBody             : 148
-enumDeclaration      : 117
-enumMember           : 135 136 137
-equalExpression      : 87
-expression           : 33 90 134 157 158 161 162 163 164 165 165 166 166 167 168 168 169 170 170 205 218 219 220 309 352 355 385 387 388 391 422 423
-expressionStatement  : 
-forStatement         : 
-foreachStatement     : 
-foreachType          : 168 170 175 176
-foreachTypeList      : 167 169 176
-functionAttribute    : 201 246
-functionBody         : 91 93 95 97 132 181 183 186 187 190 191 192 193 194 195 196 197 297 420
-functionCallExpression : 404
-functionDeclaration  : 118
-functionLiteralExpression : 12 310
-gotoStatement        : 
-identifier           : 239 241 243
-identifierChain      : 207 337 338
-identifierList       : 6 209
-identifierOrTemplateChain : 211 353 354 363
-identifierOrTemplateInstance : 210 211 303 304 406 409
-identityExpression   : 88
-ifCondition          : 216 217
-ifStatement          : 
-importBind           : 223 224 224
-importBindings       : 225 227
-importDeclaration    : 119
-importExpression     : 313
-index                : 233 234
-indexExpression      : 405
-initializer          : 55 56 128 129
+comma_arrayMemberInitialization : 27 28
+comma_assign         : 21 22
+comma_enumMember     : 140 141
+comma_identifier_assign_initializer : 57 58
+comma_index          : 234 235
+comma_singleImport   : 226 227 229
+conditionalStatement : 360
+constraint           : 100 101 102 103 185 187 189 191 432
+constructor          : 119
+continueStatement    : 355
+declaration          : 110 129 160 162 164 166 368
+declaration2         : 108
+declarationOrStatement : 127 128 160 161 162 163 164 165 166 167 168 169 170 171 217 218 218 250 441
+declarationStar      : 368 370
+declarationsAndStatements : 61 78 79 128 134
+declarator           : 436 438
+defaultStatement     : 345
+deleteExpression     : 421
+destructor           : 120
+doStatement          : 350
+empty                : 8 10 23 29 59 105 111 113 142 149 230 236 282 369 377 437
+enumBody             : 152
+enumDeclaration      : 121
+enumMember           : 139 140 141
+equalExpression      : 89
+expression           : 35 95 138 158 159 162 163 164 165 166 166 167 167 168 169 169 170 171 171 206 219 220 221 312 371 374 404 406 407 410 441 442
+expressionStatement  : 361
+finalSwitchStatement : 354
+forStatement         : 351
+foreachStatement     : 352
+foreachType          : 169 171 176 177
+foreachTypeList      : 168 170 177
+functionAttribute    : 202 251
+functionBody         : 96 98 100 102 136 182 184 187 188 191 192 193 194 195 196 197 198 300 439
+functionCallExpression : 423
+functionDeclaration  : 122
+functionLiteralExpression : 13 14 313
+gotoStatement        : 358
+identifier           : 240 242 244 246 248
+identifierChain      : 208 340 341
+identifierList       : 6 210
+identifierOrTemplateChain : 212 372 373 382
+identifierOrTemplateInstance : 211 212 306 307 425 428
+identityExpression   : 90
+ifCondition          : 217 218
+ifStatement          : 348
+importBind           : 224 225 225
+importBindings       : 226 228
+importDeclaration    : 123
+importExpression     : 316
+index                : 234 235
+indexExpression      : 424
+initializer          : 57 58 132 133
 isExpression         : 
-labeledStatement     : 
-memberFunctionAttribute : 99
-mixinDeclaration     : 120
-mixinExpression      : 250 312
-mulExpression        : 1 2 3 4 254 255 256
-multiple_declaration : 104 105
-multiple_functionAttribute : 192 195 196 199 200 201
-multiple_memberFunctionAttribute : 91 92 93 94 95 96 97 98 99 132 133 180 181 182 183 184 185 186 187 188 189 190 191 297 298 384 385 386 387
-multipleanonymousEnumMember : 142 143 144
-multipleattributes   : 103 104 107
-multiplestorageClass : 6 9 11 55 180 181 184 185 186 187 419 420
-newAnonClassExpression : 268
-newExpression        : 401 407
-nonVoidInitializer   : 30 31 237
-orExpression         : 14 15 273
-orOrExpression       : 275 355 356
-parameter            : 291 293 294
-parameterAttribute   : 276
-parameterAttributeStar : 276 278 278 278 279 279 279 280 280 280 281 281 281 282 282 282 283 283 283 284 284 284 285 285 285
-parameters           : 91 92 93 94 95 96 97 98 180 181 182 183 184 185 186 187 188 189 190 191 192 195 196 199 200 384 385 386 387
+labeledStatement     : 346
+memberFunctionAttribute : 104
+mixinDeclaration     : 124
+mixinExpression      : 255 315
+mulExpression        : 1 2 3 4 259 260 261
+multiple_declaration : 109 110
+multiple_functionAttribute : 193 196 197 200 201 202
+multiple_memberFunctionAttribute : 96 97 98 99 100 101 102 103 104 136 137 181 182 183 184 185 186 187 188 189 190 191 192 300 301 403 404 405 406
+multipleanonymousEnumMember : 146 147 148
+multipleattributes   : 108 109 112
+multiplestorageClass : 6 9 11 12 57 181 182 185 186 187 188 438 439
+newAnonClassExpression : 273
+newExpression        : 420 426
+nonVoidInitializer   : 32 33 238
+orExpression         : 16 17 278
+orOrExpression       : 280 374 375
+parameter            : 296 297
+parameterAttribute   : 281
+parameterAttributeStar : 281 283 283 283 284 284 284 285 285 285 286 286 286 287 287 287 288 288 288 289 289 289 290 290 290
+parameters           : 96 97 98 99 100 101 102 103 181 182 183 184 185 186 187 188 189 190 191 192 193 196 197 200 201 403 404 405 406
 postblit             : 
-powExpression        : 253 300
-primaryExpression    : 392
+powExpression        : 258 303
+primaryExpression    : 411
 register             : 
-relExpression        : 89 326
-relOperator          : 326
-shiftExpression      : 86 151 151 152 152 154 155 214 214 215 215 325 326
-singleImport         : 223 224 225 226 228
-statement            : 126 352
-statementNoCaseNoDefault : 134 160 162 164 166 339 423
-storageClass         : 9 55 180 181 184 185 186 187
-structBody           : 84 85 257 258 259 260 261 262 263 264 412 413 414 416
-structInitializer    : 271
-switchStatement      : 
-symbol               : 178 362
-templateInstance     : 213
-templateMixinExpression : 251
-templateParameters   : 93 94 97 98 129 184 185 186 187 188 189 190 191 412 413
-ternaryExpression    : 32 33 355
-traitsExpression     : 311
-type                 : 6 11 79 143 172 174 179 238 239 240 241 242 243 265 266 267 278 278 278 279 279 279 280 280 280 281 281 281 282 282 282 283 283 283 284 284 284 285 285 285 370 380 390
-type2                : 63 359 360
-typeConstructor      : 286 305 343 365 368 369
-typeConstructors     : 173 174 359 369
-typeSpecialization   : 240 241 242 243
-typeSuffix           : 357
-typeSuffixStar       : 357 359 360
-typeidExpression     : 384 385 386 387
-typeofExpression     : 363 364 388 389
-unaryExpression      : 78 79 80 131 178 232 233 299 300 393 394 395 396 397 399 407 408 411
-unionDeclaration     : 121
-variableDeclaration  : 122
-whileStatement       : 
-withStatement        : 
-xorExpression        : 272 273
+relExpression        : 91 329
+relOperator          : 329
+returnStatement      : 357
+shiftExpression      : 88 93 94 155 155 156 156 215 215 216 216 328 329
+singleImport         : 224 225 226 227 229
+statement            : 130 371
+statementNoCaseNoDefault : 138 161 163 165 167 342 442
+storageClass         : 9 57 181 182 185 186 187 188
+structBody           : 86 87 262 263 264 265 266 267 268 269 431 432 433 435
+structInitializer    : 276
+switchStatement      : 353
+symbol               : 179 381
+templateInstance     : 214
+templateMixinExpression : 256
+templateParameterList : 245 246 247 248
+templateParameters   : 12 14 98 99 102 103 133 185 186 187 188 189 190 191 192 431 432
+ternaryExpression    : 34 35 374
+traitsExpression     : 314
+type                 : 6 11 12 81 147 173 175 180 239 240 241 242 243 244 245 246 247 248 270 271 272 283 283 283 284 284 284 285 285 285 286 286 286 287 287 287 288 288 288 289 289 289 290 290 290 389 399 409
+type2                : 65 378 379
+typeConstructor      : 291 308 362 384 387 388
+typeConstructors     : 174 175 378 388
+typeSpecialization   : 241 242 243 244 245 246 247 248
+typeSuffix           : 376
+typeSuffixStar       : 376 378 379
+typeidExpression     : 403 404 405 406
+typeofExpression     : 382 383 407 408
+unaryExpression      : 80 81 82 135 179 233 234 302 303 412 413 414 415 416 418 426 427 430
+unionDeclaration     : 125
+variableDeclaration  : 126
+whileStatement       : 349
+withStatement        : 359
+xorExpression        : 277 278
 
