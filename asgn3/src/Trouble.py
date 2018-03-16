@@ -13,7 +13,7 @@ def p_multiple_functionAttribute(p):
 
 				DOUBT  DOUBT DOUBT DOUBT DOUBT DOUBT DOUBT DOUBT DOUBT DOUBT 
 
-  def p_identityExpression(p):
+def p_identityExpression(p):
   ''' identityExpression : shiftExpression IS shiftExpression
                  | shiftExpression EXCLAMATION IS shiftExpression
   '''
@@ -42,7 +42,7 @@ def p_cmpExpression(p):
     '''
     revoutput.append(p.slice)
 
-IMPORTANT
+IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT 
 
 DOUBLE XOR: Replaced with CARET currently
 basicType: Replaced with type currently
