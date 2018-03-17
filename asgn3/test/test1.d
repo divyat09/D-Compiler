@@ -1,6 +1,5 @@
-import std.stdio;  
-
-/* My first program in D */ 
-void main(string[] args) { 
+import stdio.io;
+int main() 
+{ 
    writeln("test!"); 
 }
