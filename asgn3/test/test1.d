@@ -1,5 +1,4 @@
-import stdio.io;
-int main() 
-{ 
-   writeln("test!"); 
-}
+a+b
+b/a
+c*d
+e-f
