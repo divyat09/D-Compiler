@@ -60,6 +60,13 @@ Operators=('COMMA',
         'LESS_DIFF',
         'GREATER_EQ_DIFF',
         'LESS_EQ_DIFF',
+        'UMINUS',
+        'UTIMES',
+        'UAMPERSAND',
+        'UPLUS',
+        'POWER',
+        'POST_PLUS_PLUS',
+        'POST_MINUS_MINUS',
         )
 
 complex_tokens=('IDENTIFIER',
@@ -134,7 +141,7 @@ Keywords={'alias': 'ALIAS',
 tokens=Operators+complex_tokens+tuple(Keywords.values())
 
 # Regular Expression for each token
-
+t_POWER = r'\^\^'
 t_ARROW = r'->'
 t_ELLIPSIS = r'\.\.\.'
 t_RANGE = r'\.\.'
@@ -178,6 +185,10 @@ t_LESS = r'<'
 t_PLUS = r'\+'
 t_MINUS = r'-'
 t_TIMES = r'\*'
+t_UTIMES = r'\*'
+t_UAMPERSAND = r'&'
+t_UPLUS = r'\+'
+t_UMINUS = r'-'
 t_DIV = r'/(?!\*)'
 t_MODULO = r'%'
 t_DOUBLE_AMPERSAND = r'&&'

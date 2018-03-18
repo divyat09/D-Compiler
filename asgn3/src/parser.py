@@ -6,6 +6,26 @@ import logging
 
 revoutput = []
 
+precedence = (
+    ('left','RANGE'),
+    ('left','COMMA'),
+    ('right','EQ_PLUS','EQ_MINUS','EQ_TIMES','EQ_DIV','EQ_MODULO','EQ_LEFT','EQ_RIGHT','EQ_AND_BIT','EQ_OR_BIT','EQ_XOR_BIT'),
+    ('right','QUESTION'),
+    ('left','DOUBLE_PIPE'),
+    ('left','DOUBLE_AMPERSAND'),
+    ('nonassoc','GREATER','LESS','IS_EQ','NOT_EQ','GREATER_EQ','LESS_EQ','IS_EQ_DIFF',
+    'NOT_EQ_DIFF','GREATER_DIFF','LESS_DIFF','GREATER_EQ_DIFF','LESS_EQ_DIFF'),
+    ('nonassoc','PIPE'),
+    ('nonassoc','CARET'),
+    ('nonassoc','AMPERSAND'),
+    ('nonassoc','LEFT_SHIFT'),
+    ('nonassoc','RIGHT_SHIFT'),
+    ('left', 'PLUS', 'MINUS','TILDE'),
+    ('left', 'TIMES', 'DIV', 'MODULO'),
+    ('nonassoc','PLUS_PLUS','MINUS_MINUS','UMINUS','UTIMES','UAMPERSAND','UPLUS','EXCLAMATION','CAST'),
+    ('right','POWER'),
+    ('right','LPAREN','LBRACKET','POST_PLUS_PLUS','POST_MINUS_MINUS','DOT'),
+)
 
 def p_addExpression(p) : 
   ''' addExpression : mulExpression 
@@ -26,18 +46,18 @@ def p_mulExpression(p):
 def p_powExpression(p):
     ''' 
       powExpression : unaryExpression 
-                      | powExpression CARET unaryExpression 
+                      | powExpression POWER unaryExpression 
     '''
     print p.slice 
 
 def p_unaryExpression(p):
     '''       
         unaryExpression : primaryExpression 
-                        | AMPERSAND unaryExpression 
+                        | UAMPERSAND unaryExpression 
                         | EXCLAMATION unaryExpression 
-                        | TIMES unaryExpression 
-                        | PLUS unaryExpression
-                        | MINUS unaryExpression 
+                        | UTIMES unaryExpression 
+                        | UPLUS unaryExpression
+                        | UMINUS unaryExpression 
                         | DOT 
                         | PLUS_PLUS unaryExpression
                         | MINUS_MINUS unaryExpression  
@@ -50,8 +70,8 @@ def p_unaryExpression(p):
                         | LPAREN type RPAREN DOT identifierOrTemplateInstance 
                         | unaryExpression DOT newExpression 
                         | unaryExpression DOT  identifierOrTemplateInstance  
-                        | unaryExpression PLUS_PLUS
-                        | unaryExpression MINUS_MINUS
+                        | unaryExpression PLUS_PLUS %prec POST_PLUS_PLUS
+                        | unaryExpression MINUS_MINUS %prec POST_MINUS_MINUS
     '''
     print p.slice     
 
@@ -159,7 +179,7 @@ def p_type(p):
 
 def p_typeSuffix(p):
     '''       
-        typeSuffix : 
+        typeSuffix : TIMES
     '''   
     print p.slice     
 
