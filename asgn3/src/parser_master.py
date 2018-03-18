@@ -67,16 +67,22 @@ def p_andExpression(p):
     print p.slice 
 
 def p_argumentList(p): 
-    ''' argumentList : assignExpression 
-                    | argumentList comma_assign
+    ''' argumentList : assignExpression comma_assign
     '''
     print p.slice 
 
 def p_comma_assign(p):
-    ''' comma_assign : COMMA assignExpression comma_assign
-                    | empty
+    ''' comma_assign : COMMA assignExpression_question comma_assign
+                     | empty
     '''
     print p.slice 
+
+def assignExpression_question(p):
+  '''
+      assignExpression_question : empty 
+                                | assignExpression
+  '''
+  print p.slice
 
 def p_arguments(p): 
     ''' arguments : LPAREN argumentList_question RPAREN
@@ -96,11 +102,17 @@ def p_arrayInitializer(p):
     print p.slice 
 
 def p_comma_arrayMemberInitialization(p):
-    ''' comma_arrayMemberInitialization : COMMA arrayMemberInitialization comma_arrayMemberInitialization
+    ''' comma_arrayMemberInitialization : COMMA arrayMemberInitialization_question comma_arrayMemberInitialization
                                         | empty
     '''
     print p.slice 
 
+def arrayMemberInitialization_question(p):
+  '''
+      arrayMemberInitialization_question : arrayMemberInitialization
+                                         | empty 
+  '''
+  print p.slice
 
 def p_arrayLiteral(p):
     ''' arrayLiteral : LBRACKET argumentList_question RBRACKET
@@ -108,10 +120,16 @@ def p_arrayLiteral(p):
     print p.slice 
           
 def p_arrayMemberInitialization(p): 
-    ''' arrayMemberInitialization : assignExpression COLON nonVoidInitializer 
-                                  | nonVoidInitializer
+    ''' arrayMemberInitialization : assignExpression_question nonVoidInitializer 
     '''
     print p.slice 
+
+def p_assignExpression_question)(p):
+  '''
+       assignExpression_question : assignExpression COLON 
+                                 | empty
+  '''
+  print p.slice
 
 def p_assignExpression(p):
     ''' assignExpression : ternaryExpression 

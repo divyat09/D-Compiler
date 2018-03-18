@@ -17,9 +17,9 @@ def p_addExpression(p) :
 
 def p_mulExpression(p):
     ''' mulExpression : powExpression 
-                      | mulExpression TIMES 
-                      | mulExpression DIV 
-                      | mulExpression MODULO
+                      | mulExpression TIMES powExpression
+                      | mulExpression DIV powExpression
+                      | mulExpression MODULO powExpression
     '''
     print p.slice 
 
