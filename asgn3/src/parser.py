@@ -38,10 +38,8 @@ def p_unaryExpression(p):
                         | TIMES unaryExpression 
                         | PLUS unaryExpression
                         | MINUS unaryExpression 
-                        | DOT 
                         | PLUS_PLUS unaryExpression
                         | MINUS_MINUS unaryExpression  
-                        | ELLIPSIS 
                         | newExpression 
                         | deleteExpression 
                         | castExpression 

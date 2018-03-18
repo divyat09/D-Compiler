@@ -60,6 +60,7 @@ Operators=('COMMA',
         'LESS_DIFF',
         'GREATER_EQ_DIFF',
         'LESS_EQ_DIFF',
+        'POWER'
         )
 
 complex_tokens=('IDENTIFIER',
@@ -185,6 +186,7 @@ t_DOUBLE_PIPE = r'\|\|'
 t_EXCLAMATION = r'!'
 t_AMPERSAND = r'&'
 t_PIPE = r'\|'
+t_POWER= r'\^\^'
 t_CARET = r'\^'
 t_QUESTION = r'\?'
 t_TILDE = r'~'

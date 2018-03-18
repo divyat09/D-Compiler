@@ -25,25 +25,10 @@ def p_addExpression(p) :
   '''
   print p.slice 
 
-def p_AliasdeclarationY(p):
-  '''
-       AliasdeclarationY : IDENTIFIER ASSIGN multiplestorageClass type
-  '''
-
-  print p.slice
-
-def p_AliasdeclarationX(p):
-  '''
-       AliasdeclarationX : AliasdeclarationY
-                         | AliasdeclarationX, AliasdeclarationY 
-  '''
-
-  print p.slice
-
 def p_aliasDeclaration(p): 
-  ''' aliasDeclaration : ALIAS multiplestorageClass BasicType Declarators SEMICOLON
-                       |  ALIAS multiplestorageClass BasicType FuncDeclarators SEMICOLON
-                       | ALIAS AliasdeclarationX SEMICOLON
+  ''' aliasDeclaration : ALIAS aliasInitializer comma_aliasInitializer SEMICOLON 
+                       | ALIAS multiplestorageClass type declaratorIdentifierList SEMICOLON
+                       | ALIAS multiplestorageClass type IDENTIFIER LPAREN parameters RPAREN multiple_memberFunctionAttribute SEMICOLON
   '''
   print p.slice 
 
@@ -76,6 +61,7 @@ def p_andAndExpression(p):
                         | andAndExpression DOUBLE_AMPERSAND orExpression
     '''
     print p.slice 
+
 def p_andExpression(p): 
     ''' andExpression : cmpExpression 
                      | andExpression AMPERSAND cmpExpression
@@ -83,16 +69,22 @@ def p_andExpression(p):
     print p.slice 
 
 def p_argumentList(p): 
-    ''' argumentList : assignExpression 
-                    | argumentList comma_assign
+    ''' argumentList : assignExpression comma_assign
     '''
     print p.slice 
 
 def p_comma_assign(p):
-    ''' comma_assign : COMMA assignExpression comma_assign
-                    | empty
+    ''' comma_assign : COMMA assignExpression_question comma_assign
+                      | empty
     '''
     print p.slice 
+
+def p_assignExpression_question(p):
+    ''' assignExpression_question : assignExpression 
+                                  | empty
+
+    '''
+    print p.slice
 
 def p_arguments(p): 
     ''' arguments : LPAREN argumentList_question RPAREN
@@ -169,12 +161,18 @@ def p_attributeDeclaration(p):
     print p.slice 
 
 def p_autoDeclaration(p):
-    ''' autoDeclaration : storageClass multiplestorageClass IDENTIFIER ASSIGN initializer comma_identifier_assign_initializer SEMICOLON
+    ''' autoDeclaration : storageClass multiplestorageClass autoDeclarationPart comma_identifier_assign_initializer SEMICOLON
     '''
     print p.slice 
 
+def p_autoDeclarationPart(p):
+    '''
+        autoDeclarationPart : IDENTIFIER ASSIGN initializer
+    '''
+    print p.slice
+
 def p_comma_identifier_assign_initializer(p):
-    ''' comma_identifier_assign_initializer : COMMA IDENTIFIER ASSIGN initializer comma_identifier_assign_initializer
+    ''' comma_identifier_assign_initializer : COMMA autoDeclarationPart comma_identifier_assign_initializer
                                            | empty
     '''
     print p.slice    
@@ -202,11 +200,17 @@ def p_baseClass(p):
     print p.slice 
 
 def p_baseClassList(p): 
-    ''' baseClassList : baseClass
-                      | baseClassList COMMA baseClass
+    ''' baseClassList : baseClass comma_baseclass_multiple
     '''
     print p.slice 
           
+def p_comma_baseclass_multiple(p):
+    ''' 
+        comma_baseclass_multiple : COMMA baseClass comma_baseclass_multiple
+                                 | empty
+     '''
+    print p.slice
+
 def p_builtinType(p):
     ''' builtinType : BOOL 
                     | SHORT 
@@ -330,10 +334,16 @@ def p_declaration2(p):
     print p.slice 
 
 def p_declarationsAndStatements(p):
-    ''' declarationsAndStatements : declarationOrStatement
-                                  | declarationOrStatement declarationsAndStatements
+    ''' declarationsAndStatements : declarationOrStatement declarationOrStatementmultiple
     '''
     print p.slice 
+
+def p_declarationOrStatementmultiple(p):
+  ''' 
+      declarationOrStatementmultiple : declarationOrStatement declarationOrStatementmultiple
+                                     | empty
+  '''
+  print p.slice
 
 def p_declarationOrStatement(p):
     ''' declarationOrStatement : declaration 
@@ -346,6 +356,18 @@ def p_declarator(p):
                    | IDENTIFIER ASSIGN initializer 
     '''
     print p.slice 
+
+def p_declaratorIdentifierList(p):
+    ''' 
+      declaratorIdentifierList : IDENTIFIER multiple_comma_identifer
+    '''
+    print p.slice 
+
+def p_multiple_comma_identifer(p):
+    ''' multiple_comma_identifer : COMMA IDENTIFIER multiple_comma_identifer
+                   | empty
+    '''
+    print p.slice
 
 def p_defaultStatement(p):
     ''' defaultStatement : DEFAULT COLON declarationsAndStatements
@@ -369,8 +391,8 @@ def p_doStatement(p):
     print p.slice 
     
 def p_enumBody(p):
-    ''' enumBody : DOUBLE_QUOTE enumMember DOUBLE_QUOTE
-                 | DOUBLE_QUOTE enumMember comma_enumMember DOUBLE_QUOTE
+    ''' enumBody : LBRACE enumMember comma_enumMember  RBRACE
+
     '''
     print p.slice 
 
@@ -401,7 +423,7 @@ def p_multipleanonymousEnumMember(p):
     print p.slice 
 
 def p_anonymousEnumDeclaration(p):
-    ''' anonymousEnumDeclaration : ENUM COMMA_TYPE_Question anonymousEnumMember multipleanonymousEnumMember
+    ''' anonymousEnumDeclaration : ENUM COMMA_TYPE_Question LBRACE anonymousEnumMember multipleanonymousEnumMember RBRACE
     '''
     print p.slice 
 
@@ -424,10 +446,16 @@ def p_equalExpression(p):
     print p.slice 
 
 def p_expression(p):
-    ''' expression : assignExpression 
-                  | expression COMMA assignExpression
+    ''' expression : assignExpression assignExpression_multiple
     '''
     print p.slice 
+
+def p_assignExpression_multiple(p):
+    '''
+        assignExpression_multiple : COMMA assignExpression assignExpression_multiple
+                                  | empty
+    '''
+    print p.slice
 
 def p_expressionStatement(p):
     ''' expressionStatement : expression SEMICOLON
@@ -437,7 +465,7 @@ def p_expressionStatement(p):
 
 def p_forStatement(p):
   ''' forStatement : FOR LPAREN declaration expression_question SEMICOLON expression_question RPAREN declarationOrStatement
-           | FOR LPAREN statementNoCaseNoDefault expression_question SEMICOLON expression_question RPAREN declarationOrStatement
+                   | FOR LPAREN statementNoCaseNoDefault expression_question SEMICOLON expression_question RPAREN declarationOrStatement
   '''
   print p.slice
 
@@ -468,10 +496,16 @@ def p_foreachType(p):
   print p.slice   
 
 def p_foreachTypeList(p):
-  ''' foreachTypeList : foreachType 
-                    | foreachTypeList COMMA foreachType
+  ''' foreachTypeList : foreachType foreachType_multiple
   '''
   print p.slice 
+
+def p_foreachType_multiple(p):
+  ''' 
+      foreachType_multiple : COMMA foreachType foreachType_multiple
+                           | empty
+  '''
+  print p.slice
 
 def p_functionBody(p):
     ''' functionBody : blockStatement
@@ -479,17 +513,18 @@ def p_functionBody(p):
     print p.slice 
 
 def p_functionCallExpression(p):
-  ''' functionCallExpression : symbol arguments unaryExpression arguments
-                 | type arguments 
+  ''' functionCallExpression : symbol arguments 
+                             | unaryExpression arguments
+                             | type arguments 
   '''
   print p.slice 
          
 def p_functionDeclaration(p):
   '''
       functionDeclaration : storageClass multiplestorageClass IDENTIFIER parameters multiple_memberFunctionAttribute SEMICOLON
-                | storageClass multiplestorageClass IDENTIFIER parameters multiple_memberFunctionAttribute functionBody 
-                | type IDENTIFIER parameters multiple_memberFunctionAttribute SEMICOLON 
-                | type IDENTIFIER parameters multiple_memberFunctionAttribute functionBody 
+                          | storageClass multiplestorageClass IDENTIFIER parameters multiple_memberFunctionAttribute functionBody 
+                          | type IDENTIFIER parameters multiple_memberFunctionAttribute SEMICOLON 
+                          | type IDENTIFIER parameters multiple_memberFunctionAttribute functionBody 
   '''
   print p.slice 
 
@@ -503,9 +538,8 @@ def p_functionLiteralExpression(p):
 
 def p_gotoStatement(p):
   ''' gotoStatement : GOTO IDENTIFIER SEMICOLON
-                | GOTO DEFAULT SEMICOLON
-            | GOTO CASE SEMICOLON
-            | GOTO CASE expression_question SEMICOLON
+                    | GOTO DEFAULT SEMICOLON
+                    | GOTO CASE expression_question SEMICOLON
   '''
   print p.slice
 
@@ -516,19 +550,16 @@ def p_identifierChain(p):
 
 def p_multiple_dot_identifier(p):
     ''' multiple_dot_identifier :  DOT IDENTIFIER multiple_dot_identifier
-                  | empty
+                                | empty
     '''
     print p.slice
-    
-def p_identifierList(p):
-    ''' 
-      identifierList : IDENTIFIER multiple_comma_identifer
-    '''
-    print p.slice 
 
-def p_multiple_comma_identifer(p):
-    ''' multiple_comma_identifer : COMMA IDENTIFIER multiple_comma_identifer
-                   | empty
+
+def p_typeIdentifierPart(p):
+    '''
+        typeIdentifierPart : identifierOrTemplateInstance
+                           | identifierOrTemplateInstance DOT typeIdentifierPart
+                           | identifierOrTemplateInstance LBRACKET assignExpression RBRACKET DOT typeIdentifierPart
     '''
     print p.slice
 
@@ -539,8 +570,8 @@ def p_identifierOrTemplateChain(p):
   print p.slice 
   
 def p_multiple_dot_identifierOrTemplateInstance(p):
-    ''' multiple_dot_identifierOrTemplateInstance : identifierOrTemplateInstance multiple_dot_identifierOrTemplateInstance
-                            | empty
+    ''' multiple_dot_identifierOrTemplateInstance : DOT identifierOrTemplateInstance multiple_dot_identifierOrTemplateInstance
+                                                  | empty
     '''
     print p.slice
 
@@ -550,39 +581,38 @@ def p_identifierOrTemplateInstance(p):
 
 def p_ifStatement(p):
   ''' ifStatement : IF LPAREN ifCondition RPAREN declarationOrStatement 
-          | IF LPAREN ifCondition RPAREN declarationOrStatement ELSE declarationOrStatement
+                  | IF LPAREN ifCondition RPAREN declarationOrStatement ELSE declarationOrStatement
   '''
   print p.slice 
  
 def p_ifCondition(p):
   ''' ifCondition : AUTO IDENTIFIER ASSIGN expression 
-              | type IDENTIFIER ASSIGN expression 
-          | expression
+                  | type IDENTIFIER ASSIGN expression
+                  | expression
   '''
   print p.slice 
 
 def p_importBind(p):
   ''' importBind : IDENTIFIER
-               | IDENTIFIER ASSIGN IDENTIFIER 
+                 | IDENTIFIER ASSIGN IDENTIFIER 
   '''
   print p.slice 
 
 def p_importBindings(p):
-  ''' importBindings : singleImport COLON importBind
-               | singleImport COLON importBind importBindstr
+  ''' importBindings : singleImport COLON importBind importBindstr
   '''
   print p.slice 
 
 def p_importBindstr(p):
   ''' importBindstr : COMMA importBind importBindstr
-            | empty
+                    | empty
   '''
   print p.slice
   
 def p_importDeclaration(p):
   ''' importDeclaration : IMPORT singleImport comma_singleImport COMMA importBindings SEMICOLON
-              | IMPORT singleImport comma_singleImport SEMICOLON
-                  | IMPORT importBindings SEMICOLON
+                        | IMPORT singleImport comma_singleImport SEMICOLON
+                        | IMPORT importBindings SEMICOLON
   '''
   print p.slice 
 
@@ -592,9 +622,15 @@ def p_comma_singleImport(p):
   '''
   print p.slice 
 
+def p_importExpression(p):
+  '''   
+     importExpression : IMPORT LBRACKET assignExpression RBRACKET
+  '''   
+  print p.slice 
+
 def p_index(p):
     ''' index : assignExpression RANGE assignExpression
-          | assignExpression 
+              | assignExpression 
     '''         
     print p.slice 
 
@@ -606,13 +642,13 @@ def p_indexExpression(p):
 
 def p_comma_index(p):
   ''' comma_index : COMMA index comma_index
-          | empty
+                  | empty
   '''
   print p.slice 
 
 def p_initializer(p):
   ''' initializer : VOID 
-          | nonVoidInitializer 
+                  | nonVoidInitializer 
   '''
   print p.slice 
 
@@ -623,9 +659,10 @@ def p_labeledStatement(p):
 
 def p_declarationOrStatement_question(p):
     ''' declarationOrStatement_question :  declarationOrStatement 
-                      | empty
+                                        | empty
     ''' 
     print p.slice
+
 def p_memberFunctionAttribute(p):
     ''' memberFunctionAttribute : IMMUTABLE 
                                 | CONST 
@@ -653,18 +690,19 @@ def p_mulExpression(p):
     print p.slice 
 
 def p_newAnonClassExpression(p):
-    ''' newAnonClassExpression : NEW arguments_question CLASS arguments baseClassList_question structBody
+    ''' newAnonClassExpression : NEW arguments_question CLASS arguments_question baseClassList_question structBody
     '''
     print p.slice 
+
 def p_arguments_question(p):
     ''' arguments_question : arguments 
-               | empty 
+                           | empty 
     '''
     print p.slice 
     
 def p_baseClassList_question(p):
     ''' baseClassList_question : baseClassList 
-                 | empty
+                               | empty
     '''
     print p.slice
     
@@ -712,7 +750,7 @@ def p_parameter(p):
 
 def  p_Identifier_question(p):
   ''' Identifier_question : IDENTIFIER 
-                | empty
+                          | empty
   '''
   print p.slice
 
@@ -746,23 +784,17 @@ def p_parameters(p):
 def p_powExpression(p):
     ''' 
       powExpression : unaryExpression 
-                      | powExpression CARET CARET unaryExpression 
+                    | powExpression POWER unaryExpression 
     '''
     print p.slice 
 
 def p_LIT_STRPlus(p):
   '''
       LIT_STRPlus : LIT_STR LIT_STRPlus
-                        | LIT_STR
+                  | LIT_STR
   '''
   print p.slice 
 
-
-def p_importExpression(p):
-  '''   
-     importExpression : IMPORT LBRACKET assignExpression RBRACKET
-  '''   
-  print p.slice 
 
 def p_primaryExpression(p):
     ''' primaryExpression : identifierOrTemplateInstance 
@@ -825,6 +857,15 @@ def p_singleImport(p):
   '''
   print p.slice 
   
+def p_statement(p):
+  '''
+      statement : statementNoCaseNoDefault 
+                | caseStatement 
+                | caseRangeStatement 
+                | defaultStatement
+  '''
+  print p.slice 
+
 def p_statementNoCaseNoDefault(p):
   '''
       statementNoCaseNoDefault : labeledStatement 
@@ -842,17 +883,7 @@ def p_statementNoCaseNoDefault(p):
                               | withStatement 
                               | expressionStatement
   '''
-  print p.slice 
-
-def p_statement(p):
-  '''
-      statement : statementNoCaseNoDefault 
-                | caseStatement 
-                | caseRangeStatement 
-                | defaultStatement
-  '''
-  print p.slice 
-  
+  print p.slice   
     
 def p_storageClass(p):
     ''' 
@@ -914,34 +945,39 @@ def p_typeConstructors_quetsion(p):
 def p_type2(p):
     '''
         type2 : builtinType 
-              | symbol 
-              | typeofExpression DOT identifierOrTemplateChain_question
+              | typeIdentifierPart 
+              | THIS DOT typeIdentifierPart
+              | typeofExpression typeIdentifierPart_question
               | typeConstructor LPAREN type RPAREN 
     '''
     print p.slice     
 
-def p_identifierOrTemplateChain_question(p):
-    ''' identifierOrTemplateChain_question : identifierOrTemplateChain 
-              | empty
-    '''
-    print p.slice
- 
+def p_typeIdentifierPart_question(p):
+  '''
+        typeIdentifierPart_question : DOT typeIdentifierPart
+                                    | empty
+  '''
+  print p.slice 
 
 def p_typeConstructor(p):
     '''
         typeConstructor : CONST 
                         | IMMUTABLE
     '''
-    print p.slice     
+    print p.slice
 
 def p_typeConstructors(p):
     '''       
-        typeConstructors : typeConstructor 
-                         | typeConstructor typeConstructors
+        typeConstructors : typeConstructor multiple_typeConstructors
     '''
     print p.slice     
 
-
+def p_multiple_typeConstructors(p):
+    '''
+         multiple_typeConstructors : typeConstructor multiple_typeConstructors
+                                   | empty 
+    '''
+    print p.slice
 
 def p_typeSuffix(p):
     '''       
@@ -981,10 +1017,8 @@ def p_unaryExpression(p):
                         | TIMES unaryExpression 
                         | PLUS unaryExpression
                         | MINUS unaryExpression 
-                        | DOT 
                         | PLUS_PLUS unaryExpression
-            | MINUS_MINUS unaryExpression  
-                        | ELLIPSIS 
+                        | MINUS_MINUS unaryExpression  
                         | newExpression 
                         | deleteExpression 
                         | castExpression 
@@ -1025,7 +1059,7 @@ def p_variableDeclaration(p):
 
 def p_whileStatement(p):
     '''
-    whileStatement : WHILE LPAREN expression RPAREN declarationOrStatement
+         whileStatement : WHILE LPAREN expression RPAREN declarationOrStatement
     '''
     print p.slice   
 
