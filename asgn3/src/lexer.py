@@ -77,7 +77,9 @@ complex_tokens=('IDENTIFIER',
         #'ILLEGAL_INUMBER',
         'LIT_STR',
         'LIT_CHAR',
-        'COMMENT')
+        'COMMENT',
+        'EMPTY',
+        'IdentifierOrTemplateInstance')
 
 Keywords={'alias': 'ALIAS',
   		'auto' : 'AUTO',
