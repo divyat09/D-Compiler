@@ -1,3 +1,4 @@
+#!/home/divyat/anaconda2/bin/python
 import ply.lex as lex
 import sys
 import ply.yacc as yacc
@@ -1438,7 +1439,7 @@ a=open(sys.argv[1],'r')
 a=a.read()
 data = ""
 a+="\n"
-yacc.parse(a, debug=False)
+yacc.parse(a, debug=True)
 
 
 File=sys.argv[1]
@@ -1490,7 +1491,7 @@ ExpandTerminal()
 
 print "<html> <head> <title> Derivation </title> </head> <body>"
 print "<h3> Rightmost Derivation of the code</h3>"
-print  "<b> "+ str(Rderivation[0][0])+"</b> "+ "</br>"
+print  "<b> "+ str(Rderivation[0][0])+"</b> "+ "<br>"
 
 for index in range(0,len(RightOutput)):
     CurrString = RightOutput[index]
@@ -1506,7 +1507,7 @@ for index in range(0,len(RightOutput)):
             print "<b>" + str(symbol) + "</b>"
         else:
             print str(symbol)       
-    print "</br>"
+    print "<br><br>"
 
 print "</body></html>"
 

@@ -1,8 +1,10 @@
-
-deprecated void foo()
+void foo()
 {
-	if (a) b();
-	if (a) b(); else c();
+	if (a) 
+	 b();
+	if (a) 
+	  b();
+	else c();
 	if (auto a = i == 10) b();
 	if (int i = x < 100) b();
 	switch (x) {}

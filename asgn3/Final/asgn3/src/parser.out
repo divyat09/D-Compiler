@@ -1,4 +1,4 @@
-Created by PLY version 3.9 (http://www.dabeaz.com/ply)
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
@@ -5809,8 +5809,6 @@ state 113
     (112) StorageClass -> . CONST
     (113) StorageClass -> . IMMUTABLE
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
-    IDENTIFIER      shift and go to state 264
     DOT             reduce using rule 470 (empty -> .)
     BOOL            reduce using rule 470 (empty -> .)
     SHORT           reduce using rule 470 (empty -> .)
@@ -5822,6 +5820,7 @@ state 113
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     ENUM            shift and go to state 63
     STATIC          shift and go to state 56
@@ -5831,7 +5830,7 @@ state 113
     CONST           shift and go to state 3
     IMMUTABLE       shift and go to state 21
 
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
+  ! IDENTIFIER      [ shift and go to state 264 ]
 
     AliasDeclarationY              shift and go to state 58
     AliasDeclarationX              shift and go to state 59
@@ -6376,11 +6375,12 @@ state 127
     (421) EnumMembers -> EnumMember . COMMA EnumMembers
     (430) AnonymousEnumMember -> EnumMember .
 
+  ! shift/reduce conflict for COMMA resolved as shift
   ! reduce/reduce conflict for RBRACE resolved using rule 419 (EnumMembers -> EnumMember .)
     RBRACE          reduce using rule 419 (EnumMembers -> EnumMember .)
-    COMMA           reduce using rule 430 (AnonymousEnumMember -> EnumMember .)
+    COMMA           shift and go to state 276
 
-  ! COMMA           [ shift and go to state 276 ]
+  ! COMMA           [ reduce using rule 430 (AnonymousEnumMember -> EnumMember .) ]
   ! RBRACE          [ reduce using rule 430 (AnonymousEnumMember -> EnumMember .) ]
 
 
@@ -7287,13 +7287,11 @@ state 145
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     RBRACE          shift and go to state 344
     SEMICOLON       shift and go to state 324
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
     LBRACE          shift and go to state 145
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -7329,6 +7327,7 @@ state 145
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -7355,8 +7354,8 @@ state 145
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -9917,6 +9916,7 @@ state 196
     (82) BasicType -> Typeof . DOT IdentifierList
     (252) PrimaryExpression -> Typeof .
 
+  ! shift/reduce conflict for DOT resolved as shift
   ! reduce/reduce conflict for LPAREN resolved using rule 81 (BasicType -> Typeof .)
   ! reduce/reduce conflict for TIMES resolved using rule 81 (BasicType -> Typeof .)
   ! reduce/reduce conflict for RPAREN resolved using rule 81 (BasicType -> Typeof .)
@@ -10972,6 +10972,7 @@ state 214
   ! shift/reduce conflict for DOT resolved as shift
   ! shift/reduce conflict for LBRACKET resolved as shift
   ! reduce/reduce conflict for POWER resolved using rule 102 (IdentifierList -> IDENTIFIER .)
+  ! shift/reduce conflict for DOT resolved as shift
   ! reduce/reduce conflict for PLUS_PLUS resolved using rule 102 (IdentifierList -> IDENTIFIER .)
   ! reduce/reduce conflict for MINUS_MINUS resolved using rule 102 (IdentifierList -> IDENTIFIER .)
   ! reduce/reduce conflict for LPAREN resolved using rule 102 (IdentifierList -> IDENTIFIER .)
@@ -12301,13 +12302,12 @@ state 237
     (101) BasicType2X -> . FUNCTION Parameters
     (470) empty -> .
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
-    IDENTIFIER      shift and go to state 448
     TIMES           shift and go to state 88
     LBRACKET        shift and go to state 80
     FUNCTION        shift and go to state 87
+    IDENTIFIER      reduce using rule 470 (empty -> .)
 
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
+  ! IDENTIFIER      [ shift and go to state 448 ]
 
     DeclaratorIdentifier           shift and go to state 444
     DeclaratorIdentifierList       shift and go to state 446
@@ -13104,10 +13104,11 @@ state 248
     (251) PrimaryExpression -> BasicTypeX . LPAREN ArgumentList_opt RPAREN
     (78) BasicType -> BasicTypeX .
 
+  ! shift/reduce conflict for LPAREN resolved as shift
     DOT             shift and go to state 426
-    LPAREN          reduce using rule 78 (BasicType -> BasicTypeX .)
+    LPAREN          shift and go to state 425
 
-  ! LPAREN          [ shift and go to state 425 ]
+  ! LPAREN          [ reduce using rule 78 (BasicType -> BasicTypeX .) ]
 
 
 state 249
@@ -15030,13 +15031,11 @@ state 297
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     RBRACE          reduce using rule 313 (StatementList -> Statement .)
     SEMICOLON       shift and go to state 324
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
     LBRACE          shift and go to state 145
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -15072,6 +15071,7 @@ state 297
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -15098,8 +15098,8 @@ state 297
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -16612,11 +16612,9 @@ state 319
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     LBRACE          shift and go to state 145
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -16652,6 +16650,7 @@ state 319
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -16678,8 +16677,8 @@ state 319
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -17922,7 +17921,6 @@ state 335
   ! reduce/reduce conflict for CHAR resolved using rule 131 (StorageClasses_opt -> StorageClasses .)
   ! reduce/reduce conflict for FLOAT resolved using rule 131 (StorageClasses_opt -> StorageClasses .)
   ! reduce/reduce conflict for VOID resolved using rule 131 (StorageClasses_opt -> StorageClasses .)
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
   ! reduce/reduce conflict for TYPEOF resolved using rule 131 (StorageClasses_opt -> StorageClasses .)
     DOT             reduce using rule 131 (StorageClasses_opt -> StorageClasses .)
     BOOL            reduce using rule 131 (StorageClasses_opt -> StorageClasses .)
@@ -17936,13 +17934,13 @@ state 335
     FLOAT           reduce using rule 131 (StorageClasses_opt -> StorageClasses .)
     VOID            reduce using rule 131 (StorageClasses_opt -> StorageClasses .)
     TYPEOF          reduce using rule 131 (StorageClasses_opt -> StorageClasses .)
-    IDENTIFIER      shift and go to state 29
     ALIAS           shift and go to state 19
     ENUM            shift and go to state 18
     IMPORT          shift and go to state 27
     STATIC          shift and go to state 5
     CLASS           shift and go to state 13
     UNION           shift and go to state 17
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     EXTERN          shift and go to state 7
     FINAL           shift and go to state 15
     AUTO            shift and go to state 2
@@ -17950,6 +17948,7 @@ state 335
     IMMUTABLE       shift and go to state 21
 
   ! IDENTIFIER      [ reduce using rule 131 (StorageClasses_opt -> StorageClasses .) ]
+  ! IDENTIFIER      [ shift and go to state 29 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ reduce using rule 470 (empty -> .) ]
   ! SHORT           [ reduce using rule 470 (empty -> .) ]
@@ -17961,7 +17960,6 @@ state 335
   ! CHAR            [ reduce using rule 470 (empty -> .) ]
   ! FLOAT           [ reduce using rule 470 (empty -> .) ]
   ! VOID            [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! TYPEOF          [ reduce using rule 470 (empty -> .) ]
 
     AggregateDeclaration           shift and go to state 4
@@ -18382,11 +18380,9 @@ state 340
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     LBRACE          shift and go to state 145
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -18422,6 +18418,7 @@ state 340
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -18448,8 +18445,8 @@ state 340
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -18779,11 +18776,9 @@ state 341
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     LBRACE          shift and go to state 145
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -18819,6 +18814,7 @@ state 341
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -18845,8 +18841,8 @@ state 341
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -31578,12 +31574,10 @@ state 492
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     SEMICOLON       shift and go to state 626
     LBRACE          shift and go to state 145
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -31619,6 +31613,7 @@ state 492
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -31645,8 +31640,8 @@ state 492
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -32477,9 +32472,7 @@ state 500
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     SEMICOLON       shift and go to state 633
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -32516,6 +32509,7 @@ state 500
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -32542,8 +32536,8 @@ state 500
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -33356,7 +33350,6 @@ state 503
   ! reduce/reduce conflict for CHAR resolved using rule 308 (LabeledStatement -> IDENTIFIER COLON .)
   ! reduce/reduce conflict for FLOAT resolved using rule 308 (LabeledStatement -> IDENTIFIER COLON .)
   ! reduce/reduce conflict for VOID resolved using rule 308 (LabeledStatement -> IDENTIFIER COLON .)
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
   ! reduce/reduce conflict for TYPEOF resolved using rule 308 (LabeledStatement -> IDENTIFIER COLON .)
   ! shift/reduce conflict for AMPERSAND resolved as shift
   ! shift/reduce conflict for PLUS_PLUS resolved as shift
@@ -33399,7 +33392,6 @@ state 503
     LBRACE          shift and go to state 145
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -33425,6 +33417,7 @@ state 503
     FOREACH_REVERSE shift and go to state 310
     CLASS           shift and go to state 13
     UNION           shift and go to state 17
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
     MINUS_MINUS     shift and go to state 192
@@ -33526,6 +33519,7 @@ state 503
   ! FOREACH_REVERSE [ reduce using rule 308 (LabeledStatement -> IDENTIFIER COLON .) ]
   ! CLASS           [ reduce using rule 308 (LabeledStatement -> IDENTIFIER COLON .) ]
   ! UNION           [ reduce using rule 308 (LabeledStatement -> IDENTIFIER COLON .) ]
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ reduce using rule 470 (empty -> .) ]
   ! SHORT           [ reduce using rule 470 (empty -> .) ]
@@ -33537,7 +33531,6 @@ state 503
   ! CHAR            [ reduce using rule 470 (empty -> .) ]
   ! FLOAT           [ reduce using rule 470 (empty -> .) ]
   ! VOID            [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! TYPEOF          [ reduce using rule 470 (empty -> .) ]
 
     ExpressionStatement            shift and go to state 296
@@ -34614,13 +34607,14 @@ state 530
     (126) ArrayMemberInitialization -> AssignExpression . COLON NonVoidInitializer
     (118) ExpInitializer -> AssignExpression .
 
+  ! shift/reduce conflict for COMMA resolved as shift
   ! reduce/reduce conflict for RBRACKET resolved using rule 118 (ExpInitializer -> AssignExpression .)
+    COMMA           shift and go to state 532
     COLON           shift and go to state 660
-    COMMA           reduce using rule 118 (ExpInitializer -> AssignExpression .)
     RBRACKET        reduce using rule 118 (ExpInitializer -> AssignExpression .)
 
   ! RBRACKET        [ reduce using rule 219 (ArgumentList -> AssignExpression .) ]
-  ! COMMA           [ shift and go to state 532 ]
+  ! COMMA           [ reduce using rule 118 (ExpInitializer -> AssignExpression .) ]
 
 
 state 531
@@ -36477,13 +36471,12 @@ state 594
     (101) BasicType2X -> . FUNCTION Parameters
     (470) empty -> .
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
-    IDENTIFIER      shift and go to state 448
     TIMES           shift and go to state 88
     LBRACKET        shift and go to state 80
     FUNCTION        shift and go to state 87
+    IDENTIFIER      reduce using rule 470 (empty -> .)
 
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
+  ! IDENTIFIER      [ shift and go to state 448 ]
 
     DeclaratorIdentifier           shift and go to state 444
     DeclaratorIdentifierList       shift and go to state 691
@@ -37032,8 +37025,10 @@ state 614
     (256) ArrayLiteral -> IDENTIFIER . LBRACKET INUMBER RBRACKET
     (257) ArrayLiteral -> IDENTIFIER . LBRACKET AssignExpression RBRACKET
 
+  ! shift/reduce conflict for DOT resolved as shift
   ! reduce/reduce conflict for RPAREN resolved using rule 233 (PrimaryExpression -> IDENTIFIER .)
   ! reduce/reduce conflict for POWER resolved using rule 102 (IdentifierList -> IDENTIFIER .)
+  ! shift/reduce conflict for DOT resolved as shift
   ! reduce/reduce conflict for PLUS_PLUS resolved using rule 102 (IdentifierList -> IDENTIFIER .)
   ! reduce/reduce conflict for MINUS_MINUS resolved using rule 102 (IdentifierList -> IDENTIFIER .)
   ! reduce/reduce conflict for LPAREN resolved using rule 102 (IdentifierList -> IDENTIFIER .)
@@ -37936,9 +37931,7 @@ state 624
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     SEMICOLON       shift and go to state 633
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -37975,6 +37968,7 @@ state 624
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -38001,8 +37995,8 @@ state 624
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -38849,7 +38843,6 @@ state 632
   ! reduce/reduce conflict for CHAR resolved using rule 362 (StatementListNoCaseNoDefault -> StatementNoCaseNoDefault .)
   ! reduce/reduce conflict for FLOAT resolved using rule 362 (StatementListNoCaseNoDefault -> StatementNoCaseNoDefault .)
   ! reduce/reduce conflict for VOID resolved using rule 362 (StatementListNoCaseNoDefault -> StatementNoCaseNoDefault .)
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
   ! reduce/reduce conflict for TYPEOF resolved using rule 362 (StatementListNoCaseNoDefault -> StatementNoCaseNoDefault .)
   ! shift/reduce conflict for AMPERSAND resolved as shift
   ! shift/reduce conflict for PLUS_PLUS resolved as shift
@@ -38891,7 +38884,6 @@ state 632
     RBRACE          reduce using rule 362 (StatementListNoCaseNoDefault -> StatementNoCaseNoDefault .)
     ELSE            reduce using rule 362 (StatementListNoCaseNoDefault -> StatementNoCaseNoDefault .)
     SEMICOLON       shift and go to state 633
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -38918,6 +38910,7 @@ state 632
     FOREACH_REVERSE shift and go to state 310
     CLASS           shift and go to state 13
     UNION           shift and go to state 17
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
     MINUS_MINUS     shift and go to state 192
@@ -39017,6 +39010,7 @@ state 632
   ! TYPEOF          [ reduce using rule 362 (StatementListNoCaseNoDefault -> StatementNoCaseNoDefault .) ]
   ! TYPEID          [ reduce using rule 362 (StatementListNoCaseNoDefault -> StatementNoCaseNoDefault .) ]
   ! BODY            [ reduce using rule 362 (StatementListNoCaseNoDefault -> StatementNoCaseNoDefault .) ]
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ reduce using rule 470 (empty -> .) ]
   ! SHORT           [ reduce using rule 470 (empty -> .) ]
@@ -39028,7 +39022,6 @@ state 632
   ! CHAR            [ reduce using rule 470 (empty -> .) ]
   ! FLOAT           [ reduce using rule 470 (empty -> .) ]
   ! VOID            [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! TYPEOF          [ reduce using rule 470 (empty -> .) ]
 
     ExpressionStatement            shift and go to state 296
@@ -40648,13 +40641,13 @@ state 652
     (100) BasicType2X -> . LBRACKET Type RBRACKET
     (101) BasicType2X -> . FUNCTION Parameters
 
+    LPAREN          shift and go to state 420
     IDENTIFIER      reduce using rule 470 (empty -> .)
-    LPAREN          reduce using rule 470 (empty -> .)
     TIMES           shift and go to state 88
     LBRACKET        shift and go to state 80
     FUNCTION        shift and go to state 87
 
-  ! LPAREN          [ shift and go to state 420 ]
+  ! LPAREN          [ reduce using rule 470 (empty -> .) ]
 
     BasicType2_opt                 shift and go to state 721
     BasicType2X                    shift and go to state 81
@@ -42960,6 +42953,7 @@ state 680
     (104) IdentifierList -> IDENTIFIER LBRACKET AssignExpression RBRACKET . DOT IdentifierList
     (257) ArrayLiteral -> IDENTIFIER LBRACKET AssignExpression RBRACKET .
 
+  ! shift/reduce conflict for DOT resolved as shift
     DOT             shift and go to state 598
     POWER           reduce using rule 257 (ArrayLiteral -> IDENTIFIER LBRACKET AssignExpression RBRACKET .)
     PLUS_PLUS       reduce using rule 257 (ArrayLiteral -> IDENTIFIER LBRACKET AssignExpression RBRACKET .)
@@ -43697,11 +43691,9 @@ state 701
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     LBRACE          shift and go to state 145
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -43737,6 +43729,7 @@ state 701
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -43763,8 +43756,8 @@ state 701
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -44094,11 +44087,9 @@ state 702
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     LBRACE          shift and go to state 145
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -44134,6 +44125,7 @@ state 702
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -44160,8 +44152,8 @@ state 702
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -45280,11 +45272,9 @@ state 716
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     LBRACE          shift and go to state 145
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -45320,6 +45310,7 @@ state 716
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -45346,8 +45337,8 @@ state 716
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -45677,11 +45668,9 @@ state 717
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     LBRACE          shift and go to state 145
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -45717,6 +45706,7 @@ state 717
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -45743,8 +45733,8 @@ state 717
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -46336,11 +46326,9 @@ state 724
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     LBRACE          shift and go to state 145
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -46376,6 +46364,7 @@ state 724
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -46402,8 +46391,8 @@ state 724
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -47466,6 +47455,7 @@ state 748
     (103) IdentifierList -> IDENTIFIER . DOT IdentifierList
     (104) IdentifierList -> IDENTIFIER . LBRACKET AssignExpression RBRACKET DOT IdentifierList
 
+  ! shift/reduce conflict for DOT resolved as shift
   ! reduce/reduce conflict for RPAREN resolved using rule 102 (IdentifierList -> IDENTIFIER .)
     DOT             shift and go to state 703
     POWER           reduce using rule 102 (IdentifierList -> IDENTIFIER .)
@@ -47767,11 +47757,9 @@ state 752
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     LBRACE          shift and go to state 145
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -47807,6 +47795,7 @@ state 752
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -47833,8 +47822,8 @@ state 752
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -49732,9 +49721,7 @@ state 775
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     SEMICOLON       shift and go to state 633
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -49771,6 +49758,7 @@ state 775
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -49797,8 +49785,8 @@ state 775
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -50243,11 +50231,9 @@ state 783
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     LBRACE          shift and go to state 145
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -50283,6 +50269,7 @@ state 783
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -50309,8 +50296,8 @@ state 783
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -50776,11 +50763,9 @@ state 788
     (438) Parameters -> . LPAREN ParameterList_opt RPAREN
     (465) BodyStatement -> . BODY BlockStatement
 
-  ! shift/reduce conflict for IDENTIFIER resolved as shift
     LBRACE          shift and go to state 145
     CASE            shift and go to state 313
     DEFAULT         shift and go to state 320
-    IDENTIFIER      shift and go to state 331
     IF              shift and go to state 348
     WHILE           shift and go to state 321
     DO              shift and go to state 340
@@ -50816,6 +50801,7 @@ state 788
     CHAR            reduce using rule 470 (empty -> .)
     FLOAT           reduce using rule 470 (empty -> .)
     VOID            reduce using rule 470 (empty -> .)
+    IDENTIFIER      reduce using rule 470 (empty -> .)
     TYPEOF          reduce using rule 470 (empty -> .)
     AMPERSAND       shift and go to state 195
     PLUS_PLUS       shift and go to state 199
@@ -50842,8 +50828,8 @@ state 788
     TYPEID          shift and go to state 197
     BODY            shift and go to state 146
 
+  ! IDENTIFIER      [ shift and go to state 331 ]
   ! DOT             [ reduce using rule 470 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 470 (empty -> .) ]
   ! BOOL            [ shift and go to state 46 ]
   ! SHORT           [ shift and go to state 31 ]
   ! USHORT          [ shift and go to state 40 ]
@@ -51241,28 +51227,22 @@ WARNING: shift/reduce conflict for IMMUTABLE in state 28 resolved as shift
 WARNING: shift/reduce conflict for DOT in state 39 resolved as shift
 WARNING: shift/reduce conflict for LBRACKET in state 39 resolved as shift
 WARNING: shift/reduce conflict for DOT in state 42 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 113 resolved as shift
 WARNING: shift/reduce conflict for LBRACKET in state 126 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 145 resolved as shift
+WARNING: shift/reduce conflict for COMMA in state 127 resolved as shift
+WARNING: shift/reduce conflict for DOT in state 196 resolved as shift
 WARNING: shift/reduce conflict for DOT in state 214 resolved as shift
 WARNING: shift/reduce conflict for LBRACKET in state 214 resolved as shift
+WARNING: shift/reduce conflict for DOT in state 214 resolved as shift
 WARNING: shift/reduce conflict for LPAREN in state 222 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 237 resolved as shift
 WARNING: shift/reduce conflict for DOT in state 244 resolved as shift
 WARNING: shift/reduce conflict for DOT in state 247 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 297 resolved as shift
+WARNING: shift/reduce conflict for LPAREN in state 248 resolved as shift
 WARNING: shift/reduce conflict for IDENTIFIER in state 303 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 319 resolved as shift
 WARNING: shift/reduce conflict for DOT in state 331 resolved as shift
 WARNING: shift/reduce conflict for IDENTIFIER in state 335 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 335 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 340 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 341 resolved as shift
 WARNING: shift/reduce conflict for DOT in state 419 resolved as shift
 WARNING: shift/reduce conflict for LBRACKET in state 419 resolved as shift
 WARNING: shift/reduce conflict for IDENTIFIER in state 450 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 492 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 500 resolved as shift
 WARNING: shift/reduce conflict for SEMICOLON in state 503 resolved as shift
 WARNING: shift/reduce conflict for LBRACE in state 503 resolved as shift
 WARNING: shift/reduce conflict for CASE in state 503 resolved as shift
@@ -51293,7 +51273,6 @@ WARNING: shift/reduce conflict for FOREACH in state 503 resolved as shift
 WARNING: shift/reduce conflict for FOREACH_REVERSE in state 503 resolved as shift
 WARNING: shift/reduce conflict for CLASS in state 503 resolved as shift
 WARNING: shift/reduce conflict for UNION in state 503 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 503 resolved as shift
 WARNING: shift/reduce conflict for AMPERSAND in state 503 resolved as shift
 WARNING: shift/reduce conflict for PLUS_PLUS in state 503 resolved as shift
 WARNING: shift/reduce conflict for MINUS_MINUS in state 503 resolved as shift
@@ -51329,11 +51308,12 @@ WARNING: shift/reduce conflict for VOID in state 503 resolved as shift
 WARNING: shift/reduce conflict for TYPEOF in state 503 resolved as shift
 WARNING: shift/reduce conflict for TYPEID in state 503 resolved as shift
 WARNING: shift/reduce conflict for BODY in state 503 resolved as shift
+WARNING: shift/reduce conflict for COMMA in state 530 resolved as shift
 WARNING: shift/reduce conflict for LBRACE in state 560 resolved as shift
 WARNING: shift/reduce conflict for BODY in state 560 resolved as shift
 WARNING: shift/reduce conflict for RBRACKET in state 576 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 594 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 624 resolved as shift
+WARNING: shift/reduce conflict for DOT in state 614 resolved as shift
+WARNING: shift/reduce conflict for DOT in state 614 resolved as shift
 WARNING: shift/reduce conflict for SEMICOLON in state 632 resolved as shift
 WARNING: shift/reduce conflict for IDENTIFIER in state 632 resolved as shift
 WARNING: shift/reduce conflict for IF in state 632 resolved as shift
@@ -51362,7 +51342,6 @@ WARNING: shift/reduce conflict for FOREACH in state 632 resolved as shift
 WARNING: shift/reduce conflict for FOREACH_REVERSE in state 632 resolved as shift
 WARNING: shift/reduce conflict for CLASS in state 632 resolved as shift
 WARNING: shift/reduce conflict for UNION in state 632 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 632 resolved as shift
 WARNING: shift/reduce conflict for AMPERSAND in state 632 resolved as shift
 WARNING: shift/reduce conflict for PLUS_PLUS in state 632 resolved as shift
 WARNING: shift/reduce conflict for MINUS_MINUS in state 632 resolved as shift
@@ -51399,19 +51378,12 @@ WARNING: shift/reduce conflict for TYPEOF in state 632 resolved as shift
 WARNING: shift/reduce conflict for TYPEID in state 632 resolved as shift
 WARNING: shift/reduce conflict for BODY in state 632 resolved as shift
 WARNING: shift/reduce conflict for LBRACKET in state 649 resolved as shift
+WARNING: shift/reduce conflict for DOT in state 680 resolved as shift
 WARNING: shift/reduce conflict for DOT in state 700 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 701 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 702 resolved as shift
 WARNING: shift/reduce conflict for SEMICOLON in state 714 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 716 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 717 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 724 resolved as shift
 WARNING: shift/reduce conflict for LPAREN in state 732 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 752 resolved as shift
+WARNING: shift/reduce conflict for DOT in state 748 resolved as shift
 WARNING: shift/reduce conflict for ELSE in state 762 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 775 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 783 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 788 resolved as shift
 WARNING: reduce/reduce conflict in state 127 resolved using rule (EnumMembers -> EnumMember)
 WARNING: rejected rule (AnonymousEnumMember -> EnumMember) in state 127
 WARNING: reduce/reduce conflict in state 189 resolved using rule (BasicType -> IdentifierList)
