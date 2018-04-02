@@ -166,7 +166,7 @@ t_RIGHT_SHIFT = r'>>'
 t_EQ_PLUS = r'\+='
 t_EQ_MINUS = r'-='
 t_EQ_TIMES = r'\*='
-t_EQ_DIV = r'/='
+t_EQ_DIV = r'\/='
 t_EQ_MODULO = r'%='
 t_EQ_AND_BIT = '&='
 t_EQ_OR_BIT =	'\|='
@@ -191,7 +191,8 @@ t_UTIMES = r'\*'
 t_UAMPERSAND = r'&'
 t_UPLUS = r'\+'
 t_UMINUS = r'-'
-t_DIV = r'/(?!\*)'
+# t_DIV = r'/(?!\*)'
+t_DIV = r'\/'
 t_MODULO = r'%'
 t_DOUBLE_AMPERSAND = r'&&'
 t_DOUBLE_PIPE = r'\|\|'
@@ -223,8 +224,8 @@ def t_DNUMBER(t):
 
 # Match an integer
 def t_INUMBER(t):
-#r'\d+(?=[+<>!=\-*/()%,;\s\]])'
-    r'-?[0-9]+'
+    r'\d+(?=[+<>!=\-*/()%,;\s\]])'
+    # r'-?[0-9]+'
     return t
 
 def t_DOT(t):
