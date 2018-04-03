@@ -1,5 +1,6 @@
-from globalvars import *
+# from globalvars import *
 
+InstrTAC = []
 def CreateTAC( op, dst, src1, src2 ):
   InstrTAC.append( [ op, dst, src1, src2 ] )
   
