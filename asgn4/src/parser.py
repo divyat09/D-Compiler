@@ -4,6 +4,8 @@ import sys
 import ply.yacc as yacc
 from lexer import tokens
 import logging
+import symbol_table
+ST = symbol_table.SymbolTable()
 
 Listnonterminals=[]
 Rderivation=[]
@@ -167,12 +169,35 @@ def p_Declaration(p):
 def p_VarDeclarations(p):
     ''' VarDeclarations : StorageClasses_opt BasicType Declarators SEMICOLON
     '''
+    # create symbolTable Entry with identifier p[3]['place'], type = p[2]
+    # print p[2],p[3]['place']
+    # print p.slice,"''''''''''''"
+    # print p[2],p[3]['type']
+
+    if p[3]['place'] in ST.table.keys():
+        print "Redeclaration of variable not allowed",p[3]['place']
+        sys.exit(0)
+
+    ST.addvar(p[3]['place'],p[2])
+
+    # print ST.table[p[3]['place']], "FFFFFFFFFFFFFFFFFFFFFFFFFFFFff"
+    
+    # print p[3]
+    if p[2]!=ST.table[p[3]['place']]['datatype']:
+        print p[2],p[3]['type'],"error type mismatch"
+        sys.exit(0)
+        return
+    # p[0] = {'type' : p[2]}
+
     Derivations.append(p.slice)
 
 def p_Declarators(p):
     '''Declarators : DeclaratorInitializer
     		   | DeclaratorInitializer COMMA DeclaratorIdentifierList
     '''
+    if len(p)==2:
+        p[0]=p[1]
+        return
     Derivations.append(p.slice)
 
 def p_DeclaratorInitializer(p):
@@ -181,6 +206,11 @@ def p_DeclaratorInitializer(p):
     			     | AltDeclarator ASSIGN Initializer
     			     | AltDeclarator 
     '''
+    p[0]=p[1]
+    if len(p)==4:
+        p[0]['type'] = p[3]['type']
+        print '=',p[0]['place'],p[3]['place']
+    return
     Derivations.append(p.slice) # rem template parameters from 2
 
 def p_DeclaratorIdentifierList(p):	
@@ -213,11 +243,17 @@ def p_Declarator(p):
     '''Declarator : VarDeclarator
 		  | AltDeclarator
     '''
+    p[0]=p[1]
     Derivations.append(p.slice)
 
 def p_VarDeclarator(p):
     '''VarDeclarator : BasicType2_opt IDENTIFIER
     '''
+    # print p[2]
+    p[0] = {
+        'place':p[2],
+        'type':"TYPE_ERROR"
+    }
     Derivations.append(p.slice)
 
 def p_AltDeclarator(p):
@@ -280,6 +316,8 @@ def p_BasicType(p):
     		  | Typeof
     		  | Typeof DOT IdentifierList
     '''
+    if len(p)==2:
+        p[0]=p[1]
     Derivations.append(p.slice)
 
 def p_BasicTypeX(p):
@@ -294,6 +332,8 @@ def p_BasicTypeX(p):
                   | FLOAT 
                   | VOID
     '''
+    # print p.slice,p[1].upper(), "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
+    p[0] = p[1].upper()
     Derivations.append(p.slice)
 
 def p_BasicType2(p):
@@ -305,6 +345,7 @@ def p_BasicType2_opt(p):
     ''' BasicType2_opt : BasicType2
 		       | empty
     '''
+    p[0]=p[1]
     Derivations.append(p.slice)
 
 def p_BasicType2X(p):
@@ -315,7 +356,7 @@ def p_BasicType2X(p):
     		   | LBRACKET Type RBRACKET
                | FUNCTION Parameters
     '''
-#delegate Parameters MemberFunctionAttributesopt
+    #delegate Parameters MemberFunctionAttributesopt
     #function Parameters FunctionAttributesopt
     Derivations.append(p.slice)
 
@@ -324,8 +365,12 @@ def p_IdentifierList(p):
     		      | IDENTIFIER DOT IdentifierList
     		      | IDENTIFIER LBRACKET AssignExpression RBRACKET DOT IdentifierList
     '''
+    # print p[1], "''''''''''''''''''"
+    if len(p)==2:
+        p[0]=p[1]
+        return
     Derivations.append(p.slice)
-#TemplateInstance
+    #TemplateInstance
     #TemplateInstance . IdentifierList
 
 def p_StorageClasses(p):
@@ -350,17 +395,21 @@ def p_Initializer(p):
     '''Initializer : VoidInitializer
     		   | NonVoidInitializer
     '''
+    p[0]=p[1]
     Derivations.append(p.slice)
 
 def p_NonVoidInitializer(p):
     '''NonVoidInitializer : ExpInitializer
                           | ArrayInitializer
     '''
+
+    p[0]=p[1]
     Derivations.append(p.slice)
 
 def p_ExpInitializer(p):
     '''ExpInitializer : AssignExpression
     '''
+    p[0]=p[1]
     Derivations.append(p.slice)
 
 def p_ArrayInitializer(p):
@@ -500,6 +549,31 @@ def p_AssignExpression(p):
                          | ConditionalExpression EQ_LEFT AssignExpression
                          | ConditionalExpression EQ_RIGHT AssignExpression 
     '''
+    if(len(p)==2):
+        p[0] = p[1]
+        return
+    # newPlace="t_new2"
+    # p[0]={'place':newPlace, 'type':"TYPE_ERROR"}
+    # p[0]['place']=p[]
+    if p[2][0]=='=':
+        if p[1]['type']==p[3]['type']:
+            print '=',p[1]['place'],p[3]['place']
+            # p[1] = p[3]
+            p[0]=p[1]
+            # print p[1],p[3],p[2][0]
+            return
+        else:
+            print "Type mismatch "+p[1]['type']+" != "+p[3]['type']
+            sys.exit(0)
+    elif p[2][0]=='<' or p[2][0]=='>':
+        # print p[2][0]    
+        print p[2][0:2],p[1]['place'],p[1]['place'],p[3]['place']
+        return
+    else:
+        print p[2][0],p[1]['place'],p[1]['place'],p[3]['place']
+        return
+
+    
     Derivations.append(p.slice)  # add eq_power
 
 
@@ -507,36 +581,54 @@ def p_ConditionalExpression(p):
     '''ConditionalExpression : OrOrExpression
     			     | OrOrExpression QUESTION Expression COLON ConditionalExpression
     '''
+    if len(p)==2:
+        p[0]=p[1]
+        return
     Derivations.append(p.slice) 
 
 def p_OrOrExpression(p):
     '''OrOrExpression : AndAndExpression
     		      | OrOrExpression DOUBLE_PIPE AndAndExpression
     '''
+    if len(p)==2:
+        p[0]=p[1]
+        return
     Derivations.append(p.slice) 
 
 def p_AndAndExpression(p):
     '''AndAndExpression : OrExpression
     			| AndAndExpression DOUBLE_AMPERSAND OrExpression
     '''
+    if len(p)==2:
+        p[0]=p[1]
+        return
     Derivations.append(p.slice) 
 
 def p_OrExpression(p):
     '''OrExpression : XorExpression
     		    | OrExpression PIPE XorExpression
     '''
+    if len(p)==2:
+        p[0]=p[1]
+        return
     Derivations.append(p.slice) 
 
 def p_XorExpression(p):
     '''XorExpression : AndExpression
     		     | XorExpression CARET AndExpression
     '''
+    if len(p)==2:
+        p[0]=p[1]
+        return
     Derivations.append(p.slice) 
 
 def p_AndExpression(p):
     '''AndExpression : CmpExpression
     		     | AndExpression AMPERSAND CmpExpression
     '''
+    if len(p)==2:
+        p[0]=p[1]
+        return
     Derivations.append(p.slice) 
 
 def p_CmpExpression(p):
@@ -544,6 +636,9 @@ def p_CmpExpression(p):
     		     | EqualExpression
 		     | RelExpression
     '''
+    if len(p)==2:
+        p[0]=p[1]
+        return
     Derivations.append(p.slice) 
 
 def p_EqualExpression(p):
@@ -565,6 +660,9 @@ def p_ShiftExpression(p):
     			| ShiftExpression LEFT_SHIFT AddExpression
     			| ShiftExpression RIGHT_SHIFT AddExpression
     '''
+    if len(p)==2:
+        p[0]=p[1]
+        return
     Derivations.append(p.slice) 
 
 def p_AddExpression(p):
@@ -572,6 +670,41 @@ def p_AddExpression(p):
     		     | AddExpression PLUS MulExpression
     		     | AddExpression MINUS MulExpression
     '''
+    if len(p)==2 :
+        p[0] = p[1]
+        return
+    # print p.slice,p[1],"'''''''''''''''''''''''''"
+    newPlace = ST.get_temp()
+    p[0] = {
+        'place' : newPlace,
+        'type' : 'TYPE_ERROR'
+    }
+
+    # if p[1]['place'] in ST.table.keys() and p[3]['place'] in ST.table.keys():
+    if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+        print p[1],p[3],"TYPE_ERROR for p[1],p[3] ??"
+        return
+
+    if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
+        # p[3] =ResolveRHSArray(p[3])
+        # p[1] =ResolveRHSArray(p[1])
+        print p[2],newPlace,p[1]['place'],p[3]['place']
+        p[0]['type'] = 'INT'
+
+    else:
+        print("Error: integer value is needed")
+        sys.exit(0)
+        return
+    # # # elif p[1]['isconst']:
+    # # #     if p[3] not in ST.table.keys():
+
+    # # if p[1]['place'] in ST.table.keys():
+    # #     t1=ST.table[p[1]['place']]['datatype']
+    
+    # p[1]['type']    
+
+
+
     Derivations.append(p.slice)  # might add catexprssion
 def p_MulExpression(p):
     '''MulExpression : UnaryExpression
@@ -579,6 +712,28 @@ def p_MulExpression(p):
     		     | MulExpression DIV UnaryExpression
     		     | MulExpression MODULO UnaryExpression
     '''
+    if len(p)==2 :
+        p[0]=p[1]
+        return
+    # print p.slice, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+    if len(p)==2 :
+        p[0] = p[1]
+        return
+    newPlace = "t_new1"
+    p[0] = {
+        'place' : newPlace,
+        'type' : 'TYPE_ERROR'
+    }
+    if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+        return
+    if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
+        # p[3] =ResolveRHSArray(p[3])
+        # p[1] =ResolveRHSArray(p[1])
+        print p[2],newPlace,p[1]['place'],p[3]['place']
+        p[0]['type'] = 'INT'
+    else:
+        print("Error: integer value is needed")
+    
     Derivations.append(p.slice) 
 
 def p_UnaryExpression(p):
@@ -594,6 +749,9 @@ def p_UnaryExpression(p):
     		       | CastExpression
 		           | PowExpression
     '''
+    if len(p)==2 :
+        p[0]=p[1]
+        return
     Derivations.append(p.slice)     
 
 def p_ComplementExpression(p):
@@ -644,6 +802,8 @@ def p_CastExpression(p):
     		      | CAST LPAREN RPAREN UnaryExpression
                  
     '''
+    print p.slice
+
     Derivations.append(p.slice)     
 
 
@@ -651,7 +811,11 @@ def p_PowExpression(p):
     '''PowExpression : PostfixExpression
                      | PostfixExpression POWER UnaryExpression
     '''
-    Derivations.append(p.slice)     
+    
+    Derivations.append(p.slice)   
+    if len(p)==2 :
+        p[0]=p[1]
+        return  
 
 
 def p_PostfixExpression(p):
@@ -664,6 +828,9 @@ def p_PostfixExpression(p):
                          | BasicType LPAREN ArgumentList_opt RPAREN                                  
     '''
     Derivations.append(p.slice)    #add index expression, slice expression 
+    if len(p)==2 :
+        p[0]=p[1]
+        return
 
 def p_PrimaryExpression(p):
     ''' PrimaryExpression : IDENTIFIER
@@ -689,8 +856,41 @@ def p_PrimaryExpression(p):
                           | LPAREN Expression RPAREN 
                           | TypeidExpression                    
     '''
-    Derivations.append(p.slice) 
-    
+    Derivations.append(p.slice)
+    if(len(p)==2):
+        p[0] = {
+        'place' : 'undefined',
+        'type' : 'TYPE_ERROR'
+        }
+        
+        if (p.slice[1].type =='INUMBER'):
+            p[0]={
+                'type':'INT',
+                'place':p[1],
+                'isconst':True
+                }
+            return
+        if(p.slice[1].type =='DNUMBER'):
+            p[0]={
+                'type':'FLOAT', 
+                'place':p[1],
+                'isconst':True                
+            }
+            # print p[0],"poooooooooo"
+            return
+        if p[1] in ST.table.keys():
+            p[0]['place'] = ST.table[p[1]]['name']
+            p[0]['type'] = ST.table[p[1]]['datatype']
+        else:
+            print('Error : undefined variable '+p[1]+' is used.')
+            sys.exit(0)
+
+
+        # if 'isconst' not in p[0].keys() and p[1] not in ST.table.keys():
+        #     print p[1] + "Variable not defined"
+        #     sys.exit(0)
+        # p[0]=p[1]
+        
 def p_ArrayLiteral(p):
     '''ArrayLiteral : LBRACKET ArgumentList_opt RBRACKET
                     | IDENTIFIER LBRACKET INUMBER RBRACKET
@@ -866,6 +1066,14 @@ def p_IfStatement(p):
                     | IF LPAREN IfCondition RPAREN ThenStatement ELSE ElseStatement
     '''
     Derivations.append(p.slice)
+
+    if( len(p) == 6 ):
+        = p[3]['code']
+
+    elif( len(p) == 8 ):
+
+    else:
+        print("Invalid If Statement")
 
 def p_IfCondition(p):
     '''
@@ -1439,75 +1647,5 @@ a=open(sys.argv[1],'r')
 a=a.read()
 data = ""
 a+="\n"
-yacc.parse(a, debug=True)
-
-
-File=sys.argv[1]
-File= File.split('/')[-1][:-2] + ".html"
-sys.stdout = open(str(File), 'w')
-
-def ExpandTerminal():
-    for i in range( 0, len(RightOutput),1 ):
-        for j in range(0, len(RightOutput[i]),1 ):
-            if RightOutput[i][j] not in Listnonterminals:
-                RightOutput[i][j]= RightOutput[i][j].value
-
-def TransformRight( ):
-    CurrString=[]
-    CurrString.append( Rderivation[0][0] )
-
-    for index in range( 0, len(Rderivation),1 ):
-        CurrDerv= Rderivation[index]
-        CurrNonT= CurrDerv[0]
-
-        UpdatedString=[]
-        for iter_ in range( len(CurrString)-1,-1,-1 ):
-            if CurrNonT == CurrString[ iter_ ]:
-                
-                for i in range( 0, iter_, 1 ):
-                    UpdatedString.append( CurrString[i] )
-
-                for item in CurrDerv[1:]:
-                    UpdatedString.append( item )
-
-                for i in range( iter_+1, len(CurrString), 1 ):
-                    UpdatedString.append( CurrString[i] )
-                
-                RightOutput.append( UpdatedString )
-                break
-
-        CurrString= UpdatedString
-
-
-for i in range(len(Derivations)):
-    Listnonterminals.append(Derivations[i][0])
-
-for i in range(len(Derivations)-1,-1,-1):
-    Rderivation.append(Derivations[i])
-
-
-TransformRight()
-ExpandTerminal()
-
-print "<html> <head> <title> Derivation </title> </head> <body>"
-print "<h3> Rightmost Derivation of the code</h3>"
-print  "<b> "+ str(Rderivation[0][0])+"</b> "+ "<br>"
-
-for index in range(0,len(RightOutput)):
-    CurrString = RightOutput[index]
-    flag=0
-    
-    for index2 in range(0, len(CurrString),1 ):
-        if CurrString[index2] in Listnonterminals:
-            flag = index2
-    
-    for index2 in range(0, len(CurrString),1 ):
-        symbol= CurrString[ index2 ]
-        if index2==flag:
-            print "<b>" + str(symbol) + "</b>"
-        else:
-            print str(symbol)       
-    print "<br><br>"
-
-print "</body></html>"
-
+yacc.parse(a)#, debug=True)
+print ST.table
