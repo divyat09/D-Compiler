@@ -12,6 +12,9 @@ Rderivation=[]
 Derivations=[]
 RightOutput = []
 
+Gloabl_Switch_Val=0
+Gloabl_Switch_Label=0
+
 precedence = (
     ('nonassoc','CONST','IMMUTABLE','BOOL','SHORT','USHORT','INT','UINT','LONG','ULONG','CHAR','FLOAT','VOID'),
     ('nonassoc','EMPTY'),
@@ -177,7 +180,6 @@ def p_VarDeclarations(p):
     if p[3]['place'] in ST.table.keys():
         print "Redeclaration of variable not allowed",p[3]['place']
         sys.exit(0)
-
     if p[3]['type']!=p[2]:
         print "Type error " + p[2] +" != " + p[3]['type']
         sys.exit(0)
@@ -212,6 +214,7 @@ def p_DeclaratorInitializer(p):
     '''
     p[0]=p[1]
     if len(p)==4:
+        # print p[3]
         p[0]['type'] = p[3]['type']
         print '=',p[0]['place'],p[3]['place']
     return
@@ -256,7 +259,7 @@ def p_VarDeclarator(p):
     # print p[2]
     p[0] = {
         'place':p[2],
-        'type':"TYPE_ERROR"
+        'type':p[-1]
     }
     Derivations.append(p.slice)
 
@@ -757,6 +760,7 @@ def p_AddExpression(p):
 
 
     Derivations.append(p.slice)  # might add catexprssion
+
 def p_MulExpression(p):
     '''MulExpression : UnaryExpression
     		     | MulExpression TIMES UnaryExpression
@@ -770,7 +774,7 @@ def p_MulExpression(p):
     if len(p)==2 :
         p[0] = p[1]
         return
-    newPlace = "t_new1"
+    newPlace = ST.get_temp()
     p[0] = {
         'place' : newPlace,
         'type' : 'TYPE_ERROR'
@@ -890,7 +894,7 @@ def p_PostfixExpression(p):
                          | PostfixExpression PLUS_PLUS %prec POST_PLUS_PLUS
                          | PostfixExpression MINUS_MINUS %prec POST_MINUS_MINUS
                          | PostfixExpression LPAREN ArgumentList RPAREN
-                         | BasicType LPAREN ArgumentList_opt RPAREN                                  
+                         | BasicType LPAREN ArgumentList_opt RPAREN JmpMark                                  
     '''
     # print p.slice
     Derivations.append(p.slice)    #add index expression, slice expression 
@@ -909,7 +913,22 @@ def p_PostfixExpression(p):
         else:
             print "Variable "+p[1]['place']+" not defined "+p.slice
             return
+    p[0]=p[5]
+    # print p[5]    
 
+def p_JmpMark(p):
+    '''
+        JmpMark : empty
+    '''
+    # 'place': ST.table[p[-4]]['returnvar'],
+
+    if p[-4] in ST.table.keys():
+        # newPlace = ST.get_temp()
+        p[0]={
+            'place':p[-4],
+            'type':ST.table[p[-4]]['datatype'] 
+        }
+    print "call ", p[-4]
 
 def p_PrimaryExpression(p):
     ''' PrimaryExpression : IDENTIFIER
@@ -1170,10 +1189,10 @@ def p_ifmark2(p):
 def p_ifmark1(p):
     ''' ifmark1 : empty
     '''
-    label1 = ST.get_label()
-    label2 = ST.get_label()
-    print "ifgoto_eq", p[-2]['place'],'1', label2
-    p[0] = [label1,label2]
+    After_Label = ST.get_label()
+    Else_Label = ST.get_label()
+    print "ifgoto_eq", p[-2]['place'],'1', Else_Label
+    p[0] = [After_Label, Else_Label]
 
 
 def p_IfCondition(p):
@@ -1202,7 +1221,7 @@ def p_ElseStatement(p):
 
 def p_WhileStatement(p):
     '''
-        WhileStatement : WHILE LPAREN Expression  RPAREN while_M1 ScopeStatement while_M2
+        WhileStatement : WHILE LPAREN Expression RPAREN while_M1 ScopeStatement while_M2
     '''
     Derivations.append(p.slice)
 
@@ -1210,11 +1229,11 @@ def p_while_M1(p):
     '''
         while_M1 : 
     '''
-    label1 =  ST.get_label()
-    label2 =  ST.get_label()
-    print "label", label1
-    print "ifgoto_eq", , "0", label2
-    p[0]= [label1,label2]
+    Repeat_Label =  ST.get_label()
+    After_Label =  ST.get_label()
+    print "label", Repeat_Label
+    print "ifgoto_eq", p[-2]['place'], "0", After_Label
+    p[0]= [Repeat_Label, After_Label]
     
 def p_while_M2(p):
     '''
@@ -1233,17 +1252,15 @@ def p_Dowhile_M1(p):
     '''
         Dowhile_M1 : empty
     '''
-    label1= ST.get_label()
-    label2= ST.get_label()
-    print "jmp", label1
-    print "label", label2
+    Repeat_Label= ST.get_label()
+    print "label", Repeat_Label
+    p[0]=[ Repeat_Label ]
 
 def p_Dowhile_M2(p):
     '''
         Dowhile_M2 : empty
     '''
-    print "label", label1
-    print "ifgoto_eq", , "0", label2
+    print "ifgoto_eq", p[-2]['place'], "0", p[-6][0]
 
 def p_ForStatement(p):
     '''
@@ -1251,6 +1268,7 @@ def p_ForStatement(p):
     '''
     # print p.slice
     Derivations.append(p.slice)
+
 def p_for_M1(p):
     '''
         for_M1 :
@@ -1264,6 +1282,7 @@ def p_for_M1(p):
         print "label", label1
     p[0]=[label1,label2,label3]
     Derivations.append(p.slice)
+
 def p_for_M2(p):
     '''
         for_M2 :
@@ -1402,15 +1421,42 @@ def p_ForeachRangeStatement(p):
 
 def p_SwitchStatement(p):
     '''
-        SwitchStatement : SWITCH LPAREN Expression RPAREN ScopeStatement
+        SwitchStatement : SWITCH LPAREN Expression RPAREN Switch_Mark1 ScopeStatement Switch_Mark2
     '''
     Derivations.append(p.slice)
 
+def p_Switch_Mark1(p):
+    '''
+        Switch_Mark1 : empty
+    '''
+    Gloabl_Switch_Val= p[-2]['place']
+    Gloabl_Switch_Label= ST.get_label()  
+
+def p_Switch_Mark2(p):
+    '''
+        Switch_Mark2 : empty
+    '''
+    print "label ", Gloabl_Switch_Label
+
 def p_CaseStatement(p):
     '''
-        CaseStatement : CASE ArgumentList COLON ScopeStatementList
+        CaseStatement : CASE ArgumentList Case_Mark_1 COLON ScopeStatementList Case_Mark_2
     '''
-    Derivations.append(p.slice)
+
+def p_Case_Mark_1(p):
+    '''
+        Case_Mark_1 : empty
+    '''
+    Execute_Label= ST.get_label()
+    print "ifgoto_eq", Gloabl_Switch_Val, p[-1]['place'], Execute_Label
+
+
+def p_Case_Mark_2(p):
+    '''
+        Case_Mark_2 : empty
+    '''
+    print ""
+    print "goto ",
 
 def p_CaseRangeStatement(p):
     '''
@@ -1475,6 +1521,7 @@ def p_Expression_opt(p):
         Expression_opt : Expression
                        | empty
     '''
+    p[0] = p[1]
     Derivations.append(p.slice)
 
 def p_ContinueStatement(p):
@@ -1493,6 +1540,9 @@ def p_ReturnStatement(p):
     '''
         ReturnStatement : RETURN Expression_opt SEMICOLON
     '''
+    print 'ret',p[2]['place']
+    
+
     Derivations.append(p.slice)
 
 def p_GotoStatement(p):
@@ -1682,11 +1732,12 @@ def p_AnonymousEnumMember(p):
     Derivations.append(p.slice)
     
 def p_FuncDeclaration(p):
-    '''FuncDeclaration : StorageClasses_opt BasicType FuncDeclarator FunctionBody
+    '''FuncDeclaration  : StorageClasses_opt BasicType FuncDeclarator FunctionBody
                         | StorageClasses_opt BasicType FuncDeclarator SEMICOLON
     		            | AutoFuncDeclaration
     '''
     Derivations.append(p.slice)
+
 
 def p_AutoFuncDeclaration(p):
     '''AutoFuncDeclaration : StorageClasses IDENTIFIER FuncDeclaratorSuffix FunctionBody
@@ -1697,6 +1748,12 @@ def p_FuncDeclarator(p):
     '''FuncDeclarator : BasicType2_opt IDENTIFIER FuncDeclaratorSuffix
     '''
     Derivations.append(p.slice)
+
+    FuncLabel= p[2]
+    ST.addfunc(FuncLabel,"function",p[-1])
+    print "label ", FuncLabel
+    p[0] = p[2]
+
 
 def p_FuncDeclaratorSuffix(p):
     '''FuncDeclaratorSuffix : Parameters MemberFunctionAttributes_opt

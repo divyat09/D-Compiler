@@ -22,3 +22,5 @@ class SymbolTable:
 		else:
 			self.table[varname]={'name':varname,'type':'Variable','datatype':datatype,'scope':None}
 
+	def addfunc(self,funcname,_type,datatype):
+		self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'scope':None}
