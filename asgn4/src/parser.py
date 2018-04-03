@@ -1223,11 +1223,28 @@ def p_while_M2(p):
     '''
     print "jmp", p[-2][0]
     print "label", p[-2][1]
+
 def p_DoStatement(p):
     '''
-        DoStatement : DO ScopeStatement WHILE LPAREN Expression  RPAREN 
+        DoStatement : DO Dowhile_M1 ScopeStatement WHILE LPAREN Expression  RPAREN Dowhile_M2 
     '''
     Derivations.append(p.slice)
+
+def p_Dowhile_M1(p):
+    '''
+        Dowhile_M1 : empty
+    '''
+    label1= ST.get_label()
+    label2= ST.get_label()
+    print "jmp", label1
+    print "label", label2
+
+def p_Dowhile_M2(p):
+    '''
+        Dowhile_M2 : empty
+    '''
+    print "label", label1
+    print "ifgoto_eq", , "0", label2
 
 def p_ForStatement(p):
     '''
