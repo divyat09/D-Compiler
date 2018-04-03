@@ -178,15 +178,19 @@ def p_VarDeclarations(p):
         print "Redeclaration of variable not allowed",p[3]['place']
         sys.exit(0)
 
+    if p[3]['type']!=p[2]:
+        print "Type error " + p[2] +" != " + p[3]['type']
+        sys.exit(0)
+
     ST.addvar(p[3]['place'],p[2])
 
     # print ST.table[p[3]['place']], "FFFFFFFFFFFFFFFFFFFFFFFFFFFFff"
     
     # print p[3]
-    if p[2]!=ST.table[p[3]['place']]['datatype']:
-        print p[2],p[3]['type'],"error type mismatch"
-        sys.exit(0)
-        return
+    # if p[2]!=ST.table[p[3]['place']]['datatype']:
+    #     print p[2],p[3]['type'],"error type mismatch"
+    #     sys.exit(0)
+    #     return
     # p[0] = {'type' : p[2]}
 
     Derivations.append(p.slice)
@@ -527,12 +531,19 @@ def p_VisibilityAttribute(p):
 def p_Expression(p):
     ''' Expression : CommaExpression
     '''
+    # print p[1],"::::::::::",p.slice
+    p[0]=p[1]
+    # print ";;;;;;;;;",p[0],"''''''''''''''"
     Derivations.append(p.slice) 
 
 def p_CommaExpression(p):
     '''CommaExpression : AssignExpression
                        | AssignExpression COMMA CommaExpression
     '''
+    if len(p)==2:
+        p[0]=p[1]
+        # print p[1]
+        return
     Derivations.append(p.slice) 
 
 def p_AssignExpression(p):
@@ -593,6 +604,15 @@ def p_OrOrExpression(p):
     if len(p)==2:
         p[0]=p[1]
         return
+    else:    
+        newPlace = ST.get_temp()
+        p[0]={
+            'place':newPlace,
+            'type':'undefined'
+        }
+        print p[2][0],p[1]['place'],p[3]['place']
+        p[0]['type'] = p[1]['type']
+        return
     Derivations.append(p.slice) 
 
 def p_AndAndExpression(p):
@@ -601,6 +621,15 @@ def p_AndAndExpression(p):
     '''
     if len(p)==2:
         p[0]=p[1]
+        return
+    else:    
+        newPlace = ST.get_temp()
+        p[0]={
+            'place':newPlace,
+            'type':'undefined'
+        }
+        print p[2][0],newPlace, p[1]['place'],p[3]['place']
+        p[0]['type'] = p[1]['type']
         return
     Derivations.append(p.slice) 
 
@@ -653,6 +682,28 @@ def p_RelExpression(p):
                      | ShiftExpression GREATER ShiftExpression
                      | ShiftExpression LESS_EQ ShiftExpression
     '''
+    newPlace = ST.get_temp()
+    p[0] = {
+        'place' : newPlace,
+        'type' : 'TYPE_ERROR'
+    }
+
+    # if p[1]['place'] in ST.table.keys() and p[3]['place'] in ST.table.keys():
+    if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+        print p[1],p[3],"TYPE_ERROR for p[1],p[3] ??"
+        return
+
+    if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
+        # p[3] =ResolveRHSArray(p[3])
+        # p[1] =ResolveRHSArray(p[1])
+        print p[2],newPlace,p[1]['place'],p[3]['place']
+        p[0]['type'] = 'INT'
+
+    else:
+        print("Error: integer value is needed")
+        sys.exit(0)
+        return
+    
     Derivations.append(p.slice) 
 
 def p_ShiftExpression(p):
@@ -752,6 +803,20 @@ def p_UnaryExpression(p):
     if len(p)==2 :
         p[0]=p[1]
         return
+    if len(p)==3:
+        if p[1]=='++' or p[1]=='--':
+            if p[2]['place'] in ST.table.keys():
+                if p[2]['type'] == "INT":
+                    print p[1][0],p[2]['place'],p[2]['place'],1
+                    p[0] = p[2]
+                    return
+                else:
+                    "Postfix operations possible only with integer variables"
+            else:
+                print "Variable "+p[2]['place']+" not defined "+p.slice
+                return
+
+    print p.slice,len(p)
     Derivations.append(p.slice)     
 
 def p_ComplementExpression(p):
@@ -827,10 +892,24 @@ def p_PostfixExpression(p):
                          | PostfixExpression LPAREN ArgumentList RPAREN
                          | BasicType LPAREN ArgumentList_opt RPAREN                                  
     '''
+    # print p.slice
     Derivations.append(p.slice)    #add index expression, slice expression 
     if len(p)==2 :
         p[0]=p[1]
         return
+
+    if len(p)==3:
+        if p[1]['place'] in ST.table.keys():
+            if p[1]['type'] == "INT":
+                print p[2][0],p[1]['place'],p[1]['place'],1
+                p[0] = p[1]
+                return
+            else:
+                "Postfix operations possible only with integer variables"
+        else:
+            print "Variable "+p[1]['place']+" not defined "+p.slice
+            return
+
 
 def p_PrimaryExpression(p):
     ''' PrimaryExpression : IDENTIFIER
@@ -1062,10 +1141,41 @@ def p_DeclarationStatement(p):
 
 def p_IfStatement(p):
     '''
-        IfStatement : IF LPAREN IfCondition RPAREN ThenStatement
-                    | IF LPAREN IfCondition RPAREN ThenStatement ELSE ElseStatement
+        IfStatement : IF LPAREN IfCondition RPAREN ifmark1 ThenStatement ifmark2 
+                    | IF LPAREN IfCondition RPAREN ifmark1 ThenStatement ifmark3 ELSE ElseStatement ifmark4
     '''
+    # print p.slice
+    
     Derivations.append(p.slice)
+
+def p_ifmark4(p):
+    '''
+        ifmark4 : empty 
+    '''
+    print "label",p[-5][0]
+
+def p_ifmark3(p):
+    '''
+        ifmark3 : empty 
+    '''
+    print "goto",p[-2][0]    
+    print "label",p[-2][1]
+
+def p_ifmark2(p):
+    '''
+        ifmark2 : empty 
+    '''
+    print "label",p[-2][1]
+
+def p_ifmark1(p):
+    ''' ifmark1 : empty
+    '''
+    label1 = ST.get_label()
+    label2 = ST.get_label()
+    print "ifgoto_eq", p[-2]['place'],'1', label2
+    p[0] = [label1,label2]
+
+
 
 def p_IfCondition(p):
     '''
@@ -1073,6 +1183,10 @@ def p_IfCondition(p):
                     | AUTO IDENTIFIER ASSIGN Expression
                     | BasicType Declarator ASSIGN Expression                    
     '''
+    
+    if len(p)==2:
+        # print p[1]
+        p[0] = p[1]
     Derivations.append(p.slice)
 
 def p_ThenStatement(p):
@@ -1089,10 +1203,26 @@ def p_ElseStatement(p):
 
 def p_WhileStatement(p):
     '''
-        WhileStatement : WHILE LPAREN Expression  RPAREN ScopeStatement 
+        WhileStatement : WHILE LPAREN Expression  RPAREN while_M1 ScopeStatement while_M2
     '''
     Derivations.append(p.slice)
 
+def p_while_M1(p):
+    '''
+        while_M1 : 
+    '''
+    label1 =  ST.get_label()
+    label2 =  ST.get_label()
+    print "label", label1
+    print "ifgoto_eq", , "0", label2
+    p[0]= [label1,label2]
+    
+def p_while_M2(p):
+    '''
+        while_M2 : 
+    '''
+    print "jmp", p[-2][0]
+    print "label", p[-2][1]
 def p_DoStatement(p):
     '''
         DoStatement : DO ScopeStatement WHILE LPAREN Expression  RPAREN 
@@ -1101,9 +1231,36 @@ def p_DoStatement(p):
 
 def p_ForStatement(p):
     '''
-        ForStatement : FOR LPAREN Initialize Test_opt SEMICOLON Increment_opt RPAREN ScopeStatement 
+        ForStatement : FOR LPAREN Initialize Test_opt SEMICOLON for_M1 Increment_opt RPAREN for_M2 ScopeStatement for_M3
     '''
+    # print p.slice
     Derivations.append(p.slice)
+def p_for_M1(p):
+    '''
+        for_M1 :
+    '''
+    label1 = ST.get_label()
+    label2 = ST.get_label()
+    label3 = ST.get_label()
+    if 'place' in p[-2].keys():
+        print "ifgoto_eq", p[-2]['place'] ,'0', label3
+        print "goto", label2
+        print "label", label1
+    p[0]=[label1,label2,label3]
+    Derivations.append(p.slice)
+def p_for_M2(p):
+    '''
+        for_M2 :
+    '''
+    print "ifgoto_eq", p[-5]['place'] ,'0', p[-3][2]
+    print "label", p[-3][1]
+
+def p_for_M3(p):
+    '''
+        for_M3 :
+    '''
+    print "jmp", p[-5][0]
+    print "label", p[-5][2]
 
 def p_Initialize(p):
     '''
@@ -1116,6 +1273,7 @@ def p_Test(p):
     ''' 
         Test : Expression
     '''
+    p[0]=p[1]
     Derivations.append(p.slice)
 
 def p_Test_opt(p):
@@ -1123,6 +1281,7 @@ def p_Test_opt(p):
         Test_opt : Test
                  | empty
     '''
+    p[0]=p[1]
     Derivations.append(p.slice)
 
 
@@ -1640,4 +1799,4 @@ a=a.read()
 data = ""
 a+="\n"
 yacc.parse(a)#, debug=True)
-print ST.table
+# print ST.table

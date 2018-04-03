@@ -1,13 +1,17 @@
 int main(){
   int i=0;
-  int x=3.0;
+  int x=3;
   x=i+2;
   if(i<2)
   {
 	i=i+1;
+	if(x<0)
+		x=1;
   }
-  else
-  {
-	i=i-1;
-  }  
+  else{
+	i=0;
+  	x=i+2;
+  }
+  x=0;
+
 }
