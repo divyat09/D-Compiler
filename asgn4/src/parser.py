@@ -11,6 +11,8 @@ Listnonterminals=[]
 Rderivation=[]
 Derivations=[]
 RightOutput = []
+s_cond=0
+s_label=0
 
 precedence = (
     ('nonassoc','CONST','IMMUTABLE','BOOL','SHORT','USHORT','INT','UINT','LONG','ULONG','CHAR','FLOAT','VOID'),
@@ -173,7 +175,6 @@ def p_VarDeclarations(p):
     # print p[2],p[3]['place']
     # print p.slice,"''''''''''''"
     # print p[2],p[3]['type']
-
     if p[3]['place'] in ST.table.keys():
         print "Redeclaration of variable not allowed",p[3]['place']
         sys.exit(0)
@@ -253,10 +254,9 @@ def p_Declarator(p):
 def p_VarDeclarator(p):
     '''VarDeclarator : BasicType2_opt IDENTIFIER
     '''
-    # print p[2]
     p[0] = {
         'place':p[2],
-        'type':"TYPE_ERROR"
+        'type':p[-1]
     }
     Derivations.append(p.slice)
 
@@ -266,6 +266,14 @@ def p_AltDeclarator(p):
                  | BasicType2_opt LPAREN AltDeclaratorX RPAREN AltFuncDeclaratorSuffix
     		     | BasicType2_opt LPAREN AltDeclaratorX RPAREN AltDeclaratorSuffixes
     '''
+    # print p[-1]
+    if len(p)==4:
+        p[0]={
+            'place':p[2],
+            'isarray':True,
+            'type':p[-1]
+        }
+        # print p[0]
     Derivations.append(p.slice) #| BasicType2_opt LPAREN AltDeclaratorX RPAREN AltFuncDeclaratorSuffix
 
 
@@ -280,12 +288,16 @@ def p_AltDeclaratorSuffixes(p):
     '''AltDeclaratorSuffixes : AltDeclaratorSuffix
     			             | AltDeclaratorSuffix AltDeclaratorSuffixes
     '''
+    if len(p)==2:
+        p[0] = p[1]
+        return
     Derivations.append(p.slice)
 
 def p_AltDeclaratorSuffixes_opt(p):
     '''AltDeclaratorSuffixes_opt : AltDeclaratorSuffixes 
 				 | empty
     '''
+    p[0]=p[1]
     Derivations.append(p.slice)
 
 def p_AltDeclaratorSuffix(p):
@@ -293,6 +305,10 @@ def p_AltDeclaratorSuffix(p):
     			   | LBRACKET AssignExpression RBRACKET
     			   | LBRACKET Type RBRACKET
     '''
+    if len(p)==4:
+        p[0]={}
+        p[0]['index'] = p[2]
+        return
     Derivations.append(p.slice)
 
 def p_AltFuncDeclaratorSuffix(p):
@@ -860,6 +876,9 @@ def p_ArgumentList(p):
     		    | AssignExpression COMMA
     		    | AssignExpression COMMA ArgumentList
     '''
+    if len(p)==2:
+        print p[1], ':::::::::::'
+        p[0]=p[1]
     Derivations.append(p.slice)  
 
 def p_CastExpression(p):
@@ -957,6 +976,29 @@ def p_PrimaryExpression(p):
             }
             # print p[0],"poooooooooo"
             return
+        # if str(p.slice[1])=="ArrayLiteral"
+
+        if (p.slice[1].type =='CHAR'):
+            p[0]={
+                'type':'CHAR',
+                'place':p[1],
+                'isconst':True
+                }
+            return
+
+        if (p.slice[1].type =='LIT_STRPlus'):
+            p[0]={
+                'type':'CHAR',
+                'place':p[1],
+                'isconst':True
+                }
+            print "in here"
+            return
+
+        if type(p[1])==type({}):
+            p[0]['place'] = p[1]['place']
+            p[0]['type'] = p[1]['type']
+            return
         if p[1] in ST.table.keys():
             p[0]['place'] = ST.table[p[1]]['name']
             p[0]['type'] = ST.table[p[1]]['datatype']
@@ -975,6 +1017,23 @@ def p_ArrayLiteral(p):
                     | IDENTIFIER LBRACKET INUMBER RBRACKET
                     | IDENTIFIER LBRACKET AssignExpression RBRACKET
     '''
+    if len(p)==5:
+        newPlace = ST.get_temp()
+        if p[1] in ST.table.keys():
+            p[0]={
+                'place':newPlace,
+                'type':ST.table[p[1]]['datatype']
+            }
+            # print '*',newPlace,p[3],sizeof(p[0]['type'])
+            if type(p[3])==type({}):
+                print '*',newPlace,p[3]['place'],'4'
+                print '+',newPlace,newPlace,p[1]
+                return
+            else:
+                print '*',newPlace,p[3],'4'
+                print '+',newPlace,newPlace,p[1]
+                return
+    # print p.slice,";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
     Derivations.append(p.slice)
 
 def p_FunctionLiteral(p):
@@ -1214,7 +1273,7 @@ def p_while_M1(p):
     label1 =  ST.get_label()
     label2 =  ST.get_label()
     print "label", label1
-    print "ifgoto_eq", , "0", label2
+    print "ifgoto_eq",p[-2]['place'] , "0", label2
     p[0]= [label1,label2]
     
 def p_while_M2(p):
@@ -1244,7 +1303,7 @@ def p_Dowhile_M2(p):
         Dowhile_M2 : empty
     '''
     print "label", label1
-    print "ifgoto_eq", , "0", label2
+    print "ifgoto_eq","" , "0", label2
 
 def p_ForStatement(p):
     '''
@@ -1403,15 +1462,53 @@ def p_ForeachRangeStatement(p):
 
 def p_SwitchStatement(p):
     '''
-        SwitchStatement : SWITCH LPAREN Expression RPAREN ScopeStatement
+        SwitchStatement : SWITCH LPAREN Expression RPAREN switch_M1 ScopeStatement switch_M2
     '''
     Derivations.append(p.slice)
+def p_switch_M1(p):
+    '''
+        switch_M1 : empty
+    '''
+    global s_cond
+    global s_label
+
+    s_cond = p[-2]['place']
+    s_label = ST.get_label()
+    print s_cond,s_label, 'mmmmmmmmmmmmmm'
+
+def p_switch_M2(p):
+    '''
+        switch_M2 : empty
+    '''
+    global s_label
+    print "label", s_label
+
 
 def p_CaseStatement(p):
     '''
-        CaseStatement : CASE ArgumentList COLON ScopeStatementList
+        CaseStatement : CASE ArgumentList COLON c_m1 ScopeStatementList c_m2
     '''
+    # print p.slice
     Derivations.append(p.slice)
+
+def p_c_m1(p):
+    '''
+        c_m1 : empty
+    ''' 
+    global s_cond
+    global s_label
+    label = ST.get_label()
+    print p[-1],p[-2],'pooooo'
+    print "ifgoto_neq", s_cond, p[-2]['place'], label
+    p[0] = [label]
+
+def p_c_m2(p):
+    '''
+        c_m2 : empty
+    ''' 
+    global s_l
+    print "goto", s_label
+    print "label" , p[-2][0]
 
 def p_CaseRangeStatement(p):
     '''
@@ -1436,6 +1533,7 @@ def p_DefaultStatement(p):
         DefaultStatement : DEFAULT COLON ScopeStatementList
     '''
     Derivations.append(p.slice)
+
 
 def p_ScopeStatementList(p):
     '''
