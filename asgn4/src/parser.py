@@ -125,10 +125,6 @@ def p_Import(p):
     Derivations.append(p.slice)
 
 
-
-
-
-
 def p_ImportBindings(p):
     '''
         ImportBindings : Import COLON ImportBindList
@@ -178,15 +174,7 @@ def p_VarDeclarations(p):
     # print p[2],p[3]['place']
     # print p.slice,"''''''''''''"
     # print p[2],p[3]['type']
-    if p[3]['place'] in ST.table.keys():
-        print "Redeclaration of variable not allowed",p[3]['place']
-        sys.exit(0)
-    if p[3]['type']!=p[2]:
-        print "Type error " + p[2] +" != " + p[3]['type']
-        sys.exit(0)
-
-    ST.addvar(p[3]['place'],p[2])
-
+    
     # print ST.table[p[3]['place']], "FFFFFFFFFFFFFFFFFFFFFFFFFFFFff"
     
     # print p[3]
@@ -202,10 +190,16 @@ def p_Declarators(p):
     '''Declarators : DeclaratorInitializer
     		   | DeclaratorInitializer COMMA DeclaratorIdentifierList
     '''
-    if len(p)==2:
-        p[0]=p[1]
-        return
+    # print p[0],"LLLLLLLLLLLLLLLL",p.slice
+
+    return
+
     Derivations.append(p.slice)
+
+# def p_declarator_mark(p):
+#     '''declarator_mark : empty
+#     '''
+
 
 def p_DeclaratorInitializer(p):
     '''DeclaratorInitializer : VarDeclarator
@@ -213,31 +207,79 @@ def p_DeclaratorInitializer(p):
     			     | AltDeclarator ASSIGN Initializer
     			     | AltDeclarator 
     '''
+    # print p[-1],"HHHHHHHHHIIIIIIIIIIIIII",p.slice
     p[0]=p[1]
+    # print p.slice
     if len(p)==4:
-        # print p[3]
+        # print p[0],":::::::::::"
         p[0]['type'] = p[3]['type']
         print '=',p[0]['place'],p[3]['place']
-    return
+        if p[1]['place'] in ST.table.keys():
+            print "Redeclaration of variable not allowed",p[3]['place']
+            sys.exit(0)
+        if p[1]['type']!=p[3]['type']:
+            print "Type error " + p[3]['type'] +" != " + p[1]['type']
+            sys.exit(0)
+    
+        ST.addvar(p[0]['place'],p[0]['type'])
+        
+        return
+    if len(p)==2:
+        if p[0]['place'] in ST.table.keys():
+            print "Redeclaration of variable not allowed",p[3]['place']
+            sys.exit(0)
+    
+    ST.addvar(p[0]['place'],p[0]['type'])
+
     Derivations.append(p.slice) # rem template parameters from 2
 
 def p_DeclaratorIdentifierList(p):	
-    ''' DeclaratorIdentifierList : DeclaratorIdentifier
-    				 | DeclaratorIdentifier COMMA DeclaratorIdentifierList
+    ''' DeclaratorIdentifierList : mark1 DeclaratorIdentifier
+    				 | mark1 DeclaratorIdentifier COMMA DeclaratorIdentifierList
     '''
+    # print p.slice
+    # if len(p)==2:
+    #     p[0]=p[1]
+    
+    # if len(p)==4:
+    #     p[3]=[p[-3]]
+        
     Derivations.append(p.slice)
+
+def p_mark1(p):
+    ''' mark1 : empty
+    '''
+    p[0]=p[-3]
+    # print p[0],"MARK!"
+
 
 def p_DeclaratorIdentifier(p):
     ''' DeclaratorIdentifier : VarDeclaratorIdentifier
     			     | AltDeclaratorIdentifier
     '''
+    # print p[-1],"MARKED"
+    p[0]=p[1]
     Derivations.append(p.slice)
 
 def p_VarDeclaratorIdentifier(p):
     ''' VarDeclaratorIdentifier : IDENTIFIER
                                 | IDENTIFIER ASSIGN Initializer
     '''
+    # print p[-1], "MARKED AGAIN"
     Derivations.append(p.slice) # rem template parameters from 2
+    if len(p)==2:
+        p[0]=p[1]
+        if p[1] in ST.table.keys():
+            print "Redeclaration of variable not allowed",p[3]['place']
+            sys.exit(0)
+        else:
+            ST.addvar(p[1],p[-1])
+        return
+    else:
+        print '=',p[1],p[3]['place']
+        if p[3]['type'] == p[-1]:
+            ST.addvar(p[1],p[-1])
+    # print p[-3],"HHHHHHHHHHHHHH"
 
 def p_AltDeclaratorIdentifier(p):
     ''' AltDeclaratorIdentifier : BasicType2 IDENTIFIER AltDeclaratorSuffixes_opt
@@ -257,6 +299,7 @@ def p_Declarator(p):
 def p_VarDeclarator(p):
     '''VarDeclarator : BasicType2_opt IDENTIFIER
     '''
+    # print p.slice
     p[0] = {
         'place':p[2],
         'type':p[-1]
@@ -881,7 +924,7 @@ def p_ArgumentList(p):
     		    | AssignExpression COMMA ArgumentList
     '''
     if len(p)==2:
-        print p[1], ':::::::::::'
+        # print p[1], ':::::::::::'
         p[0]=p[1]
     Derivations.append(p.slice)  
 
@@ -1487,12 +1530,13 @@ def p_switch_M1(p):
     '''
         switch_M1 : empty
     '''
+    # print p[-2],"::::::::"
     global s_cond
     global s_label
 
     s_cond = p[-2]['place']
     s_label = ST.get_label()
-    print s_cond,s_label, 'mmmmmmmmmmmmmm'
+    print s_cond,s_label#, 'mmmmmmmmmmmmmm'
 
 def p_switch_M2(p):
     '''
@@ -1529,7 +1573,7 @@ def p_c_m1(p):
     global s_cond
     global s_label
     label = ST.get_label()
-    print p[-1],p[-2],'pooooo'
+    # print p[-1],p[-2],'pooooo'
     print "ifgoto_neq", s_cond, p[-2]['place'], label
     p[0] = [label]
 
@@ -1956,4 +2000,5 @@ a=a.read()
 data = ""
 a+="\n"
 yacc.parse(a)#, debug=True)
-# print ST.table
+for i in ST.table:
+    print ST.table[i]

@@ -1,6 +1,7 @@
 int main(){
 	int a,b,c;
 	int D[3];
+	int d;
 	b=5;
 	c=5;
 	b=b/c;
