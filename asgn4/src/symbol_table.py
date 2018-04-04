@@ -16,9 +16,11 @@ class SymbolTable:
 		return "label"+str(self.label_no)
 		
 	def addvar(self,varname,datatype):
-
 		if '[' in varname:
 			varname= varname.split('[')[0]
 			self.table[varname]= {'name': varname,'type':'Array','scope':None}
 		else:
 			self.table[varname]={'name':varname,'type':'Variable','datatype':datatype,'scope':None}
+
+	def addfunc(self,funcname,_type,datatype):
+		self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'scope':None}
