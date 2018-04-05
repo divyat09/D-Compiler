@@ -10,7 +10,14 @@ This directory contains the python code used to generate Assembly Code form Inte
 
 2 parser.py
 
-	Generates LALR(1) parser for the Grammar using ply's syntactic analysis tool ply.yacc. Although the grammar is not yaccable we have made 	sincere attempts to make a sensible parser
+	Generates LALR(1) parser for the Grammar using ply's syntactic analysis tool ply.yacc. Although the grammar is not yaccable we have made sincere attempts to make a sensible parser, there are some shift-reduce, reduce-reduce conflicts but the preferred rules and choices in case of conflict are correct. So, in terms of correctness, the parser works fine. 
+
+3 symbol_table.py
+
+4 TAC.py
+	
+	Stores the three address code for each statement in the program in the form of a list. It has a method that iterates over the list of three
+	address codes and outputs the Intermediate Code for the source code.
 
 ###### /test directory 
 This directory contains the tests cases, txt files containing the Intermediate Representation of the program.
@@ -44,10 +51,8 @@ TestCase13: while.d : Tests while loop and dowhile implementation
 TestCase14: keywords.d : Tests implementation of special keywords in our grammar
 ### Execution
 
-1 cd to the base directory: asgn3
+1 cd to the base directory: asgn4
 
 2 Run the command: make
 
-3 Run test cases: bin/parser test/test1.d
-
-4 firefox test1.html
+3 Run test cases: bin/irgen test/test1.d

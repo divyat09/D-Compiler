@@ -1536,14 +1536,15 @@ def p_switch_M1(p):
 
     s_cond = p[-2]['place']
     s_label = ST.get_label()
-    print s_cond,s_label#, 'mmmmmmmmmmmmmm'
+    print s_cond,s_label
 
 def p_switch_M2(p):
     '''
         switch_M2 : empty
     '''
     global s_label
-    print "label", s_label
+    CreateTAC("label", s_label, None, None)
+    # print "label", s_label
 
 
 def p_Switch_Mark1(p):
@@ -1557,7 +1558,8 @@ def p_Switch_Mark2(p):
     '''
         Switch_Mark2 : empty
     '''
-    print "label ", Gloabl_Switch_Label
+    CreateTAC( "label", Gloabl_Switch_Label, None, None )
+    # print "label ", Gloabl_Switch_Label
 
 def p_CaseStatement(p):
     '''
@@ -1573,8 +1575,8 @@ def p_c_m1(p):
     global s_cond
     global s_label
     label = ST.get_label()
-    # print p[-1],p[-2],'pooooo'
-    print "ifgoto_neq", s_cond, p[-2]['place'], label
+    CreateTAC( "ifgoto_neq", label , s_cond, p[-2]['place']  )
+    # print "ifgoto_neq", s_cond, p[-2]['place'], label
     p[0] = [label]
 
 def p_c_m2(p):
@@ -1582,8 +1584,10 @@ def p_c_m2(p):
         c_m2 : empty
     ''' 
     global s_l
-    print "goto", s_label
-    print "label" , p[-2][0]
+    CreateTAC( "jmp", s_label, None, None )
+    CreateTAC( "label", p[-2][0], None, None )
+    # print "jmp", s_label
+    # print "label" , p[-2][0]
 
 def p_CaseRangeStatement(p):
     '''
@@ -1668,8 +1672,8 @@ def p_ReturnStatement(p):
     '''
         ReturnStatement : RETURN Expression_opt SEMICOLON
     '''
-    print 'ret',p[2]['place']
-    
+    # print 'ret',p[2]['place']
+    CreateTAC( 'ret', p[2]['place'], None, None )    
 
     Derivations.append(p.slice)
 

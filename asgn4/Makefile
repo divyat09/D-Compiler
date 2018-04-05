@@ -3,8 +3,10 @@ all:    binary
 binary: 
 	mkdir -p bin/
 	cp src/lexer.py bin/lexer.py
-	cp src/parser.py bin/parser
-	sudo chmod +x bin/parser
+	cp src/symbol_table.py bin/symbol_table.py
+	cp src/TAC.py bin/TAC.py
+	cp src/parser bin/irgen
+	sudo chmod +x bin/irgen
 	sudo chmod +x bin
 clean:
 	find . -type f -name '*.swp' -delete; \
