@@ -1273,27 +1273,33 @@ def p_ifmark4(p):
     '''
         ifmark4 : empty 
     '''
-    print "label",p[-5][0]
+    CreateTAC( "label", p[-5][0], None, None  )
+    # print "label",p[-5][0]
 
 def p_ifmark3(p):
     '''
         ifmark3 : empty 
     '''
-    print "goto",p[-2][0]    
-    print "label",p[-2][1]
+    CreateTAC("jmp", p[-2][0] )
+    CreateTAC("label", p[-2][1] )
+    # print "jmp",p[-2][0]    
+    # print "label",p[-2][1]
 
 def p_ifmark2(p):
     '''
         ifmark2 : empty 
     '''
-    print "label",p[-2][1]
+    CreateTAC( "label", p[-2][1] )
+    # print "label",p[-2][1]
 
 def p_ifmark1(p):
     ''' ifmark1 : empty
     '''
     After_Label = ST.get_label()
     Else_Label = ST.get_label()
-    print "ifgoto_eq", p[-2]['place'],'1', Else_Label
+
+    CreateTAC( "ifgoto_eq", Else_Label, p[-2]['place'], 1 )
+    # print "ifgoto_eq", p[-2]['place'],'1', Else_Label
     p[0] = [After_Label, Else_Label]
 
 
@@ -1333,16 +1339,21 @@ def p_while_M1(p):
     '''
     Repeat_Label =  ST.get_label()
     After_Label =  ST.get_label()
-    print "label", Repeat_Label
-    print "ifgoto_eq", p[-2]['place'], "0", After_Label
+
+    CreateTAC( "label", Repeat_Label )
+    CreateTAC( "ifgoto_eq", After_Label, p[-2]['place'], 0 )
+    # print "label", Repeat_Label
+    # print "ifgoto_eq", p[-2]['place'], "0", After_Label
     p[0]= [Repeat_Label, After_Label]
     
 def p_while_M2(p):
     '''
         while_M2 : 
     '''
-    print "jmp", p[-2][0]
-    print "label", p[-2][1]
+    CreateTAC( "jmp", p[-2][0] )
+    CreateTAC( "label", p[-2][1] )
+    # print "jmp", p[-2][0]
+    # print "label", p[-2][1]
 
 def p_DoStatement(p):
     '''
@@ -1355,14 +1366,17 @@ def p_Dowhile_M1(p):
         Dowhile_M1 : empty
     '''
     Repeat_Label= ST.get_label()
-    print "label", Repeat_Label
+    CreateTAC( "label", Repeat_Label )
+
+    # print "label", Repeat_Label
     p[0]=[ Repeat_Label ]
 
 def p_Dowhile_M2(p):
     '''
         Dowhile_M2 : empty
     '''
-    print "ifgoto_eq", p[-2]['place'], "0", p[-6][0]
+    CreateTAC( "ifgoto_eq", p[-6][0], p[-2]['place'], 0)
+    # print "ifgoto_eq", p[-2]['place'], "0", p[-6][0]
 
 def p_ForStatement(p):
     '''
@@ -1379,9 +1393,13 @@ def p_for_M1(p):
     label2 = ST.get_label()
     label3 = ST.get_label()
     if 'place' in p[-2].keys():
-        print "ifgoto_eq", p[-2]['place'] ,'0', label3
-        print "goto", label2
-        print "label", label1
+        CreateTAC( "ifgoto_eq", label3, p[-2]['place'] ,0 )
+        CreateTAC( "jmp", label2, None, None )
+        CreateTAC( "label", label1, None, None )
+        # print "ifgoto_eq", p[-2]['place'] ,'0', label3
+        # print "jmp", label2
+        # print "label", label1
+
     p[0]=[label1,label2,label3]
     Derivations.append(p.slice)
 
@@ -1389,15 +1407,21 @@ def p_for_M2(p):
     '''
         for_M2 :
     '''
-    print "ifgoto_eq", p[-5]['place'] ,'0', p[-3][2]
-    print "label", p[-3][1]
+
+    CreateTAC( "ifgoto_eq", p[-3][2] , p[-5]['place'], 0  )
+    CreateTAC( "label", p[-3][1] )
+    # print "ifgoto_eq", p[-5]['place'] ,'0', p[-3][2]
+    # print "label", p[-3][1]
 
 def p_for_M3(p):
     '''
         for_M3 :
     '''
-    print "jmp", p[-5][0]
-    print "label", p[-5][2]
+    CreateTAC( "jmp", p[-5][0], None, None )
+    CreateTAC( "label", p[-5][2], None, None )
+
+    # print "jmp", p[-5][0]
+    # print "label", p[-5][2]
 
 def p_Initialize(p):
     '''
@@ -1536,7 +1560,7 @@ def p_switch_M1(p):
 
     s_cond = p[-2]['place']
     s_label = ST.get_label()
-    print s_cond,s_label
+    # print s_cond,s_label
 
 def p_switch_M2(p):
     '''
@@ -1883,7 +1907,8 @@ def p_FuncDeclarator(p):
 
     FuncLabel= p[2]
     ST.addfunc(FuncLabel,"function",p[-1])
-    print "label ", FuncLabel
+    CreateTAC( "label", FuncLabel, None, None )
+    # print "label ", FuncLabel
     p[0] = p[2]
 
 
