@@ -1,6 +1,7 @@
 int main(int na, char* argv[])
 {
-    int b = 10,i=0;
+    int b = 10;
+    int i=0;
     switch(b)
     {
         case i<5 :

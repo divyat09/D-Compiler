@@ -6,9 +6,11 @@ int main(){
 	{
 		a[i]=i;
 		writeln(a[i]);
+		i=i+1;
 	}
 	do{
 		a[i]=i^^2;
 		writeln(a[i]);
+		i=i+1;
 	}while(i<10);
 }

@@ -1,4 +1,6 @@
 #!/home/divyat/anaconda2/bin/python
+from TAC import CreateTAC
+from TAC import OutputTAC
 import ply.lex as lex
 import sys
 import ply.yacc as yacc
@@ -213,7 +215,8 @@ def p_DeclaratorInitializer(p):
     if len(p)==4:
         # print p[0],":::::::::::"
         p[0]['type'] = p[3]['type']
-        print '=',p[0]['place'],p[3]['place']
+        CreateTAC( '=',p[0]['place'],p[3]['place'] )
+        # print '=',p[0]['place'],p[3]['place']
         if p[1]['place'] in ST.table.keys():
             print "Redeclaration of variable not allowed",p[3]['place']
             sys.exit(0)
@@ -276,7 +279,8 @@ def p_VarDeclaratorIdentifier(p):
             ST.addvar(p[1],p[-1])
         return
     else:
-        print '=',p[1],p[3]['place']
+        CreateTAC( '=',p[1],p[3]['place'] )
+        # print '=',p[1],p[3]['place']
         if p[3]['type'] == p[-1]:
             ST.addvar(p[1],p[-1])
     # print p[-3],"HHHHHHHHHHHHHH"
@@ -630,7 +634,7 @@ def p_AssignExpression(p):
     # p[0]['place']=p[]
     if p[2][0]=='=':
         if p[1]['type']==p[3]['type']:
-            print '=',p[1]['place'],p[3]['place']
+            # print '=',p[1]['place'],p[3]['place']
             # p[1] = p[3]
             p[0]=p[1]
             # print p[1],p[3],p[2][0]
@@ -672,7 +676,8 @@ def p_OrOrExpression(p):
             'place':newPlace,
             'type':'undefined'
         }
-        print p[2][0],p[1]['place'],p[3]['place']
+        CreateTAC( p[2][0],p[1]['place'],p[3]['place'] )
+        # print p[2][0],p[1]['place'],p[3]['place']
         p[0]['type'] = p[1]['type']
         return
     Derivations.append(p.slice) 
@@ -690,7 +695,8 @@ def p_AndAndExpression(p):
             'place':newPlace,
             'type':'undefined'
         }
-        print p[2][0],newPlace, p[1]['place'],p[3]['place']
+        CreateTAC( p[2][0],newPlace, p[1]['place'],p[3]['place'] )
+        # print p[2][0],newPlace, p[1]['place'],p[3]['place']
         p[0]['type'] = p[1]['type']
         return
     Derivations.append(p.slice) 
@@ -801,7 +807,8 @@ def p_AddExpression(p):
     if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
         # p[3] =ResolveRHSArray(p[3])
         # p[1] =ResolveRHSArray(p[1])
-        print p[2],newPlace,p[1]['place'],p[3]['place']
+        CreateTAC( p[2],newPlace,p[1]['place'],p[3]['place'] )
+        # print p[2],newPlace,p[1]['place'],p[3]['place']
         p[0]['type'] = 'INT'
 
     else:
@@ -843,7 +850,8 @@ def p_MulExpression(p):
     if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
         # p[3] =ResolveRHSArray(p[3])
         # p[1] =ResolveRHSArray(p[1])
-        print p[2],newPlace,p[1]['place'],p[3]['place']
+        CreateTAC( p[2], newPlace , p[1]['place'], p[3]['place'] )         
+        # print p[2],newPlace,p[1]['place'],p[3]['place']
         p[0]['type'] = 'INT'
     else:
         print("Error: integer value is needed")
@@ -870,7 +878,8 @@ def p_UnaryExpression(p):
         if p[1]=='++' or p[1]=='--':
             if p[2]['place'] in ST.table.keys():
                 if p[2]['type'] == "INT":
-                    print p[1][0],p[2]['place'],p[2]['place'],1
+                    CreateTAC( p[1][0],p[2]['place'],p[2]['place'],1 )
+                    # print p[1][0],p[2]['place'],p[2]['place'],1
                     p[0] = p[2]
                     return
                 else:
@@ -967,7 +976,8 @@ def p_PostfixExpression(p):
     if len(p)==3:
         if p[1]['place'] in ST.table.keys():
             if p[1]['type'] == "INT":
-                print p[2][0],p[1]['place'],p[1]['place'],1
+                CreateTAC( p[2][0],p[1]['place'],p[1]['place'],1 )
+                # print p[2][0],p[1]['place'],p[1]['place'],1
                 p[0] = p[1]
                 return
             else:
@@ -1280,8 +1290,8 @@ def p_ifmark3(p):
     '''
         ifmark3 : empty 
     '''
-    CreateTAC("jmp", p[-2][0] )
-    CreateTAC("label", p[-2][1] )
+    CreateTAC("jmp", p[-2][0], None, None )
+    CreateTAC("label", p[-2][1], None, None )   
     # print "jmp",p[-2][0]    
     # print "label",p[-2][1]
 
@@ -1289,7 +1299,7 @@ def p_ifmark2(p):
     '''
         ifmark2 : empty 
     '''
-    CreateTAC( "label", p[-2][1] )
+    CreateTAC( "label", p[-2][1], None, None )
     # print "label",p[-2][1]
 
 def p_ifmark1(p):
@@ -1298,7 +1308,7 @@ def p_ifmark1(p):
     After_Label = ST.get_label()
     Else_Label = ST.get_label()
 
-    CreateTAC( "ifgoto_eq", Else_Label, p[-2]['place'], 1 )
+    CreateTAC( "ifgoto_eq", Else_Label, p[-2]['place'], '1' )
     # print "ifgoto_eq", p[-2]['place'],'1', Else_Label
     p[0] = [After_Label, Else_Label]
 
@@ -1340,7 +1350,7 @@ def p_while_M1(p):
     Repeat_Label =  ST.get_label()
     After_Label =  ST.get_label()
 
-    CreateTAC( "label", Repeat_Label )
+    CreateTAC( "label", Repeat_Label, None, None )
     CreateTAC( "ifgoto_eq", After_Label, p[-2]['place'], 0 )
     # print "label", Repeat_Label
     # print "ifgoto_eq", p[-2]['place'], "0", After_Label
@@ -1350,8 +1360,8 @@ def p_while_M2(p):
     '''
         while_M2 : 
     '''
-    CreateTAC( "jmp", p[-2][0] )
-    CreateTAC( "label", p[-2][1] )
+    CreateTAC( "jmp", p[-2][0], None, None )
+    CreateTAC( "label", p[-2][1], None, None )
     # print "jmp", p[-2][0]
     # print "label", p[-2][1]
 
@@ -1366,7 +1376,7 @@ def p_Dowhile_M1(p):
         Dowhile_M1 : empty
     '''
     Repeat_Label= ST.get_label()
-    CreateTAC( "label", Repeat_Label )
+    CreateTAC( "label", Repeat_Label, None, None )
 
     # print "label", Repeat_Label
     p[0]=[ Repeat_Label ]
@@ -1409,7 +1419,7 @@ def p_for_M2(p):
     '''
 
     CreateTAC( "ifgoto_eq", p[-3][2] , p[-5]['place'], 0  )
-    CreateTAC( "label", p[-3][1] )
+    CreateTAC( "label", p[-3][1], None, None )
     # print "ifgoto_eq", p[-5]['place'] ,'0', p[-3][2]
     # print "label", p[-3][1]
 
@@ -2031,3 +2041,5 @@ a+="\n"
 yacc.parse(a)#, debug=True)
 for i in ST.table:
     print ST.table[i]
+
+OutputTAC()
