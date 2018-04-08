@@ -742,6 +742,18 @@ def p_EqualExpression(p):
     '''EqualExpression : ShiftExpression IS_EQ ShiftExpression
     		       | ShiftExpression NOT_EQ ShiftExpression
     '''
+    newPlace = ST.get_temp()
+    p[0] = {
+        'place':newPlace,
+        'type':'TYPE_ERROR'
+    }
+    if p[1]['type'] == p[3]['type'] and p[1]['type']!='TYPE_ERROR': 
+        CreateTAC(p[2],p[0]['place'],p[1]['place'],p[3]['place'])
+        p[0]['type'] = p[1]['type']
+        return
+    else:
+        print "Error:Type Mismatch for "+ p[2]+" Cant compare different datatypes " + p[1]['type']+"!="+p[3]['type']
+        sys.exit(0)
     Derivations.append(p.slice) 
 
 def p_RelExpression(p):
@@ -2041,5 +2053,6 @@ a+="\n"
 yacc.parse(a)#, debug=True)
 for i in ST.table:
     print ST.table[i]
-
+print ""
+print ""
 OutputTAC()
