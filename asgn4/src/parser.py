@@ -215,7 +215,7 @@ def p_DeclaratorInitializer(p):
     if len(p)==4:
         # print p[0],":::::::::::"
         p[0]['type'] = p[3]['type']
-        CreateTAC( '=',p[0]['place'],p[3]['place'] )
+        CreateTAC( '=',p[0]['place'],p[3]['place'], None )
         # print '=',p[0]['place'],p[3]['place']
         if p[1]['place'] in ST.table.keys():
             print "Redeclaration of variable not allowed",p[3]['place']
@@ -279,7 +279,7 @@ def p_VarDeclaratorIdentifier(p):
             ST.addvar(p[1],p[-1])
         return
     else:
-        CreateTAC( '=',p[1],p[3]['place'] )
+        CreateTAC( '=', p[1], p[3]['place'], None )
         # print '=',p[1],p[3]['place']
         if p[3]['type'] == p[-1]:
             ST.addvar(p[1],p[-1])
