@@ -15,6 +15,8 @@ Derivations=[]
 RightOutput = []
 s_cond=0
 s_label=0
+stackbegin = 0
+stackend = 0
 
 Gloabl_Switch_Val=0
 Gloabl_Switch_Label=0
@@ -1409,7 +1411,10 @@ def p_for_M1(p):
         # print "ifgoto_eq", p[-2]['place'] ,'0', label3
         # print "jmp", label2
         # print "label", label1
-
+    global stackbegin
+    global stackend
+    stackend.append(label3)
+    stackbegin.append(label1)
     p[0]=[label1,label2,label3]
     Derivations.append(p.slice)
 
@@ -1429,7 +1434,10 @@ def p_for_M3(p):
     '''
     CreateTAC( "jmp", p[-5][0], None, None )
     CreateTAC( "label", p[-5][2], None, None )
-
+    global stackbegin
+    global stackend
+    stackend.pop()
+    stackbegin.pop()
     # print "jmp", p[-5][0]
     # print "label", p[-5][2]
 
@@ -1694,12 +1702,16 @@ def p_ContinueStatement(p):
     '''
         ContinueStatement : CONTINUE IDENTIFIER_opt SEMICOLON
     '''
+    label = stackbegin[-1]
+    CreateTAC("jmp",label)
     Derivations.append(p.slice)
 
 def p_BreakStatement(p):
     '''
         BreakStatement : BREAK IDENTIFIER_opt SEMICOLON
     '''
+    label = stackend[-1]
+    CreateTAC("jmp",label)
     Derivations.append(p.slice)
 
 def p_ReturnStatement(p):
