@@ -52,7 +52,7 @@ def OutputTAC():
     elif Instr[0] == '~':
      print( str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2] + Comma)
 
-    elif Instr[0] in [ '+', '-', '*', '/', '%', '<<', '>>', '&', '|', '^' ] :
+    elif Instr[0] in [ '+', '-', '*', '/', '%', '<<', '>>', '&', '|', '^','<','>','>=', '<=', '==', '!=' ] :
       print( str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2] + Comma + Instr[3] + Comma)
 
     LineNum = LineNum + 1
