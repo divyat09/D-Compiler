@@ -1395,6 +1395,10 @@ def p_while_M1(p):
 
     CreateTAC( "label", Repeat_Label, None, None )
     CreateTAC( "ifgoto_eq", After_Label, p[-2]['place'], 0 )
+    global stackbegin
+    global stackend
+    stackend.append(After_Label)
+    stackbegin.append(Repeat_Label)
     # print "label", Repeat_Label
     # print "ifgoto_eq", p[-2]['place'], "0", After_Label
     p[0]= [Repeat_Label, After_Label]
@@ -1405,6 +1409,10 @@ def p_while_M2(p):
     '''
     CreateTAC( "jmp", p[-2][0], None, None )
     CreateTAC( "label", p[-2][1], None, None )
+    global stackbegin
+    global stackend
+    stackend.pop()
+    stackbegin.pop()
     # print "jmp", p[-2][0]
     # print "label", p[-2][1]
 
@@ -1419,16 +1427,25 @@ def p_Dowhile_M1(p):
         Dowhile_M1 : empty
     '''
     Repeat_Label= ST.get_label()
+    After_Label = ST.get_label()
     CreateTAC( "label", Repeat_Label, None, None )
-
+    global stackbegin
+    global stackend
+    stackend.append(After_Label)
+    stackbegin.append(Repeat_Label)
     # print "label", Repeat_Label
-    p[0]=[ Repeat_Label ]
+    p[0]=[ Repeat_Label,After_Label ]
 
 def p_Dowhile_M2(p):
     '''
         Dowhile_M2 : empty
     '''
     CreateTAC( "ifgoto_eq", p[-6][0], p[-2]['place'], 0)
+    CreateTAC("label",p[-6][1],None,None)
+    global stackbegin
+    global stackend
+    stackend.pop()
+    stackbegin.pop()
     # print "ifgoto_eq", p[-2]['place'], "0", p[-6][0]
 
 def p_ForStatement(p):
@@ -1630,22 +1647,24 @@ def p_switch_M2(p):
     '''
     global s_label
     CreateTAC("label", s_label, None, None)
+    global stackend
+    stackend.pop()
     # print "label", s_label
 
 
-def p_Switch_Mark1(p):
-    '''
-        Switch_Mark1 : empty
-    '''
-    Gloabl_Switch_Val= p[-2]['place']
-    Gloabl_Switch_Label= ST.get_label()  
+# def p_Switch_Mark1(p):
+#     '''
+#         Switch_Mark1 : empty
+#     '''
+#     Gloabl_Switch_Val= p[-2]['place']
+#     Gloabl_Switch_Label= ST.get_label()  
 
-def p_Switch_Mark2(p):
-    '''
-        Switch_Mark2 : empty
-    '''
-    CreateTAC( "label", Gloabl_Switch_Label, None, None )
-    # print "label ", Gloabl_Switch_Label
+# def p_Switch_Mark2(p):
+#     '''
+#         Switch_Mark2 : empty
+#     '''
+#     CreateTAC( "label", Gloabl_Switch_Label, None, None )
+#     # print "label ", Gloabl_Switch_Label
 
 def p_CaseStatement(p):
     '''
