@@ -487,6 +487,7 @@ def p_ExpInitializer(p):
 def p_ArrayInitializer(p):
     '''ArrayInitializer : LBRACKET ArrayMemberInitializations_opt RBRACKET
     '''
+    
     Derivations.append(p.slice)
 
 def p_ArrayMemberInitializations(p):
@@ -1325,7 +1326,7 @@ def p_ifmark1(p):
     After_Label = ST.get_label()
     Else_Label = ST.get_label()
 
-    CreateTAC( "ifgoto_eq", Else_Label, p[-2]['place'], '1' )
+    CreateTAC( "ifgoto_eq", Else_Label, p[-2]['place'], '0' )
     # print "ifgoto_eq", p[-2]['place'],'1', Else_Label
     p[0] = [After_Label, Else_Label]
 

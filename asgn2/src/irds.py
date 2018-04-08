@@ -36,6 +36,7 @@ class IRDS:
       # jmp address can be a label hence not addded to table
       self.const3 = data[4]
       bb.append(int(self.lineno)+1)
+      # const3[1:] implies jump to this line no.
       bb.append(int(self.const3[1:]))
       # labels[self.const3]="label"+self.const3
 
