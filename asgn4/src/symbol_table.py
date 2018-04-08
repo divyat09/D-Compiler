@@ -13,14 +13,14 @@ class SymbolTable:
 	
 	def get_label(self):
 		self.label_no = self.label_no+1
-		return "label"+str(self.label_no)
+		return "L"+str(self.label_no)
 		
-	def addvar(self,varname,datatype):
+	def addvar(self,varname,datatype,type):
 		if '[' in varname:
 			varname= varname.split('[')[0]
 			self.table[varname]= {'name': varname,'type':'Array','scope':None}
 		else:
-			self.table[varname]={'name':varname,'type':'Variable','datatype':datatype,'scope':None}
+			self.table[varname]={'name':varname,'type':type,'datatype':datatype,'scope':None}
 
 	def addfunc(self,funcname,_type,datatype):
 		self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'scope':None}

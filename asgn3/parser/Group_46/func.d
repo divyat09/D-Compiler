@@ -1,4 +1,4 @@
-int foo ()
+foo ()
 {
     int i = 1;
 }

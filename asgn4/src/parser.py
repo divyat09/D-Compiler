@@ -211,6 +211,7 @@ def p_DeclaratorInitializer(p):
     			     | AltDeclarator ASSIGN Initializer
     			     | AltDeclarator 
     '''
+    # print p.slice
     # print p[-1],"HHHHHHHHHIIIIIIIIIIIIII",p.slice
     p[0]=p[1]
     # print p.slice
@@ -226,7 +227,7 @@ def p_DeclaratorInitializer(p):
             print "Type error " + p[3]['type'] +" != " + p[1]['type']
             sys.exit(0)
     
-        ST.addvar(p[0]['place'],p[0]['type'])
+        ST.addvar(p[0]['place'],p[0]['type'],"Variable")
         
         return
     if len(p)==2:
@@ -234,7 +235,7 @@ def p_DeclaratorInitializer(p):
             print "Redeclaration of variable not allowed",p[3]['place']
             sys.exit(0)
     
-    ST.addvar(p[0]['place'],p[0]['type'])
+    ST.addvar(p[0]['place'],p[0]['type'],"Array")
 
     Derivations.append(p.slice) # rem template parameters from 2
 
@@ -278,13 +279,13 @@ def p_VarDeclaratorIdentifier(p):
             print "Redeclaration of variable not allowed",p[3]['place']
             sys.exit(0)
         else:
-            ST.addvar(p[1],p[-1])
+            ST.addvar(p[1],p[-1],"Variable")
         return
     else:
         CreateTAC( '=', p[1], p[3]['place'], None )
         # print '=',p[1],p[3]['place']
         if p[3]['type'] == p[-1]:
-            ST.addvar(p[1],p[-1])
+            ST.addvar(p[1],p[-1],"Variable")
     # print p[-3],"HHHHHHHHHHHHHH"
 
 def p_AltDeclaratorIdentifier(p):
@@ -474,7 +475,7 @@ def p_NonVoidInitializer(p):
     '''NonVoidInitializer : ExpInitializer
                           | ArrayInitializer
     '''
-
+    
     p[0]=p[1]
     Derivations.append(p.slice)
 
@@ -487,6 +488,8 @@ def p_ExpInitializer(p):
 def p_ArrayInitializer(p):
     '''ArrayInitializer : LBRACKET ArrayMemberInitializations_opt RBRACKET
     '''
+    p[0] = p[2]
+    print p.slice
     
     Derivations.append(p.slice)
 
@@ -495,12 +498,16 @@ def p_ArrayMemberInitializations(p):
     				  | ArrayMemberInitialization COMMA
     				  | ArrayMemberInitialization COMMA ArrayMemberInitializations
     '''
+    p[0] = p[1]
+    print p.slice
+
     Derivations.append(p.slice)
 
 def p_ArrayMemberInitializations_opt(p):
     '''ArrayMemberInitializations_opt : ArrayMemberInitializations
 				      | empty
     '''
+    p[0] = p[1]
     Derivations.append(p.slice)
 
 
@@ -508,6 +515,7 @@ def p_ArrayMemberInitialization(p):
     ''' ArrayMemberInitialization : NonVoidInitializer
     				 | AssignExpression COLON NonVoidInitializer
     '''
+    p[0] = p[1]
     Derivations.append(p.slice)
 
 def p_AutoDeclaration(p):
@@ -629,6 +637,7 @@ def p_AssignExpression(p):
                          | ConditionalExpression EQ_LEFT AssignExpression
                          | ConditionalExpression EQ_RIGHT AssignExpression 
     '''
+    # print p.slice
     if(len(p)==2):
         p[0] = p[1]
         return
@@ -637,6 +646,7 @@ def p_AssignExpression(p):
     # p[0]['place']=p[]
     if p[2][0]=='=':
         if p[1]['type']==p[3]['type']:
+            CreateTAC( '=',p[1]['place'],p[3]['place'], None )
             # print '=',p[1]['place'],p[3]['place']
             # p[1] = p[3]
             p[0]=p[1]
@@ -807,6 +817,7 @@ def p_AddExpression(p):
     		     | AddExpression PLUS MulExpression
     		     | AddExpression MINUS MulExpression
     '''
+    # print p.slice
     if len(p)==2 :
         p[0] = p[1]
         return
@@ -906,7 +917,7 @@ def p_UnaryExpression(p):
                 print "Variable "+p[2]['place']+" not defined "+p.slice
                 return
 
-    print p.slice,len(p)
+    # print p.slice,len(p)
     Derivations.append(p.slice)     
 
 def p_ComplementExpression(p):
@@ -943,6 +954,7 @@ def p_ArgumentList_opt(p):
     '''ArgumentList_opt : ArgumentList
 			| empty
     '''
+    p[0] = p[1]
     Derivations.append(p.slice) 
 
 def p_ArgumentList(p):
@@ -960,7 +972,7 @@ def p_CastExpression(p):
     		      | CAST LPAREN RPAREN UnaryExpression
                  
     '''
-    print p.slice
+    # print p.slice
 
     Derivations.append(p.slice)     
 
@@ -985,14 +997,15 @@ def p_PostfixExpression(p):
                          | PostfixExpression LPAREN ArgumentList RPAREN
                          | BasicType LPAREN ArgumentList_opt RPAREN JmpMark                                  
     '''
-    print p.slice
     Derivations.append(p.slice)    #add index expression, slice expression 
     if len(p)==2 :
         p[0]=p[1]
         return
 
     if len(p)==3:
-        if p[1]['place'] in ST.table.keys():
+        # print "HI"
+        # print p[1]['place'].strip("[")[0] , "HI"
+        if p[1]['place'] in ST.table.keys() or (p[1]["isarray"] and p[1]['place'].strip("[")[0] in ST.table.keys()):
             if p[1]['type'] == "INT":
                 CreateTAC( p[2][0],p[1]['place'],p[1]['place'],1 )
                 # print p[2][0],p[1]['place'],p[1]['place'],1
@@ -1001,7 +1014,7 @@ def p_PostfixExpression(p):
             else:
                 "Postfix operations possible only with integer variables"
         else:
-            print "Variable "+p[1]['place']+" not defined "+p.slice
+            print "Variable "+p[1]['place']+" not defined "
             return
     p[0]=p[5]
     # print p[5]    
@@ -1018,7 +1031,13 @@ def p_JmpMark(p):
             'place':p[-4],
             'type':ST.table[p[-4]]['datatype'] 
         }
-    print "call ", p[-4]
+    if( p[-4] == 'writeln'):
+        CreateTAC( "print_str", p[-2]['place'], None, None )
+    else:
+        CreateTAC( "call", p[-4], None, None )
+    # print "call ", p[-4]
+    print p.slice
+    print p[-2]
 
 def p_PrimaryExpression(p):
     ''' PrimaryExpression : IDENTIFIER
@@ -1044,13 +1063,17 @@ def p_PrimaryExpression(p):
                           | LPAREN Expression RPAREN 
                           | TypeidExpression                    
     '''
+    # print p.slice[1].type
     Derivations.append(p.slice)
+    
     if(len(p)==2):
+        
         p[0] = {
         'place' : 'undefined',
         'type' : 'TYPE_ERROR'
         }
         
+        #Literals
         if (p.slice[1].type =='INUMBER'):
             p[0]={
                 'type':'INT',
@@ -1058,6 +1081,7 @@ def p_PrimaryExpression(p):
                 'isconst':True
                 }
             return
+        
         if(p.slice[1].type =='DNUMBER'):
             p[0]={
                 'type':'FLOAT', 
@@ -1077,21 +1101,28 @@ def p_PrimaryExpression(p):
             return
 
         if (p.slice[1].type =='LIT_STRPlus'):
+            print p[1],"::::::::::::::::"
             p[0]={
-                'type':'CHAR',
+                'type':'STR',
                 'place':p[1],
                 'isconst':True
                 }
             print "in here"
             return
 
+        # Identifiers
+        
         if type(p[1])==type({}):
+            if 'isarray' in p[1].keys():
+                p[0] = p[1]
+                return
             p[0]['place'] = p[1]['place']
             p[0]['type'] = p[1]['type']
             return
         if p[1] in ST.table.keys():
             p[0]['place'] = ST.table[p[1]]['name']
             p[0]['type'] = ST.table[p[1]]['datatype']
+            return
         else:
             print('Error : undefined variable '+p[1]+' is used.')
             sys.exit(0)
@@ -1108,20 +1139,30 @@ def p_ArrayLiteral(p):
                     | IDENTIFIER LBRACKET AssignExpression RBRACKET
     '''
     if len(p)==5:
-        newPlace = ST.get_temp()
+        # newPlace = ST.get_temp()
         if p[1] in ST.table.keys():
-            p[0]={
-                'place':newPlace,
-                'type':ST.table[p[1]]['datatype']
-            }
             # print '*',newPlace,p[3],sizeof(p[0]['type'])
             if type(p[3])==type({}):
-                print '*',newPlace,p[3]['place'],'4'
-                print '+',newPlace,newPlace,p[1]
+                p[0]={
+                'place':p[1]+"["+ p[3]['place'] +"]",
+                'type':ST.table[p[1]]['datatype'],
+                'isarray':True
+                }
+                # CreateTAC( '*', p[1]+"["+ p[3]['place'] +"]",None , None)
+                # CreateTAC( '+', newPlace, newPlace, p[1] ) 
+                # print '*',newPlace,p[3]['place'],'4'
+                # print '+',newPlace,newPlace,p[1]
                 return
             else:
-                print '*',newPlace,p[3],'4'
-                print '+',newPlace,newPlace,p[1]
+                p[0]={
+                'place':p[1]+"["+ p[3] +"]",
+                'type':ST.table[p[1]]['datatype'],
+                'isarray':True
+                }
+                # CreateTAC( '*', newPlace, p[3], '4' )
+                # CreateTAC( '+', newPlace, newPlace, p[1] ) 
+                # print '*',newPlace,p[3],'4'
+                # print '+',newPlace,newPlace,p[1]
                 return
     # print p.slice,";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
     Derivations.append(p.slice)
@@ -1131,6 +1172,7 @@ def p_FunctionLiteral(p):
                         | ParameterMemberAttributes FunctionLiteralBody
                         | FunctionLiteralBody
     '''
+    print p.slice
     Derivations.append(p.slice)
 
 def p_ParameterAttributes(p):
@@ -1159,6 +1201,7 @@ def p_LIT_STRPlus(p):
     '''LIT_STRPlus : LIT_STR LIT_STRPlus
                    | LIT_STR
     '''
+    p[0] = p[1]
     Derivations.append(p.slice) 
  
 def p_MixinExpression(p):
@@ -1417,21 +1460,22 @@ def p_for_M1(p):
     '''
         for_M1 :
     '''
-    label1 = ST.get_label()
-    label2 = ST.get_label()
-    label3 = ST.get_label()
+    IncrLabel = ST.get_label()
+    StatementLabel = ST.get_label()
+    EndLabel = ST.get_label()
+
     if 'place' in p[-2].keys():
-        CreateTAC( "ifgoto_eq", label3, p[-2]['place'] ,0 )
-        CreateTAC( "jmp", label2, None, None )
-        CreateTAC( "label", label1, None, None )
+        CreateTAC( "ifgoto_eq", EndLabel, p[-2]['place'] ,0 )
+        CreateTAC( "jmp", StatementLabel, None, None )
+        CreateTAC( "label", IncrLabel, None, None )
         # print "ifgoto_eq", p[-2]['place'] ,'0', label3
         # print "jmp", label2
         # print "label", label1
     global stackbegin
     global stackend
-    stackend.append(label3)
-    stackbegin.append(label1)
-    p[0]=[label1,label2,label3]
+    stackend.append(EndLabel)
+    stackbegin.append(IncrLabel)
+    p[0]=[IncrLabel, StatementLabel, EndLabel]
     Derivations.append(p.slice)
 
 def p_for_M2(p):
@@ -1678,6 +1722,7 @@ def p_ScopeStatementList(p):
     '''
         ScopeStatementList : StatementListNoCaseNoDefault
     '''
+    p[0] = p[1]
     Derivations.append(p.slice)
 
 def p_StatementListNoCaseNoDefault(p):
@@ -1685,6 +1730,7 @@ def p_StatementListNoCaseNoDefault(p):
         StatementListNoCaseNoDefault : StatementNoCaseNoDefault
                                      | StatementNoCaseNoDefault StatementListNoCaseNoDefault
     '''
+    p[0]=p[1]
     Derivations.append(p.slice)
 
 def p_StatementNoCaseNoDefault(p):
@@ -2057,20 +2103,27 @@ def p_error(p):
     if p == None:
         print str(sys.argv[1])+" :: You missed something at the end"
     else:
-	    print str(sys.argv[1])+" :: Syntax error in line no " + str(p.lineno)
+    	print str(sys.argv[1])+" :: Syntax error in line no " + str(p.lineno)
+        # Exit in case of error: Dont generate IR Code
+        sys.exit(0)
 
 def p_empty(p):
     'empty : %prec EMPTY'
     pass
 
+# Build the abstract syntax parse tree
 yacc.yacc(debug=True,start='Declaration_mult')
 a=open(sys.argv[1],'r')
 a=a.read()
 data = ""
 a+="\n"
 yacc.parse(a)#, debug=True)
+
+# Printing the identifiers stored in Symbol Table
 for i in ST.table:
     print ST.table[i]
 print ""
 print ""
+
+# Print the IR Code generated
 OutputTAC()

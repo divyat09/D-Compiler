@@ -1,0 +1,28 @@
+1, =, res, 0
+2, =, i, 0
+3, jmp, L23
+4, label, D.2051
+5, =, j, 0
+6, jmp, D.2049
+7, label, D.2048
+8, =, k, 0
+9, jmp, D.2046
+10, label, 2045
+11, +, res, res, 1
+12, +, k, k, 1
+13, label, D.2046
+14, ifgoto_leq, k, 9, D.2045
+15, jmp, D.2047
+16, label, D.2047
+17, +, j, j, 1
+18, label, D.2049
+19, ifgoto_leq, j, 9, D.2048
+20, jmp. D.2050
+21, label, D.2050
+22, +, i, i, 1
+23, label, L23
+24, ifgoto_leq, i, 9, D>2051
+25, jmp, D.2053
+26, label, D.2053
+27, print_int, res
+

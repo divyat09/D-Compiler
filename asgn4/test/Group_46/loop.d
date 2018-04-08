@@ -11,5 +11,5 @@ int main(){
 		}
 	}
 
-	writeln("res = %d\n", res);
+	writeln("res = %d\n");
 }
