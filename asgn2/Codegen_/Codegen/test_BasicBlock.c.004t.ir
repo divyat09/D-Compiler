@@ -1,0 +1,25 @@
+1, =, a, 10
+2, +, b, a, 2
+3, *, c, a, 7
+4, -, d, a, 11
+5, ifgoto_gt, a, 5, L7
+6, jmp, L11
+7, label, L7
+8, +, f, a, 40
+9, -, g, a, 40
+10, jmp, L14
+11, label, L11
+12, +, i, a, 20
+13, -, j, a, 20
+14, label, L14
+15, =, k, 0
+16, jmp, L22
+17, label, L17
+18, +, a, a, 1
+19, +, i, i, 1
+20, +, j, j, 1
+21, +, k, k, 1
+22, label, L22
+23, ifgoto_lt, k, b, L17
+24, jmp, L25
+25, label, L25
