@@ -272,6 +272,7 @@ def t_error(t):
     #print "Illegal character '%s' at line number %d" % (t.value[0], t.lineno)
     #t.lexer.skip(1)
     success = False
+    sys.exit(0)
 
 def test_lexer(lexer, string):
     lexer.input(string)

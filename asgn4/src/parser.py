@@ -542,6 +542,8 @@ def p_AliasDeclaration(p):
                          | ALIAS AliasDeclarationX  SEMICOLON
     '''
     Derivations.append(p.slice)
+    print("Alias not handled currently")
+    sys.exit()
 
 def p_AliasDeclarationX(p):
     '''
@@ -1794,6 +1796,9 @@ def p_AggregateDeclaration(p):
     '''AggregateDeclaration : ClassDeclaration
     			    | UnionDeclaration
     '''
+    print("Classes not handeld currently")
+    sys.exit(0)
+
     Derivations.append(p.slice) 
 
 def p_UnionDeclaration(p):
@@ -1801,6 +1806,9 @@ def p_UnionDeclaration(p):
     			| UNION IDENTIFIER AggregateBody
     			| AnonUnionDeclaration
     '''
+    print("Unions not handeld currently")
+    sys.exit(0)
+
     Derivations.append(p.slice) 
 
 def p_AnonUnionDeclaration(p):
@@ -1901,6 +1909,9 @@ def p_EnumDeclaration(p):
                         | AnonymousEnumDeclaration
     '''
     Derivations.append(p.slice)
+
+    print("Enum not handled currently")
+    sys.exit(0)
 
 def p_EnumBaseType(p):
     '''

@@ -1,6 +1,7 @@
-void foo(int a)
+int foo ()
 {
-   const int i = 1;
+    int i = 1;
+    return 1; 
 }
 
 int main(){
