@@ -1062,7 +1062,7 @@ def p_PrimaryExpression(p):
             return
         # if str(p.slice[1])=="ArrayLiteral"
 
-        if (p.slice[1].type =='CHAR'):
+        if (p.slice[1].type =='LIT_CHAR'):
             p[0]={
                 'type':'CHAR',
                 'place':p[1],
@@ -2039,7 +2039,7 @@ def p_error(p):
     if p == None:
         print str(sys.argv[1])+" :: You missed something at the end"
     else:
-	print str(sys.argv[1])+" :: Syntax error in line no " + str(p.lineno)
+	    print str(sys.argv[1])+" :: Syntax error in line no " + str(p.lineno)
 
 def p_empty(p):
     'empty : %prec EMPTY'
