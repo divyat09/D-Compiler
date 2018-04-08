@@ -1,15 +1,15 @@
-typedef struct
+union T
 {
   char a;
   int b;
   char c;
   short d;
-  double e;
+  char e;
   char name[10];
   char f;
-} T;
+}
 
-void f (T x)
+void f (int x)
 {
   x.a = 'a';
   x.b = 47114711;
@@ -21,7 +21,7 @@ void f (T x)
 }
 
 int main (){
-    T k;
+    k = new T();
     f(k);
     return 0;
 }

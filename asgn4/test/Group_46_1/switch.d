@@ -5,11 +5,14 @@ int main(int na, char* argv[])
     char c;
     switch(c)
     {
-        case 'w':;
+        case 'w':
+		writeln("Hello");
+		break;
         case 'W':
             wflg = 1;
             break;
-        case 't':;
+        case 't':
+		writeln("Bye");	
         case 'T':
             tflg = 1;
             break;

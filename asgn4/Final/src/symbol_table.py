@@ -1,3 +1,4 @@
+#!/usr/bin/python2
 # from globalvars import *
 
 class SymbolTable:

@@ -6,5 +6,5 @@ int main(void){
     if (i>=2)
         a[i]--;
     else 
-        a[i] = 1;
+s        a[i] = 1;
 }

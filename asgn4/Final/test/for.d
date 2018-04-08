@@ -1,8 +1,8 @@
 import std.stdio;
 int main(){
-    int i=6;
-    for (;i<= 8 && i>= 6 && i!= 7; i++){
-        if (i>=0){
+    int iter;
+    for (iter=0; iter<= 5; iter++){
+        if (iter%2){
             writeln("yes\n");
         }
         else 

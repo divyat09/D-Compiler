@@ -1,4 +1,4 @@
-#!/home/divyat/anaconda2/bin/python
+#!/usr/bin/python
 import sys
 import re
 import ply.lex as lex
@@ -224,7 +224,7 @@ def t_DNUMBER(t):
 
 # Match an integer
 def t_INUMBER(t):
-    r'\d+(?=[+<>!=\-*/:()%,;\s\]])'
+    r'-?\d+(?=[+<>!=\-*/:()%,;\s\]])'
     # r'-?[0-9]+'
     return t
 
