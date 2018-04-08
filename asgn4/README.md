@@ -12,12 +12,14 @@ This directory contains the python code used to generate Assembly Code form Inte
 
 	Generates LALR(1) parser for the Grammar using ply's syntactic analysis tool ply.yacc. Although the grammar is not yaccable we have made sincere attempts to make a sensible parser, there are some shift-reduce, reduce-reduce conflicts but the preferred rules and choices in case of conflict are correct. So, in terms of correctness, the parser works fine. 
 
+	The semantic actions corresponding to production rules have been added to the parser. Markers have been used for semantic actions of inherited attributes.
+
 3 symbol_table.py
+	
 
 4 TAC.py
 	
-	Stores the three address code for each statement in the program in the form of a list. It has a method that iterates over the list of three
-	address codes and outputs the Intermediate Code for the source code.
+	Stores the three address code for each statement in the program in the form of a list. It has a method OutputTAC()" that iterates over the list of three address codes and outputs the Intermediate Code for the source code.
 
 ###### /test directory 
 This directory contains the tests cases, txt files containing the Intermediate Representation of the program.

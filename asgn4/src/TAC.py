@@ -13,6 +13,9 @@ def OutputTAC():
     if Instr[0] == 'ifgoto_eq':
       print( str(LineNum) + Comma + 'ifgoto_eq' + Comma + Instr[2] + Comma +  Instr[3] + Comma + Instr[1]) 
 
+    if Instr[0] == 'ifgoto_neq':
+      print( str(LineNum) + Comma + 'ifgoto_neq' + Comma + Instr[2] + Comma +  Instr[3] + Comma + Instr[1]) 
+
       # if Instr[1] == '>':
       #   print( LineNum + Comma + 'ifgoto_gt' + Comma + Instr[2] + Comma +  Instr[3])
 
@@ -40,11 +43,11 @@ def OutputTAC():
     elif Instr[0] ==  'label':
       print( str(LineNum) + Comma +'label' +Comma + Instr[1] )
 
-    elif Instr[0] == 'return':
+    elif Instr[0] == 'ret':
       print( str(LineNum) + Comma +'ret' +Comma + Instr[1])
 
-    elif Instr[0] == 'writeln':
-      print( str(LineNum) + Comma +'print_int' +Comma + Instr[1])
+    elif Instr[0] == 'print_str':
+      print( str(LineNum) + Comma +'print_str' +Comma + Instr[1])
 
     elif Instr[0] == '=':
       print( str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2] + Comma)
@@ -52,9 +55,10 @@ def OutputTAC():
     elif Instr[0] == '~':
      print( str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2] + Comma)
 
-    elif Instr[0] in [ '+', '-', '*', '/', '%', '<<', '>>', '&', '|', '^' ] :
+    elif Instr[0] in [ '+', '-', '*', '/', '%', '<<', '>>', '&', '|', '^','<','>','>=', '<=', '==', '!=' ] :
       print( str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2] + Comma + Instr[3] + Comma)
-
+    # else:
+    #   print(str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2] + Comma + Instr[3] + Comma)
     LineNum = LineNum + 1
 
     # if (data[1] in ["ifgoto_lt","ifgoto_leq","ifgoto_gt","ifgoto_geq","ifgoto_eq","ifgoto_neq"]):

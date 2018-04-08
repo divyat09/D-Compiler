@@ -1,6 +1,9 @@
 int main(void){
-    int i = 0;
-    int a[3]=[1,2,3];
+    int i = 2;
+    int a[3];
+    a[0]= 0;
+    a[1]= 1;
+    a[2]= 2;
     if (i<=3)
         a[i]++;
     if (i>=2)
