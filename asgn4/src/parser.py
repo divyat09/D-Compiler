@@ -626,6 +626,7 @@ def p_AssignExpression(p):
                          | ConditionalExpression EQ_LEFT AssignExpression
                          | ConditionalExpression EQ_RIGHT AssignExpression 
     '''
+    # print p.slice
     if(len(p)==2):
         p[0] = p[1]
         return
@@ -801,6 +802,7 @@ def p_AddExpression(p):
     		     | AddExpression PLUS MulExpression
     		     | AddExpression MINUS MulExpression
     '''
+    # print p.slice
     if len(p)==2 :
         p[0] = p[1]
         return
@@ -900,7 +902,7 @@ def p_UnaryExpression(p):
                 print "Variable "+p[2]['place']+" not defined "+p.slice
                 return
 
-    print p.slice,len(p)
+    # print p.slice,len(p)
     Derivations.append(p.slice)     
 
 def p_ComplementExpression(p):
@@ -954,7 +956,7 @@ def p_CastExpression(p):
     		      | CAST LPAREN RPAREN UnaryExpression
                  
     '''
-    print p.slice
+    # print p.slice
 
     Derivations.append(p.slice)     
 
@@ -1038,13 +1040,17 @@ def p_PrimaryExpression(p):
                           | LPAREN Expression RPAREN 
                           | TypeidExpression                    
     '''
+    # print p.slice[1].type
     Derivations.append(p.slice)
+    
     if(len(p)==2):
+        
         p[0] = {
         'place' : 'undefined',
         'type' : 'TYPE_ERROR'
         }
         
+        #Literals
         if (p.slice[1].type =='INUMBER'):
             p[0]={
                 'type':'INT',
@@ -1052,6 +1058,7 @@ def p_PrimaryExpression(p):
                 'isconst':True
                 }
             return
+        
         if(p.slice[1].type =='DNUMBER'):
             p[0]={
                 'type':'FLOAT', 
@@ -1062,7 +1069,7 @@ def p_PrimaryExpression(p):
             return
         # if str(p.slice[1])=="ArrayLiteral"
 
-        if (p.slice[1].type =='CHAR'):
+        if (p.slice[1].type =='LIT_CHAR'):
             p[0]={
                 'type':'CHAR',
                 'place':p[1],
@@ -1079,6 +1086,7 @@ def p_PrimaryExpression(p):
             print "in here"
             return
 
+        # Identifiers
         if type(p[1])==type({}):
             p[0]['place'] = p[1]['place']
             p[0]['type'] = p[1]['type']
@@ -1086,6 +1094,7 @@ def p_PrimaryExpression(p):
         if p[1] in ST.table.keys():
             p[0]['place'] = ST.table[p[1]]['name']
             p[0]['type'] = ST.table[p[1]]['datatype']
+            return
         else:
             print('Error : undefined variable '+p[1]+' is used.')
             sys.exit(0)
@@ -2039,20 +2048,27 @@ def p_error(p):
     if p == None:
         print str(sys.argv[1])+" :: You missed something at the end"
     else:
-	print str(sys.argv[1])+" :: Syntax error in line no " + str(p.lineno)
+    	print str(sys.argv[1])+" :: Syntax error in line no " + str(p.lineno)
+        # Exit in case of error: Dont generate IR Code
+        sys.exit(0)
 
 def p_empty(p):
     'empty : %prec EMPTY'
     pass
 
+# Build the abstract syntax parse tree
 yacc.yacc(debug=True,start='Declaration_mult')
 a=open(sys.argv[1],'r')
 a=a.read()
 data = ""
 a+="\n"
 yacc.parse(a)#, debug=True)
+
+# Printing the identifiers stored in Symbol Table
 for i in ST.table:
     print ST.table[i]
 print ""
 print ""
+
+# Print the IR Code generated
 OutputTAC()

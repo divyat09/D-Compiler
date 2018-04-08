@@ -13,7 +13,7 @@ class SymbolTable:
 	
 	def get_label(self):
 		self.label_no = self.label_no+1
-		return "label"+str(self.label_no)
+		return "L"+str(self.label_no)
 		
 	def addvar(self,varname,datatype):
 		if '[' in varname:

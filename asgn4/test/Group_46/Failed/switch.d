@@ -6,10 +6,13 @@ int main(int na, char* argv[])
     switch(c)
     {
         case 'w':
+		writeln("Hello");
+		break;
         case 'W':
             wflg = 1;
             break;
         case 't':
+		writeln("Bye");	
         case 'T':
             tflg = 1;
             break;
