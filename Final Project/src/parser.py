@@ -822,8 +822,15 @@ def p_RelExpression(p):
         CreateTAC(p[2],newPlace,p[1]['place'],p[3]['place'])
         p[0]['type'] = 'INT'
 
+    elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT' :
+        # p[3] =ResolveRHSArray(p[3])
+        # p[1] =ResolveRHSArray(p[1])
+        # print p[2],newPlace,p[1]['place'],p[3]['place']
+        CreateTAC(p[2],newPlace,p[1]['place'],p[3]['place'])
+        p[0]['type'] = 'FLOAT'
+
     else:
-        print("Error: integer value is needed")
+        print("Error: Integer or Float value is needed")
         sys.exit(0)
         return
     
@@ -867,8 +874,15 @@ def p_AddExpression(p):
         # print p[2],newPlace,p[1]['place'],p[3]['place']
         p[0]['type'] = 'INT'
 
+    elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT' :
+        # p[3] =ResolveRHSArray(p[3])
+        # p[1] =ResolveRHSArray(p[1])
+        CreateTAC( p[2],newPlace,p[1]['place'],p[3]['place'] )
+        # print p[2],newPlace,p[1]['place'],p[3]['place']
+        p[0]['type'] = 'FLOAT'
+
     else:
-        print("Error: integer value is needed")
+        print("Error: integer or float value is needed")
         sys.exit(0)
         return
     # # # elif p[1]['isconst']:
@@ -909,8 +923,16 @@ def p_MulExpression(p):
         CreateTAC( p[2], newPlace , p[1]['place'], p[3]['place'] )         
         # print p[2],newPlace,p[1]['place'],p[3]['place']
         p[0]['type'] = 'INT'
+
+    elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT' :
+        # p[3] =ResolveRHSArray(p[3])
+        # p[1] =ResolveRHSArray(p[1])
+        CreateTAC( p[2], newPlace , p[1]['place'], p[3]['place'] )         
+        # print p[2],newPlace,p[1]['place'],p[3]['place']
+        p[0]['type'] = 'FLOAT'
+
     else:
-        print("Error: integer value is needed")
+        print("Error: Integer or Float value is needed")
     
     Derivations.append(p.slice) 
 

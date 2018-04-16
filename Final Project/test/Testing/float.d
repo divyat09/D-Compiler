@@ -1,9 +1,9 @@
 int main(){
-	int a,b,c;
-	int D[3];
-	int d;
-	b=5;
-	c=5;
+	float a,b,c;
+	float D[3];
+	float d;
+	b=5.0;
+	c=5.0;
 	b=b/c;
 	a=b+c;
 	c=b-a;
