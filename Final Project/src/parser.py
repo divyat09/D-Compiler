@@ -17,7 +17,7 @@ s_cond=0
 s_label=0
 stackbegin = []
 stackend = []
-
+param_list= []
 Gloabl_Switch_Val=0
 Gloabl_Switch_Label=0
 
@@ -1389,6 +1389,7 @@ def p_M_block_begin(p):
     '''
         M_block_begin : 
     '''
+    print p[-2],"KKKKKKKKKKKKKKKKK"    
     ST.newscope()
     Derivations.append(p.slice)
 
@@ -2144,6 +2145,7 @@ def p_ParameterList(p):
     		     | Parameter COMMA ParameterList
     		     | ELLIPSIS
     '''
+    param_list.append(p[1])
     Derivations.append(p.slice)
 
 
@@ -2160,6 +2162,10 @@ def p_Parameter(p):
     		 | InOut_opt Type
     		 | InOut_opt Type ELLIPSIS
     '''
+    p[0] = p[3]
+    # ST.currentscope = "foo"
+    print p[3]
+    ST.addvar(p[3]['place'],p[2],"Variable","4")
     Derivations.append(p.slice)
 
 def p_InOut(p):

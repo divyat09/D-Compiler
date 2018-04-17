@@ -18,12 +18,12 @@ class SymbolTable:
 		self.label_no = self.label_no+1
 		return "L"+str(self.label_no)
 		
-	def addvar(self,varname,datatype,type,size):
+	def addvar(self,varname,datatype,_type,size):
 		if '[' in varname:
 			varname= varname.split('[')[0]
-			self.table[self.currentscope]['identifiers'][varname]= {'name': varname,'type':'Array','scope':self.currentscope}
+			self.table[self.currentscope]['identifiers'][varname]= {'name': varname,'type':'Array','datatype':datatype,'scope':self.currentscope}
 		else:
-			self.table[self.currentscope]['identifiers'][varname]={'name':varname,'type':type,'datatype':datatype,'scope':self.currentscope,'size':size}
+			self.table[self.currentscope]['identifiers'][varname]= {'name': varname,'type':"Variable",'datatype':datatype,'scope':self.currentscope,'size':size}
 
 	def addfunc(self,funcname,_type,datatype):
 		parentscope = self.currentscope
