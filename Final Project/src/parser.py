@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/home/divyat/anaconda2/bin/python
 from TAC import CreateTAC
 from TAC import OutputTAC
 import ply.lex as lex
@@ -17,7 +17,7 @@ s_cond=0
 s_label=0
 stackbegin = []
 stackend = []
-
+param_list = []
 Gloabl_Switch_Val=0
 Gloabl_Switch_Label=0
 
@@ -194,6 +194,12 @@ def p_Declarators(p):
     '''Declarators : DeclaratorInitializer
     		   | DeclaratorInitializer COMMA DeclaratorIdentifierList
     '''
+    print p.slice
+    
+    # print p[0],"LLLLLLLLLLLLLLLL",p.slice
+
+    return
+
     Derivations.append(p.slice)
 
 # def p_declarator_mark(p):
@@ -207,17 +213,21 @@ def p_DeclaratorInitializer(p):
     			     | AltDeclarator ASSIGN Initializer
     			     | AltDeclarator 
     '''
+    # print p.slice
+    # print p[-1],"HHHHHHHHHIIIIIIIIIIIIII",p.slice
     p[0]=p[1]
     if len(p)==4:
         # print p[0],":::::::::::"
         if "isarraylist" in p[3]:
             # print "Hi"
+            print p[3],"LLLLLLLLLLLL"
             p[0]['type'] = p[3]['type']
             global arraylist
             if len(arraylist)>int(p[1]['size']):
                     print "Size of initializer list is greater than array size"
                     sys.exit(0)
             size = int(p[1]['size'])
+            print arraylist
             for i,j in enumerate(arraylist):
                 CreateTAC( '=',p[0]['place']+"["+ str(size-i-1) +"]",j, None )
                 # print '=',p[0]['place'],p[3]['place']
@@ -249,6 +259,7 @@ def p_DeclaratorInitializer(p):
             print "Redeclaration of variable not allowed",p[3]['place']
             sys.exit(0)
 
+    print p[1],"LLLLLLLLLLLLLLLLLLL"
 
     if 'isarray' in p[1].keys():    
         ST.addvar(p[0]['place'],p[0]['type'],"Array",p[1]['size'])
@@ -339,6 +350,7 @@ def p_AltDeclarator(p):
     		     | BasicType2_opt LPAREN AltDeclaratorX RPAREN AltDeclaratorSuffixes
     '''
     # print p[-1]
+    print p.slice
     if len(p)==4:
         p[0]={
             'place':p[2],
@@ -361,6 +373,7 @@ def p_AltDeclaratorSuffixes(p):
     '''AltDeclaratorSuffixes : AltDeclaratorSuffix
     			             | AltDeclaratorSuffix AltDeclaratorSuffixes
     '''
+    print p.slice
     if len(p)==2:
         p[0] = p[1]
         return
@@ -512,6 +525,7 @@ def p_ArrayInitializer(p):
     '''ArrayInitializer : LBRACKET ArrayMemberInitializations_opt RBRACKET
     '''
     p[0] = p[2]
+    print p.slice
     
     Derivations.append(p.slice)
 
@@ -524,6 +538,7 @@ def p_ArrayMemberInitializations(p):
     p[0]['isarraylist'] = True
     global arraylist
     arraylist.append(p[1]['place'])
+    print p[1],":::::::::"
 
     Derivations.append(p.slice)
 
@@ -671,6 +686,7 @@ def p_AssignExpression(p):
     # p[0]={'place':newPlace, 'type':"TYPE_ERROR"}
     # p[0]['place']=p[]
     if p[2][0]=='=':
+        print p[1],p[3],"::::::" 
 
         if p[1]['type']==p[3]['type']:
             CreateTAC( '=',p[1]['place'],p[3]['place'], None )
@@ -822,15 +838,8 @@ def p_RelExpression(p):
         CreateTAC(p[2],newPlace,p[1]['place'],p[3]['place'])
         p[0]['type'] = 'INT'
 
-    elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT' :
-        # p[3] =ResolveRHSArray(p[3])
-        # p[1] =ResolveRHSArray(p[1])
-        # print p[2],newPlace,p[1]['place'],p[3]['place']
-        CreateTAC(p[2],newPlace,p[1]['place'],p[3]['place'])
-        p[0]['type'] = 'FLOAT'
-
     else:
-        print("Error: Integer or Float value is needed")
+        print("Error: integer value is needed")
         sys.exit(0)
         return
     
@@ -874,15 +883,8 @@ def p_AddExpression(p):
         # print p[2],newPlace,p[1]['place'],p[3]['place']
         p[0]['type'] = 'INT'
 
-    elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT' :
-        # p[3] =ResolveRHSArray(p[3])
-        # p[1] =ResolveRHSArray(p[1])
-        CreateTAC( p[2],newPlace,p[1]['place'],p[3]['place'] )
-        # print p[2],newPlace,p[1]['place'],p[3]['place']
-        p[0]['type'] = 'FLOAT'
-
     else:
-        print("Error: integer or float value is needed")
+        print("Error: integer value is needed")
         sys.exit(0)
         return
     # # # elif p[1]['isconst']:
@@ -923,16 +925,8 @@ def p_MulExpression(p):
         CreateTAC( p[2], newPlace , p[1]['place'], p[3]['place'] )         
         # print p[2],newPlace,p[1]['place'],p[3]['place']
         p[0]['type'] = 'INT'
-
-    elif p[1]['type'] == 'FLOAT' and p[3]['type'] == 'FLOAT' :
-        # p[3] =ResolveRHSArray(p[3])
-        # p[1] =ResolveRHSArray(p[1])
-        CreateTAC( p[2], newPlace , p[1]['place'], p[3]['place'] )         
-        # print p[2],newPlace,p[1]['place'],p[3]['place']
-        p[0]['type'] = 'FLOAT'
-
     else:
-        print("Error: Integer or Float value is needed")
+        print("Error: integer value is needed")
     
     Derivations.append(p.slice) 
 
@@ -1093,6 +1087,8 @@ def p_JmpMark(p):
     else:
         CreateTAC( "call", p[-4], None, None )
     # print "call ", p[-4]
+    print p.slice
+    print p[-2]
 
 def p_PrimaryExpression(p):
     ''' PrimaryExpression : IDENTIFIER
@@ -1156,11 +1152,13 @@ def p_PrimaryExpression(p):
             return
 
         if (p.slice[1].type =='LIT_STRPlus'):
+            print p[1],"::::::::::::::::"
             p[0]={
                 'type':'STR',
                 'place':p[1],
                 'isconst':True
                 }
+            print "in here"
             return
 
         # Identifiers
@@ -1225,6 +1223,7 @@ def p_FunctionLiteral(p):
                         | ParameterMemberAttributes FunctionLiteralBody
                         | FunctionLiteralBody
     '''
+    print p.slice
     Derivations.append(p.slice)
 
 def p_ParameterAttributes(p):
@@ -1541,6 +1540,7 @@ def p_for_M1(p):
     '''
         for_M1 :
     '''
+    print p[-3]
     IncrLabel = ST.get_label()
     StatementLabel = ST.get_label()
     EndLabel = ST.get_label()
@@ -2066,12 +2066,23 @@ def p_AnonymousEnumMember(p):
     Derivations.append(p.slice)
     
 def p_FuncDeclaration(p):
-    '''FuncDeclaration  : StorageClasses_opt BasicType FuncDeclarator FunctionBody
-                        | StorageClasses_opt BasicType FuncDeclarator SEMICOLON
+    '''FuncDeclaration  : StorageClasses_opt BasicType FuncDeclarator func_m1 FunctionBody 
+                        | StorageClasses_opt BasicType FuncDeclarator func_m2 SEMICOLON 
     		            | AutoFuncDeclaration
     '''
     Derivations.append(p.slice)
 
+def p_func_m1(p):
+    '''func_m1 : empty
+    '''
+    print p[-1]
+    FuncLabel = p[-1][0]
+    ST.addfunc(FuncLabel,"function",p[-2])
+    CreateTAC( "label", FuncLabel, None, None )
+
+def p_func_m2(p):
+    '''func_m2 : empty
+    '''
 
 def p_AutoFuncDeclaration(p):
     '''AutoFuncDeclaration : StorageClasses IDENTIFIER FuncDeclaratorSuffix FunctionBody
@@ -2083,11 +2094,12 @@ def p_FuncDeclarator(p):
     '''
     Derivations.append(p.slice)
 
-    FuncLabel= p[2]
-    ST.addfunc(FuncLabel,"function",p[-1])
-    CreateTAC( "label", FuncLabel, None, None )
-    # print "label ", FuncLabel
-    p[0] = p[2]
+    # FuncLabel= p[2]
+    # ST.addfunc(FuncLabel,"function",p[-1])
+    # CreateTAC( "label", FuncLabel, None, None )
+    # # print "label ", FuncLabel
+    # p[0] = p[2]
+    p[0] = [p[2]]
 
 
 def p_FuncDeclaratorSuffix(p):
@@ -2105,6 +2117,8 @@ def p_ParameterList(p):
     		     | Parameter COMMA ParameterList
     		     | ELLIPSIS
     '''
+    param_list.append(p[1])
+    print param_list
     Derivations.append(p.slice)
 
 
@@ -2121,6 +2135,7 @@ def p_Parameter(p):
     		 | InOut_opt Type
     		 | InOut_opt Type ELLIPSIS
     '''
+    p[0] = p[3]
     Derivations.append(p.slice)
 
 def p_InOut(p):
@@ -2212,10 +2227,10 @@ a+="\n"
 yacc.parse(a)#, debug=True)
 
 # Printing the identifiers stored in Symbol Table
-# for i in ST.table:
-#     print ST.table[i]
-# print ""
-# print ""
+for i in ST.table:
+    print ST.table[i]
+print ""
+print ""
 
 # Print the IR Code generated
 OutputTAC()
