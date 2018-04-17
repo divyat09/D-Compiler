@@ -1,0 +1,22 @@
+int main(){
+	int x=1,i;
+	x=x+i;
+	x=2;
+	i++;
+	//s++;
+	int A[3];
+	A[0]=1;
+	//int A[5]=[1,2,3,4,5];
+	//s=s+1;
+	if(x<2)
+	{
+		int j;
+	}
+	else
+	{
+		int m;
+	}
+
+
+}
+
