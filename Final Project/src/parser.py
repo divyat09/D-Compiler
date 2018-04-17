@@ -216,6 +216,8 @@ def p_DeclaratorInitializer(p):
     # print p.slice
     # print p[-1],"HHHHHHHHHIIIIIIIIIIIIII",p.slice
     p[0]=p[1]
+    scope = ST.checkscope(p[1]['place'])
+    currentscope = ST.currentscope
     if len(p)==4:
         # print p[0],":::::::::::"
         if "isarraylist" in p[3]:
@@ -231,8 +233,11 @@ def p_DeclaratorInitializer(p):
             for i,j in enumerate(arraylist):
                 CreateTAC( '=',p[0]['place']+"["+ str(size-i-1) +"]",j, None )
                 # print '=',p[0]['place'],p[3]['place']
-                if p[1]['place'] in ST.table.keys():
-                    print "Redeclaration of variable not allowed",p[3]['place']
+                # scope = ST.checkscope(p[1]['place'])
+                print scope, p[1]['place'],"((((((((((((((((((((((((((((("
+                # if p[1]['place'] in ST.table.keys():
+                if scope == currentscope:
+                    print "Redeclaration of variable not allowed",p[1]['place']
                     sys.exit(0)
                 if p[1]['type']!=p[3]['type']:
                     print "Type error " + p[3]['type'] +" != " + p[1]['type']
@@ -241,21 +246,24 @@ def p_DeclaratorInitializer(p):
             ST.addvar(p[0]['place'],p[0]['type'],"Array",p[1]['size'])
             return
                 
-        p[0]['type'] = p[3]['type']
-        CreateTAC( '=',p[0]['place'],p[3]['place'], None )
         # print '=',p[0]['place'],p[3]['place']
-        if p[1]['place'] in ST.table.keys():
-            print "Redeclaration of variable not allowed",p[3]['place']
+        # scope = ST.checkscope(p[1]['place'])
+        # if p[1]['place'] in ST.table.keys():
+        if scope == currentscope:
+            print "Redeclaration of variable not allowed",p[1]['place']
             sys.exit(0)
         if p[1]['type']!=p[3]['type']:
             print "Type error " + p[3]['type'] +" != " + p[1]['type']
             sys.exit(0)
         ST.addvar(p[0]['place'],p[0]['type'],"Variable","4")
+        p[0]['type'] = p[3]['type']
+        CreateTAC( '=',p[0]['place'],p[3]['place'], None )
         
         return
     
     if len(p)==2:
-        if p[0]['place'] in ST.table.keys():
+        # if p[1]['place'] in ST.table.keys():
+        if scope == currentscope:
             print "Redeclaration of variable not allowed",p[3]['place']
             sys.exit(0)
 
@@ -302,10 +310,12 @@ def p_VarDeclaratorIdentifier(p):
                                 | IDENTIFIER ASSIGN Initializer
     '''
     # print p[-1], "MARKED AGAIN"
+    scope = ST.checkscope(p[1])
     Derivations.append(p.slice) # rem template parameters from 2
     if len(p)==2:
         p[0]=p[1]
-        if p[1] in ST.table.keys():
+        # if p[1] in ST.table.keys():
+        if scope==ST.currentscope:
             print "Redeclaration of variable not allowed",p[3]['place']
             sys.exit(0)
         else:
@@ -946,9 +956,11 @@ def p_UnaryExpression(p):
     if len(p)==2 :
         p[0]=p[1]
         return
+    scope = ST.checkscope(p[2]['place']) 
     if len(p)==3:
         if p[1]=='++' or p[1]=='--':
-            if p[2]['place'] in ST.table.keys():
+            # if p[2]['place'] in ST.table.keys():
+            if scope:    
                 if p[2]['type'] == "INT":
                     CreateTAC( p[1][0],p[2]['place'],p[2]['place'],1 )
                     # print p[1][0],p[2]['place'],p[2]['place'],1
@@ -1056,7 +1068,8 @@ def p_PostfixExpression(p):
     if len(p)==3:
         # print "HI"
         # print p[1]['place'].strip("[")[0] , "HI"
-        if p[1]['place'] in ST.table.keys() or (p[1]["isarray"] and p[1]['place'].strip("[")[0] in ST.table.keys()):
+        # if p[1]['place'] in ST.table.keys() or (p[1]["isarray"] and p[1]['place'].strip("[")[0] in ST.table.keys()):
+        if ST.checkscope(p[1]['place']) or (p[1]["isarray"] and ST.checkscope(p[1]['place'].strip("[")[0])) :
             if p[1]['type'] == "INT":
                 CreateTAC( p[2][0],p[1]['place'],p[1]['place'],1 )
                 # print p[2][0],p[1]['place'],p[1]['place'],1
@@ -1075,12 +1088,14 @@ def p_JmpMark(p):
         JmpMark : empty
     '''
     # 'place': ST.table[p[-4]]['returnvar'],
-
-    if p[-4] in ST.table.keys():
+    scope = ST.checkscope(p[-4])
+    # if p[-4] in ST.table.keys():
+    if scope:
         # newPlace = ST.get_temp()
         p[0]={
             'place':p[-4],
-            'type':ST.table[p[-4]]['datatype'] 
+            # 'type':ST.table[p[-4]]['datatype'] 
+            'type':ST.gettype(scope,p[-4])
         }
     if( p[-4] == 'writeln'):
         CreateTAC( "print_str", p[-2]['place'], None, None )
@@ -1170,9 +1185,12 @@ def p_PrimaryExpression(p):
             p[0]['place'] = p[1]['place']
             p[0]['type'] = p[1]['type']
             return
-        if p[1] in ST.table.keys():
-            p[0]['place'] = ST.table[p[1]]['name']
-            p[0]['type'] = ST.table[p[1]]['datatype']
+        # if p[1] in ST.table.keys():
+        scope = ST.checkscope(p[1])
+        if scope:
+            p[0]['place'] = p[1]
+            p[0]['type'] = ST.gettype(scope,p[1])
+            # p[0]['type'] = ST.table[scope]['identifiers'][p[1]]['datatype']
             return
         else:
             print('Error : undefined variable '+p[1]+' is used.')
@@ -1191,12 +1209,15 @@ def p_ArrayLiteral(p):
     '''
     if len(p)==5:
         # newPlace = ST.get_temp()
-        if p[1] in ST.table.keys():
+        scope = ST.checkscope(p[1])
+        # if p[1] in ST.table.keys():
+        if scope:
             # print '*',newPlace,p[3],sizeof(p[0]['type'])
             if type(p[3])==type({}):
                 p[0]={
                 'place':p[1]+"["+ p[3]['place'] +"]",
-                'type':ST.table[p[1]]['datatype'],
+                # 'type':ST.table[p[1]]['datatype'],
+                'type':ST.gettype(scope,p[1]),
                 'isarray':True
                 }
                 # CreateTAC( '*', p[1]+"["+ p[3]['place'] +"]",None , None)
@@ -1207,7 +1228,8 @@ def p_ArrayLiteral(p):
             else:
                 p[0]={
                 'place':p[1]+"["+ p[3] +"]",
-                'type':ST.table[p[1]]['datatype'],
+                # 'type':ST.table[p[1]]['datatype'],
+                'type':ST.gettype(scope,p[1]),
                 'isarray':True
                 }
                 # CreateTAC( '*', newPlace, p[3], '4' )
@@ -1357,10 +1379,27 @@ def p_LabeledStatement(p):
 
 def p_BlockStatement(p):
     '''
-        BlockStatement : LBRACE RBRACE
-                       | LBRACE StatementList RBRACE
+        BlockStatement : LBRACE M_block_begin RBRACE M_block_end
+                       | LBRACE M_block_begin StatementList RBRACE M_block_end
     '''
     Derivations.append(p.slice)
+
+def p_M_block_begin(p):
+    '''
+        M_block_begin : 
+    '''
+    ST.newscope()
+    Derivations.append(p.slice)
+
+
+def p_M_block_end(p):
+    '''
+        M_block_end : 
+    '''
+    ST.endscope()
+    Derivations.append(p.slice)
+
+
 
 def p_StatementList(p):
     '''
@@ -2228,7 +2267,10 @@ yacc.parse(a)#, debug=True)
 
 # Printing the identifiers stored in Symbol Table
 for i in ST.table:
-    print ST.table[i]
+    print ST.table[i]['name'],ST.table[i]['parentscope']    
+
+    for j in ST.table[i]['identifiers']:
+        print ST.table[i]['identifiers'][j]
 print ""
 print ""
 
