@@ -252,6 +252,17 @@ def p_DeclaratorInitializer(p):
         if scope == currentscope:
             print "Redeclaration of variable not allowed",p[1]['place']
             sys.exit(0)
+        print p[1],p[3]
+        print type(p[3])!=type({}) 
+        if type(p[3])!=type({}):
+            if p[1]['type']!=ST.getfunc_returntype(p[3]):
+                print "Type error " + ST.getfunc_returntype(p[3]) +" != " + p[1]['type']
+                sys.exit(0)    
+            else:
+                ST.addvar(p[0]['place'],p[0]['type'],"Variable","4")
+                p[0]['type'] = ST.getfunc_returntype(p[3])
+                CreateTAC( '=',p[0]['place'],p[3], None )
+                return
         if p[1]['type']!=p[3]['type']:
             print "Type error " + p[3]['type'] +" != " + p[1]['type']
             sys.exit(0)
@@ -514,6 +525,7 @@ def p_Initializer(p):
     '''Initializer : VoidInitializer
     		   | NonVoidInitializer
     '''
+    # print p.slice
     p[0]=p[1]
     Derivations.append(p.slice)
 
@@ -521,6 +533,7 @@ def p_NonVoidInitializer(p):
     '''NonVoidInitializer : ExpInitializer
                           | ArrayInitializer
     '''
+    # print p.slice
     
     p[0]=p[1]
     Derivations.append(p.slice)
@@ -801,6 +814,7 @@ def p_CmpExpression(p):
     		     | EqualExpression
 		     | RelExpression
     '''
+    # print p.slice
     if len(p)==2:
         p[0]=p[1]
         return
@@ -1020,6 +1034,8 @@ def p_ArgumentList(p):
     if len(p)==2:
         # print p[1], ':::::::::::'
         p[0]=p[1]
+    print p.slice
+    param_list.append(p[1]['place'])
     Derivations.append(p.slice)  
 
 def p_CastExpression(p):
@@ -1060,6 +1076,7 @@ def p_PostfixExpression(p):
                          | PostfixExpression LPAREN ArgumentList RPAREN
                          | BasicType LPAREN ArgumentList_opt RPAREN JmpMark                                  
     '''
+    print p.slice
     Derivations.append(p.slice)    #add index expression, slice expression 
     if len(p)==2 :
         p[0]=p[1]
@@ -1081,12 +1098,14 @@ def p_PostfixExpression(p):
             print "Variable "+p[1]['place']+" not defined "
             return
     p[0]=p[5]
+    print p[5]
     # print p[5]    
 
 def p_JmpMark(p):
     '''
         JmpMark : empty
     '''
+    print p[-4], ">>>>>>>>>>>"
     # 'place': ST.table[p[-4]]['returnvar'],
     scope = ST.checkscope(p[-4])
     # if p[-4] in ST.table.keys():
@@ -1100,8 +1119,11 @@ def p_JmpMark(p):
     if( p[-4] == 'writeln'):
         CreateTAC( "print_str", p[-2]['place'], None, None )
     else:
+        for i,j in enumerate(param_list):
+            CreateTAC("=",p[-4]+'_'+str(i),j,None)
         CreateTAC( "call", p[-4], None, None )
     # print "call ", p[-4]
+    p[0]=p[-4]
     print p.slice
     print p[-2]
 
@@ -1129,7 +1151,7 @@ def p_PrimaryExpression(p):
                           | LPAREN Expression RPAREN 
                           | TypeidExpression                    
     '''
-    # print p.slice[1].type
+    print p.slice
     Derivations.append(p.slice)
     
     if(len(p)==2):
@@ -1208,7 +1230,7 @@ def p_ArrayLiteral(p):
                     | IDENTIFIER LBRACKET AssignExpression RBRACKET
     '''
     if len(p)==5:
-        # newPlace = ST.get_temp()
+        # newPlace = ST.get_temp()ArgumentList_op
         scope = ST.checkscope(p[1])
         # if p[1] in ST.table.keys():
         if scope:
@@ -1241,7 +1263,7 @@ def p_ArrayLiteral(p):
     Derivations.append(p.slice)
 
 def p_FunctionLiteral(p):
-    ''' FunctionLiteral : FUNCTION Type_opt ParameterAttributes_opt FunctionLiteralBody
+    ''' FunctionLiteral :  FUNCTION Type_opt ParameterAttributes_opt FunctionLiteralBody
                         | ParameterMemberAttributes FunctionLiteralBody
                         | FunctionLiteralBody
     '''
@@ -2116,12 +2138,18 @@ def p_func_m1(p):
     '''
     print p[-1]
     FuncLabel = p[-1][0]
-    ST.addfunc(FuncLabel,"function",p[-2])
+    #ST.addfunc(FuncLabel,"function",p[-2])
     CreateTAC( "label", FuncLabel, None, None )
+    global param_list
+    for i,j in enumerate(param_list):
+        CreateTAC( "=", j, FuncLabel+'_'+str(i), None )
+    param_list = []
 
 def p_func_m2(p):
     '''func_m2 : empty
     '''
+    global param_list
+    param_list = []
 
 def p_AutoFuncDeclaration(p):
     '''AutoFuncDeclaration : StorageClasses IDENTIFIER FuncDeclaratorSuffix FunctionBody
@@ -2129,17 +2157,24 @@ def p_AutoFuncDeclaration(p):
     Derivations.append(p.slice)
 
 def p_FuncDeclarator(p):
-    '''FuncDeclarator : BasicType2_opt IDENTIFIER FuncDeclaratorSuffix
+    '''FuncDeclarator : BasicType2_opt IDENTIFIER func_m3 FuncDeclaratorSuffix
     '''
     Derivations.append(p.slice)
 
-    # FuncLabel= p[2]
-    # ST.addfunc(FuncLabel,"function",p[-1])
+    FuncLabel= p[2]
+    ST.addfunc(FuncLabel,"function",p[-1])
     # CreateTAC( "label", FuncLabel, None, None )
     # # print "label ", FuncLabel
     # p[0] = p[2]
     p[0] = [p[2]]
 
+
+def p_func_m3(p):
+    '''func_m3 : empty
+    '''
+    # print p[-1],">>>>>>>>>>>>>>>>>>>>"
+    ST.addfunc(p[-1],"function",p[-3])
+    ST.currentscope = p[-1]
 
 def p_FuncDeclaratorSuffix(p):
     '''FuncDeclaratorSuffix : Parameters MemberFunctionAttributes_opt
@@ -2156,8 +2191,6 @@ def p_ParameterList(p):
     		     | Parameter COMMA ParameterList
     		     | ELLIPSIS
     '''
-    param_list.append(p[1])
-    print param_list
     Derivations.append(p.slice)
 
 
@@ -2174,7 +2207,13 @@ def p_Parameter(p):
     		 | InOut_opt Type
     		 | InOut_opt Type ELLIPSIS
     '''
-    p[0] = p[3]
+    global param_list
+    param_list.append(p[3]['place'])
+    print param_list,":::::::::::::::::"
+
+    # p[0] = p[3]['place']
+    # print p[-3],"jk"
+    ST.addvar(p[3]['place'],p[2],'variable','4')
     Derivations.append(p.slice)
 
 def p_InOut(p):
