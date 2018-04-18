@@ -1,0 +1,17 @@
+1, label, main
+2, =, b, 10
+3, =, i, 0
+4, <, tmp1, i, 5
+5, ifgoto_neq, b, tmp1, L2
+6, =, c, 5
+7, jmp, L1
+8, label, L2
+9, >=, tmp2, i, 5
+10, ifgoto_neq, b, tmp2, L3
+11, =, j, 1
+12, jmp, L1
+13, label, L3
+14, +, tmp3, b, 1
+15, =, b, tmp3
+16, label, L1
+17, ret, 0

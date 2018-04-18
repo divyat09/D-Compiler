@@ -5,11 +5,11 @@ int main(int na, char* argv[])
     switch(b)
     {
         case i<5:
-	    writeln("Weekday\n");
+		int c=5;
         case i>=5:
-            writeln("Weekend\n");
+		int j=1;
 	default: 
-	    writeln("Deafault Case\n");	
+		b=b+1;
     }
     return 0;
 }

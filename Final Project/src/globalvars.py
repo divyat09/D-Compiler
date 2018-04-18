@@ -2,6 +2,7 @@
 from symbol_table import *
 
 def isint(value):
+  # print "Val", value
   if (value[0]=='-'):
     value = value[1:]
     return value.isdigit()

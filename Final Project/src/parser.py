@@ -6,8 +6,8 @@ import sys
 import ply.yacc as yacc
 from lexer import tokens
 import logging
-import symbol_table
-ST = symbol_table.SymbolTable()
+import Symbol_Table
+ST = Symbol_Table.SymbolTable()
 arraylist = []
 Listnonterminals=[]
 Rderivation=[]
