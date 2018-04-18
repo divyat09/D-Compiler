@@ -23,14 +23,15 @@ class SymbolTable:
 			varname= varname.split('[')[0]
 			self.table[self.currentscope]['identifiers'][varname]= {'name': varname,'type':'Array','datatype':datatype,'scope':self.currentscope}
 		else:
-			self.table[self.currentscope]['identifiers'][varname]= {'name': varname,'type':"Variable",'datatype':datatype,'scope':self.currentscope,'size':size}
+			self.table[self.currentscope]['identifiers'][varname]={'name':varname,'type':_type,'datatype':datatype,'scope':self.currentscope,'size':size}
 
 	def addfunc(self,funcname,_type,datatype):
+		print "Hi"
 		parentscope = self.currentscope
 		if funcname=='main':
-			self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':None,'identifiers':{}}
+			self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':None,'identifiers':{},'parameters':{}}
 		else:	
-			self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':parentscope,'identifiers':{}}
+			self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':parentscope,'identifiers':{},'parameters':{}}
 		self.currentscope = funcname
 	
 	def newscope(self):
@@ -58,3 +59,6 @@ class SymbolTable:
 	
 	def gettype(self,scope,varname):
 		return self.table[scope]['identifiers'][varname]['datatype']
+
+	def getfunc_returntype(self,funcname):
+		return self.table[funcname]['datatype']
