@@ -1,5 +1,4 @@
-#!/usr/bin/python2
-# from globalvars import *
+from globalvars import *
 
 class SymbolTable:
 	def __init__(self):

@@ -9,7 +9,6 @@ int main(){
 	}
 	do{
 		a[i]=i*2;
-		writeln("Do While");
 		i=i+1;
 	}while(i<10);
 }

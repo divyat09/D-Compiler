@@ -286,6 +286,58 @@ def BitNeg( IRObj ):
 	else:
 		print "Error: Destination is not a Variable "
 
+def ConditionalExpression(IRObj):
+	
+	global special_count
+
+	if IRObj.op == "<":
+		cond_type= "ifgoto_lt"
+	elif IRObj.op == ">":
+		cond_type= "ifgoto_gt"
+	elif IRObj.op == "<=":
+		cond_type= "ifgoto_leq"
+	elif IRObj.op == ">=":
+		cond_type= "ifgoto_geq"
+
+	flag_= 0
+	if IRObj.isValid()[0]:
+		_src1= IRObj.src1
+		reg1= AssignRegister( _src1, IRObj.lineno, 1 )
+	else:
+		_src1= IRObj.const
+		flag_= 1
+		reg1= SpecialConstRegister( _src1, IRObj.lineno )
+		RegisterStatus[reg1]= 1
+
+	if IRObj.isValid()[1]:
+		_src2= IRObj.src2
+		reg2= AssignRegister( _src2, IRObj.lineno, 1 )
+	else:
+		_src2= IRObj.const2
+		reg2= "$" + _src2
+
+	_dst= IRObj.dst
+	reg3 = AssignRegister( _dst, IRObj.lineno, 0)
+
+	_target1= "LL" + str(special_count)
+	special_count+=1;
+	_target2= "LL" + str(special_count)
+	special_count+=1;
+	
+	f = open(AssemFile,'a')
+	f.write( "cmpl\t"+ reg2+ ","+ reg1+ "\n")
+	f.write( str(op2wrd[cond_type])+"\t"+ _target2+"\n")
+
+	f.write( "movl\t" + '$0' +',\t' + str(reg3)+"\n" )
+	f.write( "JMP"+"\t"+_target1+"\n" )
+
+	f.write(_target2+":"+"\n")
+	f.write( "movl\t" + '$1' +',\t' + str(reg3)+"\n" )
+	f.write(_target1+":"+"\n")
+
+	f.close()
+
+
 def Conditional ( IRObj):
 	
 	flag_= 0
@@ -465,6 +517,9 @@ def Operator3( IRObj ):			# left and right shift
 
 def SaveContext( lineno ):
 	# Save Context Information
+	f=open(AssemFile,'a')
+	f.write( "\n// Saving Context at the end of Basic Block\n" ) 
+	f.close()
 	if lineno in bb:
 		for register in RegisterStatus : 		
 			if RegisterStatus[register]==1:
@@ -503,12 +558,17 @@ def AssemblyConverter():
 			Ret( IRObj)
 		elif IRObj.op == "exit":
 			Exit( IRObj )
+
 		elif IRObj.op == "label":
 			if IRObj.lineno in bb:
 				SaveContext( IRObj.lineno )
 			Label( IRObj )
+
 		elif IRObj.op == "=":
 			Assignment( IRObj )
+
+		elif IRObj.op in ["<",">",">=","<="]:
+			ConditionalExpression(IRObj)	
 
 		elif IRObj.op[0] == "i":
 			SaveContext( IRObj.lineno + 1 )
@@ -533,4 +593,4 @@ def AssemblyConverter():
 
 		
 	# Program End Context Save Case
-	# SaveContext( IRObj.lineno )
+	SaveContext( IRObj.lineno )

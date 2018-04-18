@@ -50,13 +50,13 @@ def OutputTAC():
       print( str(LineNum) + Comma +'print_str' +Comma + Instr[1])
 
     elif Instr[0] == '=':
-      print( str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2] + Comma)
+      print( str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2])
 
     elif Instr[0] == '~':
-     print( str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2] + Comma)
+     print( str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2])
 
     elif Instr[0] in [ '+', '-', '*', '/', '%', '<<', '>>', '&', '|', '^','<','>','>=', '<=', '==', '!=' ] :
-      print( str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2] + Comma + Instr[3] + Comma)
+      print( str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2] + Comma + Instr[3])
     # else:
     #   print(str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2] + Comma + Instr[3] + Comma)
     LineNum = LineNum + 1

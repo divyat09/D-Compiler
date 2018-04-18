@@ -16,7 +16,7 @@ class IRDS:
     return [bool(self.src1),bool(self.src2),bool(self.dst)]
   
   def represent(self,data):
-    # print data
+    print "Data", data
     self.lineno = int(data[0])
     self.op = data[1]
   
@@ -106,11 +106,13 @@ class IRDS:
     else:
       # Table.addvar(data[2])
       self.dst = data[2]
+
       if(isint(data[3])):
         self.const=data[3]
       else:
         # Table.addvar(data[3])
         self.src1 = data[3]
+
       if(isint(data[4])):
         self.const2=data[4]
       else:
