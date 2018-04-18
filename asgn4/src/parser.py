@@ -17,7 +17,7 @@ s_cond=0
 s_label=0
 stackbegin = []
 stackend = []
-
+param_list = []
 Gloabl_Switch_Val=0
 Gloabl_Switch_Label=0
 
@@ -2066,12 +2066,23 @@ def p_AnonymousEnumMember(p):
     Derivations.append(p.slice)
     
 def p_FuncDeclaration(p):
-    '''FuncDeclaration  : StorageClasses_opt BasicType FuncDeclarator FunctionBody
-                        | StorageClasses_opt BasicType FuncDeclarator SEMICOLON
+    '''FuncDeclaration  : StorageClasses_opt BasicType FuncDeclarator func_m1 FunctionBody 
+                        | StorageClasses_opt BasicType FuncDeclarator func_m2 SEMICOLON 
     		            | AutoFuncDeclaration
     '''
     Derivations.append(p.slice)
 
+def p_func_m1(p):
+    '''func_m1 : empty
+    '''
+    print p[-1]
+    FuncLabel = p[-1][0]
+    ST.addfunc(FuncLabel,"function",p[-2])
+    CreateTAC( "label", FuncLabel, None, None )
+
+def p_func_m2(p):
+    '''func_m2 : empty
+    '''
 
 def p_AutoFuncDeclaration(p):
     '''AutoFuncDeclaration : StorageClasses IDENTIFIER FuncDeclaratorSuffix FunctionBody
@@ -2083,11 +2094,12 @@ def p_FuncDeclarator(p):
     '''
     Derivations.append(p.slice)
 
-    FuncLabel= p[2]
-    ST.addfunc(FuncLabel,"function",p[-1])
-    CreateTAC( "label", FuncLabel, None, None )
-    # print "label ", FuncLabel
-    p[0] = p[2]
+    # FuncLabel= p[2]
+    # ST.addfunc(FuncLabel,"function",p[-1])
+    # CreateTAC( "label", FuncLabel, None, None )
+    # # print "label ", FuncLabel
+    # p[0] = p[2]
+    p[0] = [p[2]]
 
 
 def p_FuncDeclaratorSuffix(p):
@@ -2105,6 +2117,8 @@ def p_ParameterList(p):
     		     | Parameter COMMA ParameterList
     		     | ELLIPSIS
     '''
+    param_list.append(p[1])
+    print param_list
     Derivations.append(p.slice)
 
 
@@ -2121,6 +2135,7 @@ def p_Parameter(p):
     		 | InOut_opt Type
     		 | InOut_opt Type ELLIPSIS
     '''
+    p[0] = p[3]
     Derivations.append(p.slice)
 
 def p_InOut(p):
