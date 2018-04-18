@@ -1,11 +1,11 @@
-from globalvars import *
+# from globalvars import *
 
 class SymbolTable:
 	def __init__(self):
 		self.table = {}
 		self.temp_no=0	
 		self.label_no=0
-		self.currentscope = 'main'
+		self.currentscope = None
 		self.scope_no = 0
 		#Add variable to table 
 
@@ -27,12 +27,31 @@ class SymbolTable:
 	def addfunc(self,funcname,_type,datatype):
 		print "Hi"
 		parentscope = self.currentscope
-		if funcname=='main':
-			self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':None,'identifiers':{},'parameters':{}}
-		else:	
-			self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':parentscope,'identifiers':{},'parameters':{}}
+		# if funcname=='main':
+		# 	self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':None,'identifiers':{},'parameters':[]}
+		# else:	
+		# 	self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':None,'identifiers':{},'parameters':[]}
+		self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':None,'identifiers':{},'parameters':[]}
+		
 		self.currentscope = funcname
 	
+	def addclass(self,classname,_type):
+		self.table[classname]={'name':classname,'type':_type,'datatype':None,'parentscope':None,'identifiers':{},'member_functions':{}}
+		self.currentscope = classname
+
+
+	def addvar_class(self,varname,datatype,_type,size):
+		if '[' in varname:
+			varname= varname.split('[')[0]
+			self.table[self.currentscope]['identifiers'][varname]= {'name': varname,'type':'Array','datatype':datatype,'scope':self.currentscope}
+		else:
+			self.table[self.currentscope]['identifiers'][varname]={'name':varname,'type':_type,'datatype':datatype,'scope':self.currentscope,'size':size}
+
+	
+	def addfunc_class(self,classname,funcname,datatype,_type):
+		self.table[classname]['member_functions'][funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':self.currentscope,'identifiers':{},'parameters':[]}
+		self.currentscope = funcname
+
 	def newscope(self):
 		scope = "s"+str(self.scope_no)
 		self.table[scope] = {'name':scope,'type':None,'datatype':None,'parentscope':self.currentscope,'identifiers':{}}
@@ -44,6 +63,7 @@ class SymbolTable:
 	
 	def checkscope(self,varname):
 		scope = self.currentscope
+		print  varname , self.table[scope]['identifiers']
 		while scope not in ['main']:
 		
 			if varname in self.table[scope]['identifiers']:
@@ -51,8 +71,10 @@ class SymbolTable:
 		
 			scope = self.table[scope]['parentscope']
 		
-		if varname in self.table['main']['identifiers']:
-			return 'main'
+
+		if 'main' in self.table.keys():
+			if varname in self.table['main']['identifiers']:
+				return 'main'
 		
 		return None
 	
