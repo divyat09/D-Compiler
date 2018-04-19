@@ -1,12 +1,18 @@
-int foo(int b,int c){
-    return 1;
+class foo{
+    int x = 0;
+    int c;
+    int hello(int a,int b){
+    	int x=0;	
+	
+    }
 }
+
 int main(){
-    int a =0;
-    char b = '0';
+    int a =0,f,g;
+    int b = &g;
     int res; 
-    //res =  res + b;
-    res = res + foo(a);
+    foo c,d;
+    c.hello(a,b);
     return 0;
 }
 
