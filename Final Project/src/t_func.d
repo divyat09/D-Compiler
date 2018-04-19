@@ -1,15 +1,18 @@
 class foo{
     int x = 0;
+    int c;
+    int hello(int a,int b){
+    	int x=0;	
+	
+    }
 }
 
 int main(){
-    int a =0;
-    int b = 0;
+    int a =0,f,g;
+    int b = &g;
     int res; 
-    //res =  res + b;
-    res = res + foo(b);
-    foo c;
-    res = c.x; 
+    foo c,d;
+    c.hello(a,b);
     return 0;
 }
 
