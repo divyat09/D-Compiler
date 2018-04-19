@@ -1353,6 +1353,7 @@ def p_JmpMark(p):
         else:
             print "FUNCTION not defined",scope
             sys.exit(0)
+        i = 0
         for i,j in enumerate(param_list):
             if (len(param_list) != len(ST.table[u]['parameters'])):
                 print "Number of arguments mismatch"
@@ -1460,12 +1461,16 @@ def p_PrimaryExpression(p):
             return
         # if p[1] in ST.table.keys():
         scope = ST.checkscope(p[1])
+
         if scope:
             p[0]['place'] = p[1]
             p[0]['type'] = ST.gettype(scope,p[1])
             # p[0]['type'] = ST.table[scope]['identifiers'][p[1]]['datatype']
             return
+        
         else:
+
+            #check parent scope if class function
             print('Error : undefined variable '+str(p[1])+' is used.')
             sys.exit(0)
 
@@ -1673,8 +1678,9 @@ def p_M_block_begin(p):
             CreateTAC( "=", j[0]+ST.currentscope, FuncLabel+'_'+str(i), None )
             print i
             ST.addvar(j[0],j[1],"Variable","4")
-        ST.addvar("this"+ST.currentscope,"INT","Variable","4")    
-        CreateTAC("=","this"+ST.currentscope,FuncLabel+'_'+str(i+1),None)    
+        if "." in FuncLabel:
+            ST.addvar("this"+ST.currentscope,"INT","Variable","4")    
+            CreateTAC("=","this"+ST.currentscope,FuncLabel+'_'+str(i+1),None)    
         param_list = []
     Derivations.append(p.slice)
 
@@ -2433,10 +2439,14 @@ def p_func_m1(p):
     global is_class
     global FuncLabel
     if is_class != False:
-        FuncLabel = is_class+"."+ p[-1][0] # pass aprameters too
+        #FuncLabel = is_class+"."+ p[-1][0] # pass aprameters too
+        #ST.addfunc_class(is_class,FuncLabel,p[-2],"class_func")
+        #print ST.table[FuncLabel],">>>>>>>>>>>>>"
         global flag
         flag=is_class
+        FuncLabel = is_class+'.'+p[-1][0]
         is_class = False
+
     else:
         FuncLabel = p[-1][0]
     #ST.addfunc(FuncLabel,"function",p[-2])
@@ -2490,10 +2500,11 @@ def p_func_m3(p):
     # print p[-1],">>>>>>>>>>>>>>>>>>>>"
     global is_class
     if (is_class):
-        ST.addfunc(is_class+"."+p[-1],"function",p[-3])
+        ST.addfunc_class(is_class,is_class+'.'+p[-1],p[-2],"class_func")
+        ST.addfunc(is_class+'.'+p[-1],p[-2],"class_func",is_class)
         ST.currentscope = is_class+"."+p[-1]
     else:
-        ST.addfunc(p[-1],"function",p[-3])
+        ST.addfunc(p[-1],"function",p[-3],None)
         ST.currentscope = p[-1]
 
 def p_FuncDeclaratorSuffix(p):

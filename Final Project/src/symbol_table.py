@@ -24,15 +24,18 @@ class SymbolTable:
 		else:
 			self.table[self.currentscope]['identifiers'][varname]={'name':varname,'type':_type,'datatype':datatype,'scope':self.currentscope,'size':size}
 
-	def addfunc(self,funcname,_type,datatype):
+	def addfunc(self,funcname,_type,datatype,parentscope):
 		# print "Hi"
-		parentscope = self.currentscope
-		# if funcname=='main':
-		# 	self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':None,'identifiers':{},'parameters':[]}
-		# else:	
-		# 	self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':None,'identifiers':{},'parameters':[]}
-		self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':None,'identifiers':{},'parameters':[]}
-		
+		if not parentscope:
+			parentscope = self.currentscope
+			# if funcname=='main':
+			# 	self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':None,'identifiers':{},'parameters':[]}
+			# else:	
+			# 	self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':None,'identifiers':{},'parameters':[]}
+			self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':None,'identifiers':{},'parameters':[]}
+		else:
+			self.table[funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':self.table[parentscope]['child'],'identifiers':{},'parameters':[]}
+
 		self.currentscope = funcname
 	
 	def addclass(self,classname,_type):
@@ -52,8 +55,10 @@ class SymbolTable:
 
 	
 	def addfunc_class(self,classname,funcname,datatype,_type):
-		self.table[classname]['member_functions'][funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':self.currentscope,'identifiers':{},'parameters':[]}
+		print self.table[classname]['child'], "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK"
+		self.table[classname]['member_functions'][funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':self.table[classname]['child'],'identifiers':{},'parameters':[]}
 		self.currentscope = funcname
+		print self.table[classname]['member_functions'][funcname]['parentscope']
 
 	def get_class_idlist(self,classname):
 		return self.table[self.table[classname]['child']]['identifiers']
@@ -69,11 +74,13 @@ class SymbolTable:
 	
 	def checkscope(self,varname):
 		scope = self.currentscope
+		print scope,"poooooooooooopoooooooo"
 		# print scope, varname , self.table[scope]#['identifiers']
 		while scope not in [None]:
 			# print not self.table[scope]['identifiers'],"GGGGGGGGGGGG"
 			if bool(self.table[scope]['identifiers']) and (varname in self.table[scope]['identifiers']):
 				return scope
+			print scope,self.table[scope]['parentscope']
 		
 			scope = self.table[scope]['parentscope']
 		
