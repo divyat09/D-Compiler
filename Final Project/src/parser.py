@@ -220,7 +220,6 @@ def p_DeclaratorInitializer(p):
     '''
     # print p.slice
     global is_class
-    print p[-1],p[1],is_class,"HHHHHHHHHIIIIIIIIIIIIII",p.slice
     p[0]=p[1]
     # print p[1]['place'],ST.currentscope,"::::::::::;"
     scope = ST.checkscope(p[1]['place'])
@@ -243,7 +242,6 @@ def p_DeclaratorInitializer(p):
                     CreateTAC( '=',p[0]['place']+"["+ str(size-i-1) +"]",j, None )
                     # print '=',p[0]['place'],p[3]['place']
                     # scope = ST.checkscope(p[1]['place'])
-                    print scope, p[1]['place'],"((((((((((((((((((((((((((((("
                     # if p[1]['place'] in ST.table.keys():
                     if scope == currentscope:
                         print "Redeclaration of variable not allowed",p[1]['place']
@@ -302,7 +300,6 @@ def p_DeclaratorInitializer(p):
             _list = ST.get_class_idlist(p[-1])
             for ele in _list.keys():
                 ST.addvar(p[1]['place']+"."+ele,_list[ele]['datatype'],"CLASS_VARIABLE","4")
-                print ele,ST.table[p[-1]]['constructor'].keys(),"HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"
                 if ele in ST.table[p[-1]]['constructor'].keys():
                     CreateTAC("=",p[1]['place']+ST.currentscope+"."+ele,ST.table[p[-1]]['constructor'][ele]['value'],None)
         # return
@@ -1320,7 +1317,6 @@ def p_JmpMark(p):
     '''
         JmpMark : empty
     '''
-    print p[-4], ">>>>>>>>>>>"
     # 'place': ST.table[p[-4]]['returnvar'],
     # scope = ST.checkscope(p[-4])
 
@@ -1335,11 +1331,12 @@ def p_JmpMark(p):
         if ((p[-4] not in ST.table.keys()) and '.' in p[-4]):
             print ST.currentscope
             objname = p[-4].split(".")[0]
+            print objname, ":::::::::::::"
             # print ST.table[ST.currentscope].keys()
             u = ST.table[ST.currentscope]['identifiers'][p[-4].split(".")[0]]['datatype']
             u = u+ '.'+p[-4].split(".")[1]
             
-
+        print u, "::::::::::::::::::::::::"
         if u in ST.table.keys():
             # if scope:
             # newPlace = ST.get_temp()
@@ -1348,7 +1345,6 @@ def p_JmpMark(p):
                 # 'type':ST.table[p[-4]]['datatype'] 
                 'type':ST.table[u]['datatype']
             }
-            print p[0],"::::::::::::::::::::::::::::::"
 
         else:
             print "FUNCTION not defined",scope
@@ -1358,18 +1354,31 @@ def p_JmpMark(p):
             if (len(param_list) != len(ST.table[u]['parameters'])):
                 print "Number of arguments mismatch"
                 sys.exit(0)
-            print j, j[0], "PPPPPPPPPPPPPPPP"
             if (ST.table[u]['parameters'][i]!= j[1]):
                 print "Error type mismatch", ST.table[u]['parameters'][i],"!=" ,j[1], " in call to ",u
                 sys.exit(0)
             CreateTAC("=",u+'_'+str(i),j[0]+ST.currentscope,None)
         
         param_list = []
-        if "." in u:
-            CreateTAC("=",u+'_'+str(i+1),"&"+objname+ST.currentscope,None)
+        k = i
+        if "." in p[-4]:
+            classname = u.split(".")[0]
+            for j in ST.table[ST.table[classname]['child']]['identifiers']:
+                CreateTAC("=",u+'_'+str(i+1),objname+ST.currentscope+'.'+j,None)
+                i = i+1
     
         CreateTAC( "call", u, None, None )
-        
+        i =k
+        if "." in p[-4]:
+
+            classname = u.split(".")[0]
+            print objname,"KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK"
+            scope = ST.checkscope(u)
+            print scope
+            print "YYYYYYYYYYYYYYYYYYYYY",classname,ST.table[ST.table[classname]['child']]['identifiers']
+            for j in ST.table[ST.table[classname]['child']]['identifiers']:
+                CreateTAC("=",objname+ST.currentscope+'.'+j,u+'_'+str(i+1),None)
+                i = i+1
         
 
     # print "call ", p[-4]
@@ -1409,8 +1418,8 @@ def p_PrimaryExpression(p):
         'place' : 'undefined',
         'type' : 'TYPE_ERROR'
         }
-        
         #Literals
+        #if p.slice[1].type == 'FALSE' or 
         if (p.slice[1].type =='INUMBER'):
             p[0]={
                 'type':'INT',
@@ -1673,14 +1682,19 @@ def p_M_block_begin(p):
     '''
     ST.newscope()
     global param_list,FuncLabel
+    i = 0
     if len(param_list):
         for i,j in enumerate(param_list):
             CreateTAC( "=", j[0]+ST.currentscope, FuncLabel+'_'+str(i), None )
             print i
             ST.addvar(j[0],j[1],"Variable","4")
-        if "." in FuncLabel:
-            ST.addvar("this"+ST.currentscope,"INT","Variable","4")    
-            CreateTAC("=","this"+ST.currentscope,FuncLabel+'_'+str(i+1),None)    
+    print FuncLabel
+    classname = FuncLabel.split(".")[0]
+    if "." in FuncLabel:
+        for j in ST.table[ST.table[classname]['child']]['identifiers']:
+            CreateTAC("=",j,FuncLabel+'_'+str(i+1),None)
+            i = i+1
+        
         param_list = []
     Derivations.append(p.slice)
 

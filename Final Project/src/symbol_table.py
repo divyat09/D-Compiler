@@ -74,13 +74,11 @@ class SymbolTable:
 	
 	def checkscope(self,varname):
 		scope = self.currentscope
-		print scope,"poooooooooooopoooooooo"
 		# print scope, varname , self.table[scope]#['identifiers']
 		while scope not in [None]:
 			# print not self.table[scope]['identifiers'],"GGGGGGGGGGGG"
 			if bool(self.table[scope]['identifiers']) and (varname in self.table[scope]['identifiers']):
 				return scope
-			print scope,self.table[scope]['parentscope']
 		
 			scope = self.table[scope]['parentscope']
 		
