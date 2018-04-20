@@ -1,7 +1,7 @@
 class foo{
     int x = 0;
     int c;
-    int hello(){
+    int hello(int a){
     	x=c+2;	
 	
     }
@@ -18,7 +18,7 @@ int main(){
     
     foo c;
     if (b>0){
-    	c.hello();
+    	c.hello(2);
     }//bool d = false;
     return 0;
 }

@@ -1,0 +1,12 @@
+1, =, i, 0
+2, label, L2
+3, input_int, A[i]
+4, +, i, i, 1
+5, ifgoto_lt, i, 10, L2
+6, =, i, 0
+7, label, L7
+8, -, j, 9, i
+9, print_int, A[j]
+10, +, i, i, 1
+11, ifgoto_lt, i, 10, L7
+12, exit, 0

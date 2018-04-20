@@ -220,10 +220,6 @@ def p_DeclaratorInitializer(p):
     '''
     # print p.slice
     global is_class
-<<<<<<< HEAD
-    # print p[-1],p[1],is_class,"HHHHHHHHHIIIIIIIIIIIIII",p.slice
-=======
->>>>>>> 086e1744896e084812f1b8536dae8656bfbf5637
     p[0]=p[1]
     # print p[1]['place'],ST.currentscope,"::::::::::;"
     scope = ST.checkscope(p[1]['place'])
@@ -246,10 +242,6 @@ def p_DeclaratorInitializer(p):
                     CreateTAC( '=',p[0]['place']+ST.currentscope+"["+ str(size-i-1) +"]",j, None )
                     # print '=',p[0]['place'],p[3]['place']
                     # scope = ST.checkscope(p[1]['place'])
-<<<<<<< HEAD
-                    # print scope, p[1]['place'],"((((((((((((((((((((((((((((("
-=======
->>>>>>> 086e1744896e084812f1b8536dae8656bfbf5637
                     # if p[1]['place'] in ST.table.keys():
                     if scope == currentscope:
                         print "Redeclaration of variable not allowed",p[1]['place']
@@ -289,13 +281,17 @@ def p_DeclaratorInitializer(p):
             if 'isconst' in p[3].keys():
                 CreateTAC( '=',p[0]['place']+ST.currentscope,p[3]['place'], None )
             else:
+                # print p[3],"{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{"
                 if ST.checkscope(p[3]['place']):
                     CreateTAC( '=',p[0]['place']+ST.currentscope,p[3]['place']+ST.checkscope(p[3]['place']), None )
                 else:
                     if 'isfunc' in p[3].keys():
                         CreateTAC( '=',p[0]['place']+ST.currentscope,p[3]['place']+".ret", None )
+                        return
+                    if 'scope' in p[3].keys():
+                        CreateTAC( '=',p[0]['place']+ST.currentscope,p[3]['place']+p[3]['scope'], None)
                     else:
-                        print p[3]['place'], " NOT DEFINED "
+                        print p[3], " NOT DEFINED "
             return
         
         if len(p)==2:
@@ -313,10 +309,6 @@ def p_DeclaratorInitializer(p):
             _list = ST.get_class_idlist(p[-1])
             for ele in _list.keys():
                 ST.addvar(p[1]['place']+"."+ele,_list[ele]['datatype'],"CLASS_VARIABLE","4")
-<<<<<<< HEAD
-                # print ele,ST.table[p[-1]]['constructor'].keys(),"HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"
-=======
->>>>>>> 086e1744896e084812f1b8536dae8656bfbf5637
                 if ele in ST.table[p[-1]]['constructor'].keys():
                     CreateTAC("=",p[1]['place']+ST.currentscope+"."+ele,ST.table[p[-1]]['constructor'][ele]['value'],None)
         # return
@@ -859,14 +851,20 @@ def p_AssignExpression(p):
                 print "type mismatch"+p[1]['type']+"!="+ST.getfunc_returntype(p[3])
                 sys.exit(0)
         if p[1]['type']==p[3]['type']:
+            name = p[1]['place']
+            end =""
+            if "[" in name:
+                name = p[1]['place'].split("[")[0]
+                end = "["+ p[1]['place'].split("[")[1]
+            scope = ST.checkscope(name)
             if "isconst" in p[3].keys():
-                CreateTAC( '=',p[1]['place']+p[1]['scope'],p[3]['place'], None )
+                CreateTAC( '=',name+scope+end,p[3]['place'], None )
             else:
                 if '[' in p[1]['place'] or '[' in  p[3]['place']:
                     x=p[1]['place'].split("[")
                     y=p[3]['place'].split("[")
                     if len(y)==2:
-                        CreateTAC( '=',x[0]+p[1]['scope']+"["+x[1],y[0]+p[3]['scope']+"["+y[1]+"]", None )
+                        CreateTAC( '=',x[0]+p[1]['scope']+"["+x[1],y[0]+p[3]['scope']+"["+y[1], None )
                     else:
                         CreateTAC( '=',x[0]+p[1]['scope']+"["+x[1],p[3]['place']+p[3]['scope'], None )                        
                 else:                
@@ -881,18 +879,46 @@ def p_AssignExpression(p):
             sys.exit(0)
     elif p[2][0]=='<' or p[2][0]=='>':
         # print p[2][0]    
-        #print p[2][0:2],p[1]['place'],p[1]['place'],p[3]['place']
+        #print p[2][0:2],p[1]['place'],p[1]['place'],p[3]['place']   
+        name1 =  p[1]['place'].split("[")[0]
+        end1 = ""
+        if "[" in p[1]['place']:
+            end1 = "["+p[1]['place'].split("[")[1]
+        
         if "isconst" in p[3].keys():
-            CreateTAC(p[2][0:2],p[1]['place'],p[1]['place'],p[3]['place'])
+            CreateTAC(p[2][0:2],name1+p[1]['scope']+end1,name1+p[1]['scope']+end1,p[3]['place'])
         else:
-            CreateTAC(p[2][0:2],p[1]['place'],p[1]['place'],p[3]['place']+ST.currentscope)
+            name2 = p[3]['place'].split("[")[0]
+            end2 = ""
+            if "[" in p[3]['place']:
+                end2 = "["+p[3]['place'].split("[")[1]
+            CreateTAC(p[2][0:2],name1+p[1]['scope']+end1,name1+p[1]['scope']+end1,name2+p[3]['scope']+end2)
         return
     else:
+        name =  p[1]['place']
+        end = ""
+        if "[" in p[1]['place']:
+            name = p[1]['place'].split("[")[0]
+            end = "["+p[1]['place'].split("[")[1]
+        scope =  ST.checkscope(name)
+
         # print p[2][0],p[1]['place'],p[1]['place'],p[3]['place']
         if "isconst" in p[3].keys():
-            CreateTAC(p[2][0],p[1]['place'],p[1]['place'],p[3]['place'])
+            CreateTAC(p[2][0],name+scope+end,name+scope+end,p[3]['place'])
         else:
-            CreateTAC(p[2][0],p[1]['place'],p[1]['place'],p[3]['place']+ST.currentscope)        
+            name2 = p[3]['place']
+            end2 = ""
+            if "[" in p[3]['place']:
+                name2 = p[3]['place'].split("[")[0]
+                end2 = "["+p[3]['place'].split("[")[1]
+            scope2 =  ST.checkscope(name2)
+            
+            print scope,scope2
+            if 'scope' in p[3].keys():
+                CreateTAC(p[2][0],name+scope+end,name+scope+end,name2+p[3]['scope'])
+            else:
+                CreateTAC(p[2][0],name+scope+end,name+scope+end,name2+scope2+end2)        
+                        
         return
 
     
@@ -925,13 +951,21 @@ def p_OrOrExpression(p):
         if "isconst"  in p[1].keys():
             x =  p[1]['place'] 
         else:
-            x =  p[1]['place'] + ST.currentscope 
-            
+            if "[" not in p[1]['place']:
+                x =  p[1]['place'] +  ST.currentscope
+            else:
+                name=p[1]['place'].split("[")[0]
+                x = name + ST.checkscope(name)+"["+p[1]['place'].split("[")[1]            
         if "isconst" in p[3].keys():
-            y =  p[3]['place'] 
+            y =  p[3]['place']
+            
         else:
-            y =  p[3]['place'] + ST.currentscope 
-        CreateTAC( p[2][0],newplace+ ST.currentscope,x,y )
+            if "[" not in p[1]['place']:            
+                y =  p[3]['place']  +  ST.currentscope 
+            else:
+                name=p[3]['place'].split("[")[0]
+                y = name + ST.checkscope(name)+"["+p[3]['place'].split("[")[1]
+        CreateTAC( p[2][0],newPlace+ ST.currentscope,x,y )
         # print p[2][0],p[1]['place'],p[3]['place']
         p[0]['type'] = p[1]['type']
         return
@@ -1057,12 +1091,21 @@ def p_RelExpression(p):
         if "isconst" in p[1].keys():
             x =  p[1]['place'] 
         else:
-            x =  p[1]['place'] +  ST.currentscope 
+            if "[" not in p[1]['place']:
+                x =  p[1]['place'] +  ST.currentscope
+            else:
+                name=p[1]['place'].split("[")[0]
+                x = name + ST.checkscope(name)+"["+p[1]['place'].split("[")[1]
+
             
         if "isconst" in p[3].keys():
             y =  p[3]['place'] 
         else:
-            y =  p[3]['place']  +  ST.currentscope 
+            if "[" not in p[1]['place']:            
+                y =  p[3]['place']  +  ST.currentscope 
+            else:
+                name=p[3]['place'].split("[")[0]
+                y = name + ST.checkscope(name)+"["+p[3]['place'].split("[")[1]
         CreateTAC(p[2],newPlace+ ST.currentscope,x,y)
         p[0]['type'] = 'INT'
 
@@ -1081,6 +1124,50 @@ def p_ShiftExpression(p):
     if len(p)==2:
         p[0]=p[1]
         return
+    else:
+        newPlace = ST.get_temp()
+        p[0] = {
+            'place' : newPlace,
+            'type' : 'TYPE_ERROR',
+            'scope': ST.currentscope
+        }
+
+        # if p[1]['place'] in ST.table.keys() and p[3]['place'] in ST.table.keys():
+        if p[1]['type']=='TYPE_ERROR' or p[3]['type']=='TYPE_ERROR':
+            print p[1],p[3],"TYPE_ERROR for p[1],p[3] ??"
+            return
+
+        if p[1]['type'] == 'INT' and p[3]['type'] == 'INT' :
+            # p[3] =ResolveRHSArray(p[3])
+            # p[1] =ResolveRHSArray(p[1])
+            # print p[2],newPlace,p[1]['place'],p[3]['place']
+            if "isconst" in p[1].keys():
+                x =  p[1]['place'] 
+            else:
+                if "[" not in p[1]['place']:
+                    x =  p[1]['place'] +  ST.currentscope
+                else:
+                    name=p[1]['place'].split("[")[0]
+                    x = name + ST.checkscope(name)+"["+p[1]['place'].split("[")[1]
+
+                
+            if "isconst" in p[3].keys():
+                y =  p[3]['place'] 
+            else:
+                if "[" not in p[1]['place']:            
+                    y =  p[3]['place']  +  ST.currentscope 
+                else:
+                    name=p[3]['place'].split("[")[0]
+                    y = name + ST.checkscope(name)+"["+p[3]['place'].split("[")[1]
+            CreateTAC(p[2],newPlace+ ST.currentscope,x,y)
+            p[0]['type'] = 'INT'
+
+        else:
+            print("Error: integer value is needed")
+            sys.exit(0)
+            return
+        
+    
     Derivations.append(p.slice) 
 
 def p_AddExpression(p):
@@ -1207,13 +1294,18 @@ def p_UnaryExpression(p):
     if len(p)==2 :
         p[0]=p[1]
         return
-    scope = ST.checkscope(p[2]['place']) 
+    name =  p[2]['place']
+    end = ""
+    if "[" in p[2]['place']:
+        name = p[2]['place'].split("[")[0]
+        end = "["+p[2]['place'].split("[")[1]
+    scope =  ST.checkscope(name)
     if len(p)==3:
         if p[1]=='++' or p[1]=='--':
             # if p[2]['place'] in ST.table.keys():
             if scope:    
                 if p[2]['type'] == "INT":
-                    CreateTAC( p[1][0],p[2]['place'],p[2]['place'],1 )
+                    CreateTAC( p[1][0],name+scope+end,name+scope+end,1 )
                     # print p[1][0],p[2]['place'],p[2]['place'],1
                     p[0] = p[2]
                     return
@@ -1224,9 +1316,9 @@ def p_UnaryExpression(p):
                 return
         else:
             newplace = ST.get_temp()
-            print "HI"
+            # print "HI", p[2]['scope']
             p[0] ={'place':newplace,'type':"INT",'scope':ST.currentscope}
-            CreateTAC('=',newplace+ST.currentscope,p[1]+p[2]['place'],None) 
+            CreateTAC('=',newplace+ST.currentscope,p[1]+p[2]['place']+p[2]['scope'],None) 
     
     # print p.slice,len(p)
     Derivations.append(p.slice)     
@@ -1333,9 +1425,16 @@ def p_PostfixExpression(p):
         # print "HI"
         # print p[1]['place'].strip("[")[0] , "HI"
         # if p[1]['place'] in ST.table.keys() or (p[1]["isarray"] and p[1]['place'].strip("[")[0] in ST.table.keys()):
-        if ST.checkscope(p[1]['place']) or (p[1]["isarray"] and ST.checkscope(p[1]['place'].strip("[")[0])) :
+        name =  p[1]['place']
+        end = ""
+        if "[" in p[1]['place']:
+            name = p[1]['place'].split("[")[0]
+            end = "["+p[1]['place'].split("[")[1]
+        scope = ST.checkscope(name) 
+        
+        if (scope):
             if p[1]['type'] == "INT":
-                CreateTAC( p[2][0],p[1]['place'],p[1]['place'],1 )
+                CreateTAC( p[2][0],name+scope+end,name+scope+end,1 )
                 # print p[2][0],p[1]['place'],p[1]['place'],1
                 p[0] = p[1]
                 return
@@ -1348,8 +1447,10 @@ def p_PostfixExpression(p):
         u = p[1]
         if ((p[1] not in ST.table.keys()) and '.' in p[1]):
             print ST.currentscope
+            objname = p[1].split(".")[0]
+            scope = ST.checkscope(objname)
             # print ST.table[ST.currentscope].keys()
-            u = ST.table[ST.currentscope]['identifiers'][p[1].split(".")[0]]['datatype']
+            u = ST.table[scope]['identifiers'][objname]['datatype']
             u = u+ '.'+p[1].split(".")[1]
             if u not in ST.table.keys():
                 print "Error: function not defined"
@@ -1361,13 +1462,9 @@ def p_JmpMark(p):
     '''
         JmpMark : empty
     '''
-<<<<<<< HEAD
-    # print p[-4], ">>>>>>>>>>>"
-=======
->>>>>>> 086e1744896e084812f1b8536dae8656bfbf5637
     # 'place': ST.table[p[-4]]['returnvar'],
     # scope = ST.checkscope(p[-4])
-
+    scope=""
     if( p[-4] == 'writeln'):
         CreateTAC( "print_str", p[-2]['place'], None, None )
     else:
@@ -1379,12 +1476,13 @@ def p_JmpMark(p):
         if ((p[-4] not in ST.table.keys()) and '.' in p[-4]):
             # print ST.currentscope
             objname = p[-4].split(".")[0]
+            scope = ST.checkscope(objname)
+            print scope
             print objname, ":::::::::::::"
             # print ST.table[ST.currentscope].keys()
-            u = ST.table[ST.currentscope]['identifiers'][p[-4].split(".")[0]]['datatype']
+            u = ST.table[scope]['identifiers'][objname]['datatype']
             u = u+ '.'+p[-4].split(".")[1]
             
-        print u, "::::::::::::::::::::::::"
         if u in ST.table.keys():
             # if scope:
             # newPlace = ST.get_temp()
@@ -1393,10 +1491,6 @@ def p_JmpMark(p):
                 # 'type':ST.table[p[-4]]['datatype'] 
                 'type':ST.table[u]['datatype']
             }
-<<<<<<< HEAD
-            # print p[0],"::::::::::::::::::::::::::::::"
-=======
->>>>>>> 086e1744896e084812f1b8536dae8656bfbf5637
 
         else:
             print "FUNCTION not defined",scope
@@ -1406,21 +1500,21 @@ def p_JmpMark(p):
             if (len(param_list) != len(ST.table[u]['parameters'])):
                 print "Number of arguments mismatch"
                 sys.exit(0)
-<<<<<<< HEAD
-            # print j, j[0], "PPPPPPPPPPPPPPPP"
-=======
->>>>>>> 086e1744896e084812f1b8536dae8656bfbf5637
             if (ST.table[u]['parameters'][i]!= j[1]):
                 print "Error type mismatch", ST.table[u]['parameters'][i],"!=" ,j[1], " in call to ",u
                 sys.exit(0)
-            CreateTAC("=",u+'_'+str(i),j[0]+ST.currentscope,None)
+            if (j[0].isdigit()):
+                CreateTAC("=",u+'_'+str(i),j[0],None)
+            else:
+                CreateTAC("=",u+'_'+str(i),j[0]+ST.currentscope,None)
+                
         
         param_list = []
         k = i
         if "." in p[-4]:
             classname = u.split(".")[0]
             for j in ST.table[ST.table[classname]['child']]['identifiers']:
-                CreateTAC("=",u+'_'+str(i+1),objname+ST.currentscope+'.'+j,None)
+                CreateTAC("=",u+'_'+str(i+1),objname+scope+'.'+j,None)
                 i = i+1
     
         CreateTAC( "call", u, None, None )
@@ -1428,12 +1522,10 @@ def p_JmpMark(p):
         if "." in p[-4]:
 
             classname = u.split(".")[0]
-            print objname,"KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK"
-            scope = ST.checkscope(u)
-            print scope
-            print "YYYYYYYYYYYYYYYYYYYYY",classname,ST.table[ST.table[classname]['child']]['identifiers']
+            #scope = ST.checkscope(u)
+            #print scope
             for j in ST.table[ST.table[classname]['child']]['identifiers']:
-                CreateTAC("=",objname+ST.currentscope+'.'+j,u+'_'+str(i+1),None)
+                CreateTAC("=",objname+scope+'.'+j,u+'_'+str(i+1),None)
                 i = i+1
         
 
@@ -1750,19 +1842,31 @@ def p_M_block_begin(p):
             ST.addvar(j[0],j[1],"Variable","4")
     print FuncLabel
     classname = FuncLabel.split(".")[0]
+    p[0] = i
     if "." in FuncLabel:
         for j in ST.table[ST.table[classname]['child']]['identifiers']:
-            CreateTAC("=",j,FuncLabel+'_'+str(i+1),None)
+            scope = ST.checkscope(j)
+            #print j,scope,"::::::::::::"
+            CreateTAC("=",j+scope,FuncLabel+'_'+str(i+1),None)
             i = i+1
-        
-        param_list = []
+    param_list = []
+    
     Derivations.append(p.slice)
 
 
 def p_M_block_end(p):
     '''
-        M_block_end : 
+        M_block_end : empty
     '''
+    # print FuncLabel,"hi"
+    classname = FuncLabel.split(".")[0]
+    i = p[-3]
+    if "." in FuncLabel:
+        for j in ST.table[ST.table[classname]['child']]['identifiers']:
+            scope = ST.checkscope(j)            
+            CreateTAC("=",FuncLabel+'_'+str(i+1),j+scope,None)
+            i = i+1
+    
     ST.endscope()
     Derivations.append(p.slice)
 
@@ -2338,14 +2442,14 @@ def p_AggBody_m1(p):
     '''AggBody_m1 : empty
     '''
     ST.newscope()
-    print "HI"
+    # print "HI"
     
 def p_AggBody_m2(p):
     '''AggBody_m2 : empty
     '''
     ST.endscope()
     
-    print "HI"
+    # print "HI"
 
 def p_ClassDeclaration(p):
     '''ClassDeclaration : CLASS IDENTIFIER SEMICOLON

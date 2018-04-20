@@ -1,0 +1,9 @@
+1, =, a, 5
+2, ifgoto_eq, a, 5, L1
+3, =, a, 1
+4, print_int, a
+5, exit, 0
+6, label, L1
+7, =, a, 2
+8, print_int, a
+9, exit, 0
