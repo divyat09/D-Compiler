@@ -1,0 +1,15 @@
+main
+1, label, main
+2, =, bs0, 5
+3, =, cs0, 5
+4, /, tmp1s0, bs0, cs0
+5, =, bs0, tmp1s0
+6, +, tmp2s0, bs0, cs0
+7, =, as0, tmp2s0
+8, -, tmp3s0, bs0, as0
+9, =, cs0, tmp3s0
+10, *, tmp4s0, bs0, cs0
+11, =, as0, tmp4s0
+12, %, tmp5s0, as0, cs0
+13, =, ds0, tmp5s0
+14, =, main.ret, 0

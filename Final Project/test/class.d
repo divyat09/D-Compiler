@@ -1,10 +1,7 @@
-extern int d;
-int q;
-extern float v;
 class Box{
 	public:
 		int h;
-		float b;
+		int b;
 		char p;
 	private:
 		void foo();
@@ -16,6 +13,6 @@ int main(){
 	
 	A=new Box();
 	A.h = 12;
-	A.b = 12.89;
+	A.b = 19;
 	A.p = 'k';
 }

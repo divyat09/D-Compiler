@@ -4,12 +4,10 @@ int main(){
     int A[10];
     for (iter=0; iter< 10; iter++){
         if (iter%2){
-	    A[iter]= A[iter] + 1;
-            writeln("yes\n");
+		    A[iter]= A[iter] + 1;
         }
-        else
-	    A[iter]= A[iter] + 1; 
-            writeln("no\n");
+        else{
+		    A[iter]= A[iter] - 1; 
+		}
     }
-    return 0;
 }

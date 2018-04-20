@@ -20,6 +20,7 @@ for line in f.readlines():
     param=param.strip()
     param=param.strip('\n')
     _input.append(param)
+
   for variables in _input[2:]:
     if(_input[1] in ["ifgoto_lt","ifgoto_leq","ifgoto_gt","ifgoto_geq","ifgoto_eq","ifgoto_neq",'print_string','ret','label','jmp'] ):
       continue
@@ -30,6 +31,7 @@ for line in f.readlines():
         functions.append(_input[2])
       else:
         Table.addvar(variables)
+  
   IRepresentation= IRDS()
   IRepresentation.represent( _input )
   statements.append(IRepresentation)
@@ -49,3 +51,5 @@ f= open(AssemFile,'r')
 content = f.read()
 print content
 f.close()
+
+print "Hello, Is there anybody in there ?"

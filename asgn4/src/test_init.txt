@@ -1,4 +1,0 @@
-int main(){
-	int a,b,c,d,e,f;
-	a=f+b*c-d;
-}
