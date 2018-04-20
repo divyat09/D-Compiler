@@ -220,7 +220,10 @@ def p_DeclaratorInitializer(p):
     '''
     # print p.slice
     global is_class
+<<<<<<< HEAD
     # print p[-1],p[1],is_class,"HHHHHHHHHIIIIIIIIIIIIII",p.slice
+=======
+>>>>>>> 086e1744896e084812f1b8536dae8656bfbf5637
     p[0]=p[1]
     # print p[1]['place'],ST.currentscope,"::::::::::;"
     scope = ST.checkscope(p[1]['place'])
@@ -243,7 +246,10 @@ def p_DeclaratorInitializer(p):
                     CreateTAC( '=',p[0]['place']+ST.currentscope+"["+ str(size-i-1) +"]",j, None )
                     # print '=',p[0]['place'],p[3]['place']
                     # scope = ST.checkscope(p[1]['place'])
+<<<<<<< HEAD
                     # print scope, p[1]['place'],"((((((((((((((((((((((((((((("
+=======
+>>>>>>> 086e1744896e084812f1b8536dae8656bfbf5637
                     # if p[1]['place'] in ST.table.keys():
                     if scope == currentscope:
                         print "Redeclaration of variable not allowed",p[1]['place']
@@ -307,7 +313,10 @@ def p_DeclaratorInitializer(p):
             _list = ST.get_class_idlist(p[-1])
             for ele in _list.keys():
                 ST.addvar(p[1]['place']+"."+ele,_list[ele]['datatype'],"CLASS_VARIABLE","4")
+<<<<<<< HEAD
                 # print ele,ST.table[p[-1]]['constructor'].keys(),"HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"
+=======
+>>>>>>> 086e1744896e084812f1b8536dae8656bfbf5637
                 if ele in ST.table[p[-1]]['constructor'].keys():
                     CreateTAC("=",p[1]['place']+ST.currentscope+"."+ele,ST.table[p[-1]]['constructor'][ele]['value'],None)
         # return
@@ -1352,7 +1361,10 @@ def p_JmpMark(p):
     '''
         JmpMark : empty
     '''
+<<<<<<< HEAD
     # print p[-4], ">>>>>>>>>>>"
+=======
+>>>>>>> 086e1744896e084812f1b8536dae8656bfbf5637
     # 'place': ST.table[p[-4]]['returnvar'],
     # scope = ST.checkscope(p[-4])
 
@@ -1367,11 +1379,12 @@ def p_JmpMark(p):
         if ((p[-4] not in ST.table.keys()) and '.' in p[-4]):
             # print ST.currentscope
             objname = p[-4].split(".")[0]
+            print objname, ":::::::::::::"
             # print ST.table[ST.currentscope].keys()
             u = ST.table[ST.currentscope]['identifiers'][p[-4].split(".")[0]]['datatype']
             u = u+ '.'+p[-4].split(".")[1]
             
-
+        print u, "::::::::::::::::::::::::"
         if u in ST.table.keys():
             # if scope:
             # newPlace = ST.get_temp()
@@ -1380,27 +1393,48 @@ def p_JmpMark(p):
                 # 'type':ST.table[p[-4]]['datatype'] 
                 'type':ST.table[u]['datatype']
             }
+<<<<<<< HEAD
             # print p[0],"::::::::::::::::::::::::::::::"
+=======
+>>>>>>> 086e1744896e084812f1b8536dae8656bfbf5637
 
         else:
             print "FUNCTION not defined",scope
             sys.exit(0)
+        i = 0
         for i,j in enumerate(param_list):
             if (len(param_list) != len(ST.table[u]['parameters'])):
                 print "Number of arguments mismatch"
                 sys.exit(0)
+<<<<<<< HEAD
             # print j, j[0], "PPPPPPPPPPPPPPPP"
+=======
+>>>>>>> 086e1744896e084812f1b8536dae8656bfbf5637
             if (ST.table[u]['parameters'][i]!= j[1]):
                 print "Error type mismatch", ST.table[u]['parameters'][i],"!=" ,j[1], " in call to ",u
                 sys.exit(0)
             CreateTAC("=",u+'_'+str(i),j[0]+ST.currentscope,None)
         
         param_list = []
-        if "." in u:
-            CreateTAC("=",u+'_'+str(i+1),"&"+objname+ST.currentscope,None)
+        k = i
+        if "." in p[-4]:
+            classname = u.split(".")[0]
+            for j in ST.table[ST.table[classname]['child']]['identifiers']:
+                CreateTAC("=",u+'_'+str(i+1),objname+ST.currentscope+'.'+j,None)
+                i = i+1
     
         CreateTAC( "call", u, None, None )
-        
+        i =k
+        if "." in p[-4]:
+
+            classname = u.split(".")[0]
+            print objname,"KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK"
+            scope = ST.checkscope(u)
+            print scope
+            print "YYYYYYYYYYYYYYYYYYYYY",classname,ST.table[ST.table[classname]['child']]['identifiers']
+            for j in ST.table[ST.table[classname]['child']]['identifiers']:
+                CreateTAC("=",objname+ST.currentscope+'.'+j,u+'_'+str(i+1),None)
+                i = i+1
         
 
     # print "call ", p[-4]
@@ -1441,8 +1475,8 @@ def p_PrimaryExpression(p):
         'type' : 'TYPE_ERROR',
         'scope':'None'
         }
-        
         #Literals
+        #if p.slice[1].type == 'FALSE' or 
         if (p.slice[1].type =='INUMBER'):
             p[0]={
                 'type':'INT',
@@ -1493,13 +1527,17 @@ def p_PrimaryExpression(p):
             return
         # if p[1] in ST.table.keys():
         scope = ST.checkscope(p[1])
+
         if scope:
             p[0]['place'] = p[1]
             p[0]['type'] = ST.gettype(scope,p[1])
             p[0]['scope'] = scope
             # p[0]['type'] = ST.table[scope]['identifiers'][p[1]]['datatype']
             return
+        
         else:
+
+            #check parent scope if class function
             print('Error : undefined variable '+str(p[1])+' is used.')
             sys.exit(0)
 
@@ -1704,13 +1742,19 @@ def p_M_block_begin(p):
     '''
     ST.newscope()
     global param_list,FuncLabel
+    i = 0
     if len(param_list):
         for i,j in enumerate(param_list):
             CreateTAC( "=", j[0]+ST.currentscope, FuncLabel+'_'+str(i), None )
             # print i
             ST.addvar(j[0],j[1],"Variable","4")
-        ST.addvar("this"+ST.currentscope,"INT","Variable","4")    
-        CreateTAC("=","this"+ST.currentscope,FuncLabel+'_'+str(i+1),None)    
+    print FuncLabel
+    classname = FuncLabel.split(".")[0]
+    if "." in FuncLabel:
+        for j in ST.table[ST.table[classname]['child']]['identifiers']:
+            CreateTAC("=",j,FuncLabel+'_'+str(i+1),None)
+            i = i+1
+        
         param_list = []
     Derivations.append(p.slice)
 
@@ -2474,10 +2518,14 @@ def p_func_m1(p):
     global is_class
     global FuncLabel
     if is_class != False:
-        FuncLabel = is_class+"."+ p[-1][0] # pass aprameters too
+        #FuncLabel = is_class+"."+ p[-1][0] # pass aprameters too
+        #ST.addfunc_class(is_class,FuncLabel,p[-2],"class_func")
+        #print ST.table[FuncLabel],">>>>>>>>>>>>>"
         global flag
         flag=is_class
+        FuncLabel = is_class+'.'+p[-1][0]
         is_class = False
+
     else:
         FuncLabel = p[-1][0]
     #ST.addfunc(FuncLabel,"function",p[-2])
@@ -2531,10 +2579,11 @@ def p_func_m3(p):
     # print p[-1],">>>>>>>>>>>>>>>>>>>>"
     global is_class
     if (is_class):
-        ST.addfunc(is_class+"."+p[-1],"function",p[-3])
+        ST.addfunc_class(is_class,is_class+'.'+p[-1],p[-2],"class_func")
+        ST.addfunc(is_class+'.'+p[-1],p[-2],"class_func",is_class)
         ST.currentscope = is_class+"."+p[-1]
     else:
-        ST.addfunc(p[-1],"function",p[-3])
+        ST.addfunc(p[-1],"function",p[-3],None)
         ST.currentscope = p[-1]
 
 def p_FuncDeclaratorSuffix(p):
