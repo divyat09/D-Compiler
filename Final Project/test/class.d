@@ -12,4 +12,5 @@ int main(){
 	A.h = 2;
 	A.b = 19;
 	int res = A.foo();
+	return 1;
 }

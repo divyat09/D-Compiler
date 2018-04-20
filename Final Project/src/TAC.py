@@ -46,9 +46,15 @@ def OutputTAC():
     elif Instr[0] == 'ret':
       print( str(LineNum) + Comma +'ret' +Comma + Instr[1])
 
+    elif Instr[0] == 'exit':
+      print( str(LineNum) + Comma +'exit' +Comma + Instr[1])
+
     elif Instr[0] == 'print_str':
       print( str(LineNum) + Comma +'print_str' +Comma + Instr[1])
 
+    elif Instr[0] == 'print_int':
+      print( str(LineNum) + Comma +'print_int' +Comma + Instr[1])
+    
     elif Instr[0] == '=':
       print( str(LineNum) + Comma + Instr[0] + Comma + Instr[1] + Comma + Instr[2])
 

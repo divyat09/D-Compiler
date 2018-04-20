@@ -341,7 +341,7 @@ def p_DeclaratorInitializer(p):
                     
                     ST.addconstructor_class(is_class,p[0]['place']+"["+ str(size-i-1) +"]",j)
                     
-                    print scope, p[1]['place'],"((((((((((((((((((((((((((((("
+                    # print scope, p[1]['place'],"((((((((((((((((((((((((((((("
                     if scope == currentscope:
                         print "Redeclaration of variable not allowed",p[1]['place']
                         sys.exit(0)
@@ -2411,7 +2411,7 @@ def p_ReturnStatement(p):
     if "." in FuncLabel:
         for j in ST.table[ST.table[classname]['child']]['identifiers']:
             scope = ST.checkscope(j)
-            print j,scope            
+            # print j,scope            
             CreateTAC("=",FuncLabel+'_'+str(i+1),j+scope,None)
             i = i+1
     CreateTAC("=",FuncLabel+".ret",p[2]['place']+p[2]['scope'],None)
