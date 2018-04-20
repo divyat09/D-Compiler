@@ -1,8 +1,8 @@
 int foo()
 {	
-    int x;
-    int y;
-    int z;
+    int x=2;
+    int y=3;
+    int z=4;
     return x*x+y+z;
 }
 
