@@ -6,8 +6,7 @@ int main(){
     int a =0;
     int b = 0;
     int res; 
-    res =  res + b;
-
+    res =  foo(a,b);
     return 0;
 }
 
