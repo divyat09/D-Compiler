@@ -1,18 +1,15 @@
 class Box{
-	public:
-		int h;
-		int b;
-		char p;
-	private:
-		void foo();
-	protected:
-		char foo1();
+	int h;
+	int b;
+	int foo(){
+		int a = h*b;
+		return a;
+	}
 }
 
 int main(){
-	
-	A=new Box();
-	A.h = 12;
+	Box A;
+	A.h = 2;
 	A.b = 19;
-	A.p = 'k';
+	int res = A.foo();
 }

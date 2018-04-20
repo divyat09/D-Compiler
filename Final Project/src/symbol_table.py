@@ -55,10 +55,10 @@ class SymbolTable:
 
 	
 	def addfunc_class(self,classname,funcname,datatype,_type):
-		print self.table[classname]['child'], "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK"
+		#print self.table[classname]['child'], "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK"
 		self.table[classname]['member_functions'][funcname]={'name':funcname,'type':_type,'datatype':datatype,'parentscope':self.table[classname]['child'],'identifiers':{},'parameters':[]}
 		self.currentscope = funcname
-		print self.table[classname]['member_functions'][funcname]['parentscope']
+		#print self.table[classname]['member_functions'][funcname]['parentscope']
 
 	def get_class_idlist(self,classname):
 		return self.table[self.table[classname]['child']]['identifiers']
