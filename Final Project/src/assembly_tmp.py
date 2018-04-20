@@ -55,7 +55,6 @@ def Print_Int( IRObj ):
 		# f.write("pushl\t"+RegisterASssigned[_var]+"\n")			
 		# else:
 		# if _var in RegisterAssigned.keys():
-		print _var
 		AssignRegister(_var,IRObj.lineno,1)
 		# f.write("pushl\t"+_var+"\n")		
 		f.write("pushl\t"+RegisterAssigned[_var]+"\n")							
@@ -81,24 +80,24 @@ def Print_Int( IRObj ):
 	# f.write( length_reg+ output + sys_write + stdout + syscall )
 	f.close()
 
-def Print_Str( IRObj ):
+# def Print_Str( IRObj ):
 
-	# if IRObj.isValid()[0]:	
-	# 	_str= IRObj.src1
-	# else:
-	# 	print "Invalid Case"
-	f=open(AssemFile,'a')
-	if(IRObj.const):
-		print "hi"
-		length_reg = "mov"+"\t"+str(len(IRObj.const))+"%edx\n"
-		output = "mov\t"+IRObj.const+"%ecx\n"
-		stdout = "mov"+"\t"+"1,%ebx\n"
-		sys_write = "mov"+"\t"+"$0x4"+","+"eax\n"
-		syscall = "int"+"\t"+"$0x80\n"
-		f.write(length_reg+ output + sys_write + stdout + syscall )
-	else:
-		print "Invalid Print_str"
-	f.close()
+# 	# if IRObj.isValid()[0]:	
+# 	# 	_str= IRObj.src1
+# 	# else:
+# 	# 	print "Invalid Case"
+# 	f=open(AssemFile,'a')
+# 	if(IRObj.const):
+# 		print "hi"
+# 		# length_reg = "mov"+"\t"+str(len(IRObj.const))+"%edx\n"
+# 		# output = "mov\t"+IRObj.const+"%ecx\n"
+# 		# stdout = "mov"+"\t"+"1,%ebx\n"
+# 		# sys_write = "mov"+"\t"+"$0x4"+","+"eax\n"
+# 		# syscall = "int"+"\t"+"$0x80\n"
+# 		# f.write(length_reg+ output + sys_write + stdout + syscall )
+# 	else:
+# 		print "Invalid Print_str"
+# 	f.close()
 
 def Input_Int( IRObj ):
 
@@ -184,10 +183,6 @@ def Label( IRObj ):
 		f.close()
 		functions.remove(IRObj.const)
 	else:
-		if IRObj.const=="main":
-			f=open(AssemFile,'a')
-			f.write("_start:\n")
-			f.close()		
 		f=open(AssemFile,'a')
 		f.write(IRObj.const+":\n")
 		f.close()		
@@ -238,38 +233,38 @@ def Assignment( IRObj ):
 	if IRObj.isValid()[2]:
 
 		
-		if IRObj.isValid()[0] and (IRObj.src1[0] == "*" or IRObj.src1[0] == "&"):
-			_src= IRObj.src1[1:]
-			_dst= IRObj.dst
-			reg2= AssignRegister(_dst, IRObj.lineno ,0)
-			if (IRObj.src1 == "*"):
-				reg1= AssignRegister(_src, IRObj.lineno ,1)
-				f=open(AssemFile,'a')
-				f.write( "movl\t[" + str(reg1) +',]\t' + str(reg2)+"\n" )
-				f.close()
-			else:
-				f=open(AssemFile,'a')
-				f.write( "lea\tbyte ptr " +_src +"," + str(reg2)+"\n" )
-				f.close()
+	# 	if IRObj.isValid()[0] and (IRObj.src1[0] == "*" or IRObj.src1[0] == "&"):
+	# 		_src= IRObj.src1[1:]
+	# 		_dst= IRObj.dst
+	# 		reg2= AssignRegister(_dst, IRObj.lineno ,0)
+	# 		if (IRObj.src1 == "*"):
+	# 			reg1= AssignRegister(_src, IRObj.lineno ,1)
+	# 			f=open(AssemFile,'a')
+	# 			f.write( "movl\t[" + str(reg1) +',]\t' + str(reg2)+"\n" )
+	# 			f.close()
+	# 		else:
+	# 			f=open(AssemFile,'a')
+	# 			f.write( "lea\tbyte ptr " +_src +"," + str(reg2)+"\n" )
+	# 			f.close()
+	# 	else:
+		if IRObj.isValid()[0]:
+			_src= IRObj.src1
+			reg1= AssignRegister(_src, IRObj.lineno ,1)
 		else:
-			if IRObj.isValid()[0]:
-				_src= IRObj.src1
-				reg1= AssignRegister(_src, IRObj.lineno ,1)
-			else:
-				_src= IRObj.const
-				reg1= '$'+ _src
-			if (IRObj.dst[0]=='*'):
-				_dst = IRObj.dst[1:]
-				reg2 = AssignRegister(_dst, IRObj.lineno, 0)
-				f=open(AssemFile,'a')
-				f.write( "movl\t" + str(reg1) +',\t[' + str(reg2)+"]\n" )
-				f.close()
-			else:
-				_dst = IRObj.dst
-				reg2 = AssignRegister(_dst, IRObj.lineno, 0)
-				f=open(AssemFile,'a')
-				f.write( "movl\t" + str(reg1) +',\t' + str(reg2)+"\n" )
-				f.close()
+			_src= IRObj.const
+			reg1= '$'+ _src
+	# if (IRObj.dst[0]=='*'):
+	# 	_dst = IRObj.dst[1:]
+	# 	reg2 = AssignRegister(_dst, IRObj.lineno, 0)
+	# 	f=open(AssemFile,'a')
+	# 	f.write( "movl\t" + str(reg1) +',\t[' + str(reg2)+"]\n" )
+	# 	f.close()
+			# else:
+		_dst = IRObj.dst
+		reg2 = AssignRegister(_dst, IRObj.lineno, 0)
+		f=open(AssemFile,'a')
+		f.write( "movl\t" + str(reg1) +',\t' + str(reg2)+"\n" )
+		f.close()
 	else:
 		print "Error: Destination is not a Variable "
 
@@ -290,58 +285,6 @@ def BitNeg( IRObj ):
 		f.close
 	else:
 		print "Error: Destination is not a Variable "
-
-def ConditionalExpression(IRObj):
-	
-	global special_count
-
-	if IRObj.op == "<":
-		cond_type= "ifgoto_lt"
-	elif IRObj.op == ">":
-		cond_type= "ifgoto_gt"
-	elif IRObj.op == "<=":
-		cond_type= "ifgoto_leq"
-	elif IRObj.op == ">=":
-		cond_type= "ifgoto_geq"
-
-	flag_= 0
-	if IRObj.isValid()[0]:
-		_src1= IRObj.src1
-		reg1= AssignRegister( _src1, IRObj.lineno, 1 )
-	else:
-		_src1= IRObj.const
-		flag_= 1
-		reg1= SpecialConstRegister( _src1, IRObj.lineno )
-		RegisterStatus[reg1]= 1
-
-	if IRObj.isValid()[1]:
-		_src2= IRObj.src2
-		reg2= AssignRegister( _src2, IRObj.lineno, 1 )
-	else:
-		_src2= IRObj.const2
-		reg2= "$" + _src2
-
-	_dst= IRObj.dst
-	reg3 = AssignRegister( _dst, IRObj.lineno, 0)
-
-	_target1= "LL" + str(special_count)
-	special_count+=1;
-	_target2= "LL" + str(special_count)
-	special_count+=1;
-	
-	f = open(AssemFile,'a')
-	f.write( "cmpl\t"+ reg2+ ","+ reg1+ "\n")
-	f.write( str(op2wrd[cond_type])+"\t"+ _target2+"\n")
-
-	f.write( "movl\t" + '$0' +',\t' + str(reg3)+"\n" )
-	f.write( "JMP"+"\t"+_target1+"\n" )
-
-	f.write(_target2+":"+"\n")
-	f.write( "movl\t" + '$1' +',\t' + str(reg3)+"\n" )
-	f.write(_target1+":"+"\n")
-
-	f.close()
-
 
 def Conditional ( IRObj):
 	
@@ -486,7 +429,6 @@ def Operator3( IRObj ):			# left and right shift
 		else:
 			_src2= IRObj.const2
 			reg2= '$'+ _src2
-		
 		RegisterStatus["%ecx"] = 1
 		if IRObj.isValid()[0]:
 			_src1= IRObj.src1
@@ -513,7 +455,6 @@ def Operator3( IRObj ):			# left and right shift
 			f.write( str(op2wrd[IRObj.op]) +"\t"+ str(reg2) +',\t' + str(reg3)+"\n" )
 	
 		f.close()
-		print flag
 		if (flag == 0):
 			RegisterStatus["%ecx"] = -1
 		
@@ -524,18 +465,12 @@ def Operator3( IRObj ):			# left and right shift
 
 def SaveContext( lineno ):
 	# Save Context Information
-	f=open(AssemFile,'a')
-	f.write( "\n// Saving Context at the end of Basic Block\n" ) 
-	f.close()
 	if lineno in bb:
 		for register in RegisterStatus : 		
 			if RegisterStatus[register]==1:
 				varname= RegisterData[register]
 				FreeRegister(register)
-	f=open(AssemFile,'a')
-	f.write( "\n// Finished Saving Context at the end of Basic Block\n" ) 
-	f.close()
-	
+
 def AssemblyConverter():
 
 	flag_exit=0
@@ -545,7 +480,7 @@ def AssemblyConverter():
 	f.close()
 	datasection()
 	f=open(AssemFile,'a')
-	f.write('\n.text\n.globl _start\n')
+	f.write('\n.text\n.globl _start\n_start:\n')
 	f.close()
 	for IRObj in statements:
 		
@@ -564,24 +499,16 @@ def AssemblyConverter():
 
 		elif IRObj.op == "call":
 			Call( IRObj )    
-
 		elif IRObj.op == "ret":
-			SaveContext(IRObj.lineno)
 			Ret( IRObj)
-
 		elif IRObj.op == "exit":
 			Exit( IRObj )
-
 		elif IRObj.op == "label":
 			if IRObj.lineno in bb:
 				SaveContext( IRObj.lineno )
 			Label( IRObj )
-
 		elif IRObj.op == "=":
 			Assignment( IRObj )
-
-		elif IRObj.op in ["<",">",">=","<="]:
-			ConditionalExpression(IRObj)	
 
 		elif IRObj.op[0] == "i":
 			SaveContext( IRObj.lineno + 1 )
@@ -606,8 +533,4 @@ def AssemblyConverter():
 
 		
 	# Program End Context Save Case
-	SaveContext( IRObj.lineno )
-	f=open(AssemFile,'a')
-	f.write( "\n// The End\n" ) 
-	f.close()
-	
+	# SaveContext( IRObj.lineno )

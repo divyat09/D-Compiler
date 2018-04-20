@@ -276,7 +276,7 @@ def p_DeclaratorInitializer(p):
                     return
 
             if p[1]['type']!=p[3]['type']:
-                print ST.table[p[3]['place']],"KKKKKKKKKK"
+                # print ST.table[p[3]['place']],"KKKKKKKKKK"
                 
                 print "Type error " + p[3]['type'] +" != " + p[1]['type']
                 sys.exit(0)
@@ -840,6 +840,7 @@ def p_AssignExpression(p):
     if(len(p)==2):
         p[0] = p[1]
         return
+    # print p[1]['place'],p[3]['place']
     # print "Problem is here"
     # newPlace="t_new2"
     # p[0]={'place':newPlace, 'type':"TYPE_ERROR"}
@@ -1025,6 +1026,35 @@ def p_OrExpression(p):
     if len(p)==2:
         p[0]=p[1]
         return
+    else:    
+        newPlace = ST.get_temp()
+        p[0]={
+            'place':newPlace,
+            'type':'undefined',
+            'scope':ST.currentscope
+        }
+        if "isconst"  in p[1].keys():
+            x =  p[1]['place'] 
+        else:
+            if "[" not in p[1]['place']:
+                x =  p[1]['place'] +  ST.currentscope
+            else:
+                name=p[1]['place'].split("[")[0]
+                x = name + ST.checkscope(name)+"["+p[1]['place'].split("[")[1]        
+            
+        if "isconst" in p[3].keys():
+            y =  p[3]['place'] 
+        else:
+            if "[" not in p[3]['place']:            
+                y =  p[3]['place']  +  ST.currentscope 
+            else:
+                name=p[3]['place'].split("[")[0]
+                y = name + ST.checkscope(name)+"["+p[3]['place'].split("[")[1]
+        CreateTAC( p[2][0],newPlace+ ST.currentscope,x,y )
+        # print p[2][0],newPlace, p[1]['place'],p[3]['place']
+        p[0]['type'] = p[1]['type']
+        return
+    
     Derivations.append(p.slice) 
 
 def p_XorExpression(p):
@@ -1034,21 +1064,81 @@ def p_XorExpression(p):
     if len(p)==2:
         p[0]=p[1]
         return
+    else:    
+        newPlace = ST.get_temp()
+        p[0]={
+            'place':newPlace,
+            'type':'undefined',
+            'scope':ST.currentscope
+        }
+        if "isconst"  in p[1].keys():
+            x =  p[1]['place'] 
+        else:
+            if "[" not in p[1]['place']:
+                x =  p[1]['place'] +  ST.currentscope
+            else:
+                name=p[1]['place'].split("[")[0]
+                x = name + ST.checkscope(name)+"["+p[1]['place'].split("[")[1]        
+            
+        if "isconst" in p[3].keys():
+            y =  p[3]['place'] 
+        else:
+            if "[" not in p[3]['place']:            
+                y =  p[3]['place']  +  ST.currentscope 
+            else:
+                name=p[3]['place'].split("[")[0]
+                y = name + ST.checkscope(name)+"["+p[3]['place'].split("[")[1]
+        CreateTAC( p[2][0],newPlace+ ST.currentscope,x,y )
+        # print p[2][0],newPlace, p[1]['place'],p[3]['place']
+        p[0]['type'] = p[1]['type']
+        return
+    
     Derivations.append(p.slice) 
 
 def p_AndExpression(p):
     '''AndExpression : CmpExpression
     		     | AndExpression AMPERSAND CmpExpression
     '''
+    # print p[1]
     if len(p)==2:
+
         p[0]=p[1]
         return
+    else:    
+        newPlace = ST.get_temp()
+        p[0]={
+            'place':newPlace,
+            'type':'undefined',
+            'scope':ST.currentscope
+        }
+        if "isconst"  in p[1].keys():
+            x =  p[1]['place'] 
+        else:
+            if "[" not in p[1]['place']:
+                x =  p[1]['place'] +  ST.currentscope
+            else:
+                name=p[1]['place'].split("[")[0]
+                x = name + ST.checkscope(name)+"["+p[1]['place'].split("[")[1]        
+            
+        if "isconst" in p[3].keys():
+            y =  p[3]['place'] 
+        else:
+            if "[" not in p[3]['place']:            
+                y =  p[3]['place']  +  ST.currentscope 
+            else:
+                name=p[3]['place'].split("[")[0]
+                y = name + ST.checkscope(name)+"["+p[3]['place'].split("[")[1]
+        CreateTAC( p[2][0],newPlace+ ST.currentscope,x,y )
+        # print p[2][0],newPlace, p[1]['place'],p[3]['place']
+        p[0]['type'] = p[1]['type']
+        return
+    
     Derivations.append(p.slice) 
 
 def p_CmpExpression(p):
     '''CmpExpression : ShiftExpression
-    		     | EqualExpression
-		     | RelExpression
+    		         | EqualExpression
+		             | RelExpression
     '''
     # print p.slice
     if len(p)==2:
@@ -1351,8 +1441,22 @@ def p_UnaryExpression(p):
 def p_ComplementExpression(p):
     '''ComplementExpression : TILDE UnaryExpression
     '''
-    print p[2]
-    p[0] = p[2]
+    # print p.slice
+    newPlace = ST.get_temp()
+    p[0] = {
+        'place':newPlace,
+        'type':p[2]['type'],
+        'scope':ST.currentscope
+    }
+    name = p[2]['place']
+    end = ""
+    if "[" in p[2]['place']:
+        name = p[2]['place'].split("[")[0]
+        end = p[2]['place'].split("[")[1]
+    if "." in p[2]['place']:
+        name = p[2]['place'].split(".")[0]
+        end = p[2]['place'].split(".")[1]
+    CreateTAC("~",newPlace+ST.currentscope,name+p[2]['scope']+end,None)
     Derivations.append(p.slice)     
 
     
@@ -1472,7 +1576,7 @@ def p_PostfixExpression(p):
     if len(p)==6:
         u = p[1]
         if ((p[1] not in ST.table.keys()) and '.' in p[1]):
-            print ST.currentscope
+            # print ST.currentscope
             objname = p[1].split(".")[0]
             scope = ST.checkscope(objname)
             # print ST.table[ST.currentscope].keys()
@@ -1493,13 +1597,14 @@ def p_JmpMark(p):
     '''
     # 'place': ST.table[p[-4]]['returnvar'],
     # scope = ST.checkscope(p[-4])
+    global param_list
+
     scope=""
     if( p[-4] == 'writeln'):
         for i in param_list:
             if i[1]=="INT":
                 CreateTAC( "print_int", i[0]+ST.checkscope(i[0]), None, None )
     else:
-        global param_list
         # print "ajoop alien"
         # print ST.table[p[-4]]['parameters'], "oOOOOOOOOOOOOOOOOOOOOOO"
         u= p[-4]
@@ -2084,7 +2189,7 @@ def p_for_M1(p):
     '''
         for_M1 :
     '''
-    print p[-3]
+    # print p[-3]
     IncrLabel = ST.get_label()
     StatementLabel = ST.get_label()
     EndLabel = ST.get_label()
@@ -2426,11 +2531,24 @@ def p_ReturnStatement(p):
     # CreateTAC( 'ret', p[2]['place']+p[2]['scope'], None, None )    
     # Derivations.append(p.slice)
 
-    CreateTAC("=",FuncLabel+".ret",p[2]['place'],None)
+    name = p[2]['place']
+    if not name.isdigit():
+        if 'scope' in p[2].keys():
+            name = name + p[2]['scope']
+        else:
+            end = ""
+            if "[" in name:
+                name = p[2]['place'].strip("[")[0]
+                end = p[2]['place'].strip("[")[1]
+            if "." in name:
+                name = p[2]['place'].strip(".")[0]
+                end = p[2]['place'].strip(".")[1]
+            name = name + ST.checkscope(name)+end
+    CreateTAC("=",FuncLabel+".ret",name,None)    
     if FuncLabel=='main':
-        CreateTAC( 'exit', p[2]['place'], None, None )    
+        CreateTAC( 'exit',name,None, None )    
     else:
-        CreateTAC( 'ret', p[2]['place'], None, None )    
+        CreateTAC( 'ret', name, None, None )    
     Derivations.append(p.slice)
 
 

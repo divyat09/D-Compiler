@@ -8,58 +8,46 @@ def SaveArray( reg, var):
 	Index= var.split('[')[1].split(']')[0]
 
 	# Temporary Register for Base
-	reg0='%esi'
-	f.write( 'movl\t$' + str(Base)+',\t'+ str(reg0) +"\n")
+	flag0= GetFreeRegister()
+	if flag0 == -1:
+		for temp in RegisterStatus:
+			if  temp != reg:
+				reg0= temp
+				break			
+		f.write( 'movl\t' + str(reg0)+',\t'+ str(RegisterData[reg0]) +"\n")
+		f.write( 'movl\t$' + str(Base)+',\t'+ str(reg0) +"\n")
+	else:
+		reg0= flag0
+		RegisterStatus[reg0]= 1
+		f.write( 'movl\t$' + str(Base)+',\t'+ str(reg0) +"\n")
+	
+	RegisterStatus[reg0]= 1
 
 	# Temporary Register for Index
-	if isint(Index):	# Case of A[4]
-		reg1= '%edi'
-		f.write( 'movl\t$' + str(Index)+',\t'+ str(reg1) +"\n")
-	else:				# Case of A[i]
-		reg1= '%edi'
-		f.write( 'movl\t$' + str(Index)+',\t'+ str(reg1) +"\n")
-
-	# Temporary Register for Base
-	# flag0= GetFreeRegister()
-	# if flag0 == -1:
-	# 	for temp in RegisterStatus:
-	# 		if  temp != reg:
-	# 			reg0= temp
-	# 			break			
-	# 	f.write( 'movl\t' + str(reg0)+',\t'+ str(RegisterData[reg0]) +"\n")
-	# 	f.write( 'movl\t$' + str(Base)+',\t'+ str(reg0) +"\n")
-	# else:
-	# 	reg0= flag0
-	# 	RegisterStatus[reg0]= 1
-	# 	f.write( 'movl\t$' + str(Base)+',\t'+ str(reg0) +"\n")
+	if isint(Index):
+		Index= '$' + str(Index)
 	
-	# RegisterStatus[reg0]= 1
-
-	# Temporary Register for Index
-	# if isint(Index):
-	# 	Index= '$' + str(Index)
-	
-	# flag1= GetFreeRegister()
-	# if flag1 == -1:
-	# 	for temp in RegisterData:
-	# 		if temp != reg and temp != reg0:
-	# 			reg1= temp
-	# 			break
-	# 	f.write( 'movl\t' + str(reg1)+',\t'+ str(RegisterData[reg1]) +"\n")			
-	# 	f.write( 'movl\t' + str(Index)+',\t'+ str(reg1) +"\n")
-	# else:
-	# 	reg1= flag1
-	# 	f.write( 'movl\t' + str(Index)+',\t'+ str(reg1) +"\n")
+	flag1= GetFreeRegister()
+	if flag1 == -1:
+		for temp in RegisterData:
+			if temp != reg and temp != reg0:
+				reg1= temp
+				break
+		f.write( 'movl\t' + str(reg1)+',\t'+ str(RegisterData[reg1]) +"\n")			
+		f.write( 'movl\t' + str(Index)+',\t'+ str(reg1) +"\n")
+	else:
+		reg1= flag1
+		f.write( 'movl\t' + str(Index)+',\t'+ str(reg1) +"\n")
 					
 	# Stroing Val in memory
 	f.write( "movl\t" + str(reg) +  ',\t(' + str(reg0) + ', ' + str(reg1) + ', ' + str(4) +')' +'\n' )
 
-	# RegisterStatus[reg0]= -1
-	# if flag0 == -1:
-	# 	f.write( 'movl\t' + str(RegisterData[reg0]) +',\t'+ str(reg0)  +"\n")
+	RegisterStatus[reg0]= -1
+	if flag0 == -1:
+		f.write( 'movl\t' + str(RegisterData[reg0]) +',\t'+ str(reg0)  +"\n")
 
-	# if flag1 == -1:
-	# 	f.write( 'movl\t' +  str(RegisterData[reg1]) +',\t'+ str(reg1) +"\n")			
+	if flag1 == -1:
+		f.write( 'movl\t' +  str(RegisterData[reg1]) +',\t'+ str(reg1) +"\n")			
 
 	f.close()	
 
@@ -108,9 +96,6 @@ def RegisterSpilling( lineno ):
 	VictimReg= RegisterAssigned[VictimVar]
 
 	# Setting the Register holding Longest Use Varible Free
-	print RegisterData
-	print RegisterAssigned
-	# print VictimReg, RegisterData[VictimReg], RegisterStatus[VictimReg]
 	FreeRegister( VictimReg )
 
 	return VictimReg
@@ -119,12 +104,25 @@ def RegisterSpilling( lineno ):
 # Given a Variable and LineNumber of program, assign a register
 def AssignRegister(_var, lineno, LoadCase ):
 
-	# print _var
 	if _var in RegisterAssigned.keys():
 		return RegisterAssigned[ _var ]
 
-
 	elif '[' in _var:	# The case of Array, you first need to assing registers to Base and Index here
+
+		BaseName= _var.split('[')[0]
+		Index= _var.split('[')[1].split(']')[0]
+		
+		# Assigning the Register to Base Array: A
+		reg1= AssignRegister( BaseName, lineno  , 0 )
+		f= open( AssemFile, 'a' )
+		f.write( 'movl\t$' + str(BaseName)+',\t'+ str(reg1) +"\n")
+		f.close()
+
+		# Assigning the Index to a Register: var in A[var]
+		if isint(Index):	# Case of A[4]
+			reg2= SpecialConstRegister( Index, lineno )
+		else:				# Case of A[i]
+			reg2= AssignRegister( Index, lineno , 1 )	
 
 		# Assigning the result of A[var] to a register
 		reg= GetFreeRegister()	
@@ -135,29 +133,6 @@ def AssignRegister(_var, lineno, LoadCase ):
 		RegisterData[reg]= _var
 		RegisterAssigned[ _var ]= reg		
 		RegisterStatus[ reg ]= 1
-
-		BaseName= _var.split('[')[0]
-		Index= _var.split('[')[1].split(']')[0]
-
-		# Assigning the Register to Base Array: A
-		reg1='%esi'
-
-		f= open( AssemFile, 'a' )
-		f.write( 'movl\t$' + str(BaseName)+',\t'+ str(reg1) +"\n")
-		f.close()
-
-		# Assigning the Index to a Register: var in A[var]
-		if isint(Index):	# Case of A[4]
-			reg2='%edi'
-			f=open( AssemFile, 'a' )
-			f.write( 'movl\t' + '$'+str(Index)+',\t'+ str(reg2) +"\n")
-			f.close()
-
-		else:				# Case of A[i]
-			reg2='%edi'
-			f=open( AssemFile, 'a' )
-			f.write( 'movl\t' + str(Index)+',\t'+ str(reg2) +"\n")
-			f.close()
 
 		f=open( AssemFile, 'a' )
 		f.write( "movl\t" + '(' + str(reg1) + ', ' + str(reg2) + ', ' + str(4) +'),' + '\t' + str(reg)+'\n' )
@@ -223,4 +198,5 @@ def EndDivisionRegister( MainReg, SecReg, _var, lineno  ):
 	f.close()
 
 	RegisterStatus[MainReg]= -1
+
 

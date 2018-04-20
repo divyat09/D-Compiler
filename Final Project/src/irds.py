@@ -50,6 +50,7 @@ class IRDS:
       # what about basic block???
   
     elif (data[1] == "ret"):  
+      bb.append(int(self.lineno))
       if(isint(data[2])):
         self.const=data[2]
       else:

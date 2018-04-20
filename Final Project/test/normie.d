@@ -1,10 +1,8 @@
 int main(){
-    int i = 0;
     int a=5;
     int b=8;
-
-    if (a <= b){
-		a=a+1;
-		b=3;
-    }
+	int c=5;
+	c=a+b;
+	writeln("%d",c);
+	return 1;
 }

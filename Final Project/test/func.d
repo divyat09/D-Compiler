@@ -9,7 +9,8 @@ int foo()
 int main(){
     int a = 2;
     int b = 13;
-    char q='a';    
+        
     int res = foo();
+	writeln("%d",res);
     return 0;
 }
