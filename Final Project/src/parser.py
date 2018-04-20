@@ -960,7 +960,7 @@ def p_OrOrExpression(p):
             y =  p[3]['place']
             
         else:
-            if "[" not in p[1]['place']:            
+            if "[" not in p[3]['place']:            
                 y =  p[3]['place']  +  ST.currentscope 
             else:
                 name=p[3]['place'].split("[")[0]
@@ -988,12 +988,20 @@ def p_AndAndExpression(p):
         if "isconst"  in p[1].keys():
             x =  p[1]['place'] 
         else:
-            x =  p[1]['place'] + ST.currentscope 
+            if "[" not in p[1]['place']:
+                x =  p[1]['place'] +  ST.currentscope
+            else:
+                name=p[1]['place'].split("[")[0]
+                x = name + ST.checkscope(name)+"["+p[1]['place'].split("[")[1]        
             
         if "isconst" in p[3].keys():
             y =  p[3]['place'] 
         else:
-            y =  p[3]['place'] + ST.currentscope 
+            if "[" not in p[3]['place']:            
+                y =  p[3]['place']  +  ST.currentscope 
+            else:
+                name=p[3]['place'].split("[")[0]
+                y = name + ST.checkscope(name)+"["+p[3]['place'].split("[")[1]
         CreateTAC( p[2][0],newPlace+ ST.currentscope,x,y )
         # print p[2][0],newPlace, p[1]['place'],p[3]['place']
         p[0]['type'] = p[1]['type']
@@ -1052,12 +1060,19 @@ def p_EqualExpression(p):
         if "isconst" in p[1].keys():
             x =  p[1]['place']  
         else:
-            x =  p[1]['place'] + ST.currentscope 
-            
+            if "[" not in p[1]['place']:
+                x =  p[1]['place'] +  ST.currentscope
+            else:
+                name=p[1]['place'].split("[")[0]
+                x = name + ST.checkscope(name)+"["+p[1]['place'].split("[")[1]       
         if "isconst" in p[3].keys():
             y =  p[3]['place']  
         else:
-            y =  p[3]['place'] + ST.currentscope 
+            if "[" not in p[3]['place']:            
+                y =  p[3]['place']  +  ST.currentscope 
+            else:
+                name=p[3]['place'].split("[")[0]
+                y = name + ST.checkscope(name)+"["+p[3]['place'].split("[")[1]
         CreateTAC(p[2],p[0]['place']+ ST.currentscope,x,y)
         p[0]['type'] = p[1]['type'] 
         return
@@ -1101,7 +1116,7 @@ def p_RelExpression(p):
         if "isconst" in p[3].keys():
             y =  p[3]['place'] 
         else:
-            if "[" not in p[1]['place']:            
+            if "[" not in p[3]['place']:            
                 y =  p[3]['place']  +  ST.currentscope 
             else:
                 name=p[3]['place'].split("[")[0]
@@ -1154,7 +1169,7 @@ def p_ShiftExpression(p):
             if "isconst" in p[3].keys():
                 y =  p[3]['place'] 
             else:
-                if "[" not in p[1]['place']:            
+                if "[" not in p[3]['place']:            
                     y =  p[3]['place']  +  ST.currentscope 
                 else:
                     name=p[3]['place'].split("[")[0]
