@@ -1388,7 +1388,7 @@ def p_ArgumentList(p):
     # if (p[1]['type'] != ST.table[p[-2]]['parameters'][p[1]['place']]['type'])
 
     param_list.append([p[1]['place'],p[1]['type']])
-    print param_list, "|||||||||||||||||||||||||||||||"
+    # print param_list, "|||||||||||||||||||||||||||||||"
     Derivations.append(p.slice)  
 
 def p_CastExpression(p):
@@ -1469,7 +1469,8 @@ def p_PostfixExpression(p):
             u = u+ '.'+p[1].split(".")[1]
             if u not in ST.table.keys():
                 print "Error: function not defined"
-            
+        if u=="writeln":
+            return
         p[0] = {'place':u,'type':ST.getfunc_returntype(u),'isfunc':True}
     # print p[5]    
 
@@ -1481,7 +1482,10 @@ def p_JmpMark(p):
     # scope = ST.checkscope(p[-4])
     scope=""
     if( p[-4] == 'writeln'):
-        CreateTAC( "print_str", p[-2]['place'], None, None )
+        for i in param_list:
+            if i[1]=="INT":
+                CreateTAC( "print_int", i[0], None, None )
+
     else:
         global param_list
         # print "ajoop alien"
@@ -1617,7 +1621,7 @@ def p_PrimaryExpression(p):
                 'place':p[1],
                 'isconst':True
                 }
-            print "in here"
+            # print "in here"
             return
 
         # Identifiers
@@ -1855,7 +1859,7 @@ def p_M_block_begin(p):
             CreateTAC( "=", j[0]+ST.currentscope, FuncLabel+'_'+str(i), None )
             # print i
             ST.addvar(j[0],j[1],"Variable","4")
-    print FuncLabel
+    # print FuncLabel
     classname = FuncLabel.split(".")[0]
     p[0] = i
     if "." in FuncLabel:
