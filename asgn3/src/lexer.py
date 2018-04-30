@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/home/divyat/anaconda2/bin/python
 import sys
 import re
 import ply.lex as lex
